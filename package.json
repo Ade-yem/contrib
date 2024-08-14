@@ -13,11 +13,13 @@
     "@auth/core": "^0.34.2",
     "@convex-dev/auth": "^0.0.48",
     "@heroicons/react": "^2.1.5",
+    "@paystack/paystack-sdk": "^1.0.1",
     "convex": "^1.13.2",
     "next": "14.2.5",
     "next-themes": "^0.3.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "@types/node": "^20",
