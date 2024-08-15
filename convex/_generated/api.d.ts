@@ -19,6 +19,9 @@ import type * as group from "../group.js";
 import type * as http from "../http.js";
 import type * as payments from "../payments.js";
 import type * as paystack from "../paystack.js";
+import type * as types_subscriptions from "../types/subscriptions.js";
+import type * as types_verification from "../types/verification.js";
+import type * as user from "../user.js";
 import type * as utils from "../utils.js";
 
 /**
@@ -35,6 +38,9 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   payments: typeof payments;
   paystack: typeof paystack;
+  "types/subscriptions": typeof types_subscriptions;
+  "types/verification": typeof types_verification;
+  user: typeof user;
   utils: typeof utils;
 }>;
 export declare const api: FilterApi<

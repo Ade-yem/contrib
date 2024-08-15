@@ -4,7 +4,8 @@ import Paystack from "@paystack/paystack-sdk";
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 import crypto from "crypto"
-import { createPlanResponse, InitializeResponse } from "./types";
+import { createPlanResponse, InitializeResponse } from "./types/subscriptions";
+import { VerificationResponse } from "./types/verification";
 
 const paystack = new Paystack(process.env.PAYSTACK_SECRET);
 
@@ -56,6 +57,19 @@ export const createSubscription = action({
             plan: plan
         })
         return result;
+    }
+})
+
+export const verifyTransaction = action({
+    args: {
+        reference: v.string(),
+    },
+    handler: async (_, args) => {
+        const { reference } = args;
+        const res: VerificationResponse = await paystack.transaction.verify({
+            reference: reference
+        })
+        return res
     }
 })
 
