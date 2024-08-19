@@ -1,3 +1,4 @@
+"use client";
 import GoogleSignIn from "@/components/buttons/Google";
 import { SignInWithPassword } from "@/components/forms/SigninForm";
 import {
