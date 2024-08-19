@@ -1,0 +1,67 @@
+@import "./variables";
+
+.fw-regular {
+  font-weight: 400;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.fw-semi-bold {
+  font-weight: 600;
+}
+
+.fw-bold {
+  font-weight: 700;
+}
+
+.click {
+  cursor: pointer;
+}
+
+.text-2xs {
+  font-size: 1rem !important;
+}
+
+.text-xs {
+  font-size: 1.2rem !important;
+}
+.text-sm {
+  font-size: 1.4rem !important;
+}
+
+.text-base {
+  font-size: 1.5rem !important;
+}
+
+.text-lg {
+  font-size: 1.6rem !important;
+}
+
+.text-xl {
+  font-size: 1.8rem !important;
+}
+
+.text-xxl {
+  font-size: 2rem !important;
+}
+
+.text-2xl {
+  font-size: 2.4rem !important;
+}
+
+.text-3xl {
+  font-size: 4rem !important;
+}
+
+.title {
+  font-size: 5.4rem;
+}
+
+.sub-title {
+  font-size: 2.7rem;
+}
+.xsub-title {
+  font-size: 2.7rem;
+}

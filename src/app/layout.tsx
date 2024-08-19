@@ -1,11 +1,17 @@
 import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { Toaster } from "react-hot-toast";
-
+import { LayoutProvider } from "@/context/layoutContext";
+import { AuthContainer } from "@/components/authContainer";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./globals.scss";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Navbar from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,16 +27,19 @@ export default function RootLayout({
 }) {
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <Toaster position="top-center" />
-          <ConvexClientProvider>
-            <ThemeProvider>
-              {children}
-            </ThemeProvider>
-          </ConvexClientProvider>
-        </body>
-      </html>
+      <LayoutProvider>
+        <html lang="en">
+          <body className={`${inter.className} layout-wrapper`}>
+            <Toaster position="top-center" />
+            <ConvexClientProvider>
+              {/* <Navbar /> */}
+              <ThemeProvider>{children}</ThemeProvider>
+              {/* <Footer /> */}
+            </ConvexClientProvider>
+          </body>
+        </html>
+        <AuthContainer />
+      </LayoutProvider>
     </ConvexAuthNextjsServerProvider>
   );
 }

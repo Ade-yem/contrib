@@ -1,0 +1,40 @@
+@import "../../../../styles/base/variables";
+
+.border-line {
+  border-bottom: 0.5px solid $primary-500;
+}
+.NewUser-bg {
+  background: rgba($primary-500, 0.5);
+  height: 100%;
+  img {
+    width: 100%;
+  }
+}
+.modal-body {
+  padding: 0 !important;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 2.9rem;
+  opacity: 0.7;
+  font-size: 2.8rem;
+  transition: all 0.3s ease;
+  color: $primary-500;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+}
+.place {
+  min-height: 4rem !important;
+  &::placeholder {
+    font-size: 1.2rem !important;
+  }
+}
+.d-mobile {
+  @media (max-width: 800px) {
+    display: none;
+  }
+}

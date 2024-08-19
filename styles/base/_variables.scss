@@ -1,0 +1,81 @@
+//Fonts
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap");
+
+// Primary colors
+$primary-600: #240893;
+$primary-500: #3c0df5;
+$primary-300: #e7eaf4b2;
+
+$black-000: #000000;
+$black-100: #111111;
+
+$pink: #ff2caa;
+$orange: #f2994a;
+$purple: #4a0375;
+$green: #20a50b;
+$yellow: #f4cf0c;
+
+// Neutrals & Shades
+$white-000: #ffffff;
+$white-100: #f2f7f8;
+
+$gray-300: #d9d9d9;
+$gray-400: #828282;
+$gray-600: #515b6f;
+
+$theme-colors: (
+  "pink": $pink,
+  "orange": $orange,
+  "purple": $purple,
+  "green": $green,
+  "yellow": $yellow,
+
+  "primary-600": $primary-600,
+  "primary-500": $primary-500,
+  "primary-300": $primary-300,
+
+  "black-000": $black-000,
+  "black-100": $black-100,
+
+  "white-000": $white-000,
+  "white-100": $white-100,
+
+  "gray-300": $gray-300,
+  "gray-400": $gray-400,
+  "gray-600": $gray-600,
+);
+
+$spacers: (
+  "3_5": 1.2rem,
+  "4_5": 2rem,
+  "4_55": 2.3rem,
+  "5_5": 3.6rem,
+  "5_6": 4.5rem,
+  6: 6rem,
+  7: 7rem,
+  8: 8rem,
+  9: 9rem,
+  10: 12rem,
+);
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  lee: 1100px,
+  xl: 1350px,
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1300px,
+);
+$position-values: (
+  1: 1.5rem,
+  2: 2rem,
+  3: 3rem,
+);

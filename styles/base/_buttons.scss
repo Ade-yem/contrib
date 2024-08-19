@@ -1,0 +1,84 @@
+@import "./variables";
+
+.btn {
+  font-size: 1.4rem;
+  text-align: center;
+  justify-content: center;
+  padding: 1.1rem;
+  border: none;
+  min-width: 12rem;
+  display: flex;
+  align-items: center;
+  min-height: 3.5rem;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: $primary-500 !important;
+  color: $white-000 !important;
+  transition: all ease 0.3s;
+  position: relative;
+  &:hover,
+  &:focus,
+  &:disabled {
+    color: $white-000;
+    background-color: darken($color: $primary-500, $amount: 15) !important;
+  }
+  &:disabled {
+    opacity: 0.8;
+  }
+}
+.btn-black {
+  background-color: $black-000 !important;
+  color: $white-000 !important;
+  transition: all ease 0.3s;
+  position: relative;
+  &:hover,
+  &:focus,
+  &:disabled {
+    color: $white-000;
+    background-color: darken($color: $black-000, $amount: 15) !important;
+  }
+  &:disabled {
+    opacity: 0.8;
+  }
+}
+
+.btn-outline-purple {
+  border: 1px solid $primary-500 !important;
+  color: $primary-500 !important;
+  &:hover,
+  &:focus,
+  &:disabled {
+    color: $white-000 !important;
+    background-color: darken($color: $primary-500, $amount: 15) !important;
+  }
+  &:disabled {
+    opacity: 0.8;
+  }
+}
+
+.btn-lg {
+  min-height: 4.8rem;
+  min-width: 16rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  @media (max-width: 500px) {
+    min-width: 16rem;
+    min-height: 4rem;
+  }
+}
+
+.btn-md {
+  min-height: 3.6rem;
+  min-width: 14rem;
+  font-size: 1.5rem;
+}
+
+.btn-sm {
+  height: 3rem;
+  min-width: 0;
+  font-size: 1.3rem;
+  min-height: 0;
+}
