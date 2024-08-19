@@ -9,29 +9,33 @@ const schema = defineSchema({
     name: v.string(),
     number_of_people: v.float64(),
     number_of_people_present: v.float64(),
-    savings_per_momth: v.float64(),
+    interval: v.union(v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
+    savings_per_interval: v.float64(),
     subscription_plan_id: v.string(),
     status: v.union(v.literal("active"), v.literal("pending"), v.literal("closed")),
     start_date: v.float64(),
     elapsed_time: v.float64(),
+    private: v.boolean()
   }),
   membership: defineTable({
     group_id: v.id("groups"),
     user_id: v.id("users"),
-    collection_number: v.float64(),
+    collection_number: v.optional(v.float64()),
   }),
   transactions: defineTable({
     group_id: v.id("groups"),
     user_id: v.id("users"),
     amount: v.float64(),
     type: v.union(v.literal("transfer"), v.literal("deposit")),
+    status: v.string(),
+    reference: v.string()
   }),
   invites: defineTable({
     group_id: v.id("groups"),
     status: v.string(),
     code: v.optional(v.string()),
   }),
-  month: defineTable({
+  interval: defineTable({
     group_id: v.id("groups"),
     month: v.float64(),
     members_payment_status: v.array(v.object({
@@ -42,9 +46,13 @@ const schema = defineSchema({
   }),
   payment_methods: defineTable({
     user_id: v.id('users'),
-    type: v.union(v.literal("bank transfer"), v.literal("credit card")), // to add more to it
+    type: v.union(v.literal("ghpss"), v.literal("nuban")),
     account_name: v.string(),
-    is_default: v.boolean(),
+    recipient_code: v.string(),
+    authorization_code: v.string(),
+    currency: v.union(v.literal("NGN"), v.literal("GHS")),
+    bank_name: v.string(),
+    account_number: v.string(),
   })
 
 });
