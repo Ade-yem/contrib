@@ -10,7 +10,6 @@ import { useState } from "react";
 
 export default function Home() {
   const user = useQuery(api.user.getUser);
-  const [group_id, setGroup_id] = useState<Id<"groups"> | "">("");
   const initializeTransaction = useAction(api.payments.initializePaystackTransaction);
   const createPlan = useAction(api.payments.createPaystackPlan);
   // const createSubscription = useAction(api.payments.createSubscription);
@@ -19,7 +18,7 @@ export default function Home() {
   const joinGroup = useMutation(api.group.createMembership);
 
   const createGroup = async () => {
-    const group_id = await addGroup({
+    const group = await addGroup({
       creator_id: user?._id as Id<"users">,
       name: "Adeyemi Adejumo",
       number_of_people: 5,
@@ -32,20 +31,19 @@ export default function Home() {
       elapsed_time: 0,
       private: false
     })
-    if (group_id) {
+    if (group) {
       const plan = await createPlan({
-        name: "First test",
-        group_id: group_id as Id<"groups">,
-        amount: 10000,
+        name: group.name,
+        group_id: group._id,
+        amount: group.savings_per_interval,
         description: "First paystack test",
         currency: "NGN",
-        invoiceLimit: 5,
-        email: user?.email as string
+        invoiceLimit: group.number_of_people,
       })
       console.log(plan);
       const invite_code = await createInvite({
         status: "pending",
-        group_id: group_id
+        group_id: group._id
       })
       console.log(invite_code);
     }

@@ -1,6 +1,5 @@
 "use node";
 
-// import Paystack from "@paystack/paystack-sdk";
 import paystack from "./paystack_api";
 import { internal } from "./_generated/api";
 import { action, internalAction } from "./_generated/server";
@@ -9,7 +8,6 @@ import crypto from "crypto"
 import { createPlanResponse, InitializeResponse } from "./types/subscriptions";
 import { VerificationResponse } from "./types/verification";
 
-// const paystack = new Paystack(process.env.PAYSTACK_SECRET);
 export const createPaystackPlan = action ({
     args: {
         name: v.string(),

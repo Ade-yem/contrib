@@ -13,7 +13,6 @@
     "@auth/core": "^0.34.2",
     "@convex-dev/auth": "^0.0.48",
     "@heroicons/react": "^2.1.5",
-    "@paystack/paystack-sdk": "^1.0.1",
     "convex": "^1.13.2",
     "nanoid": "^5.0.7",
     "next": "14.2.5",

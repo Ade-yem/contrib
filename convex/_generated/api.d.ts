@@ -20,7 +20,7 @@ import type * as http from "../http.js";
 import type * as payments from "../payments.js";
 import type * as paystack from "../paystack.js";
 import type * as paystack_api from "../paystack_api.js";
-import type * as types_subscriptions f../types/transfers.jsiptions.js";
+import type * as types_subscriptions from "../types/transfers.jsiptions.js";
 import type * as types_transfers from "../types/transfers.js";
 import type * as types_verification from "../types/verification.js";
 import type * as user from "../user.js";
