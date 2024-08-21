@@ -10,8 +10,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Navbar from "@/components/navbar";
-import { Footer } from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 

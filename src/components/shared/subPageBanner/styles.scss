@@ -1,0 +1,14 @@
+.sub-page-banner {
+  margin-top: 7rem;
+  background: url(../../../../public/subPage-banner.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}

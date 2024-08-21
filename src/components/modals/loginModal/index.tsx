@@ -74,7 +74,7 @@ export const LoginModal = ({
       >
         <Modal.Body>
           <div className="row">
-            <div className="col-lg-6 col-12 pt-5 pb-5 px-7">
+            <div className="col-lg-6 col-12 pt-5 pb-5 px-lg-7 px-5">
               <div className="close-modal" onClick={closeModal}>
                 <Icon icon="charm:square-cross" />
               </div>

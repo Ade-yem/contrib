@@ -61,7 +61,7 @@ export const ChooseUs = () => {
         <div className="row px-6">
           {cardList.map((item, index) => (
             <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-4" key={index}>
-              <div className="default-card">
+              <div className="default-card default-shadow">
                 <Image src={item.img} alt={item.alt} width={100} height={120} />
                 <p className="text-xl fw-bold"> {item.title}</p>
                 <p className="text-sm px-md-4">{item.desc}</p>

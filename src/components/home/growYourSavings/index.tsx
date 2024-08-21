@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
-import { SavingsCard } from "../../growSavingsCard";
+import { SavingsCard } from "../../shared/growSavingsCard";
 import { SliderNextArrow, SliderPrevArrow } from "../../customSliderArrows";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });

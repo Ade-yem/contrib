@@ -1,4 +1,4 @@
-@import "../../../styles/base/variables";
+@import "../../../../styles/base/variables";
 
 .nav-fixed {
   position: fixed;
@@ -10,7 +10,6 @@
 nav {
   padding-block: 1rem;
   background-color: $white-000;
-  // border-bottom: 0.1rem solid $grey-10;
 
   .nav-logo {
     // width: 19rem;
