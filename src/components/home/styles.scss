@@ -19,7 +19,7 @@
   }
 }
 .download-app-wrapper {
-  background: url(../../../public/friends.svg);
+  background: url(../../../public/download-app.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -29,11 +29,5 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-attachment: scroll;
-  @media (max-width: 767px) {
-    background: url(../../../public/friends.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
+  background-attachment: fixed;
 }
