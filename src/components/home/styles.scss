@@ -1,19 +1,39 @@
-// @import "../../../styles/base/variables";
 .home-banner {
   margin-top: 7rem;
   background: url(../../../public/banner-pics.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 3rem;
   text-align: center;
-  //   color: $white-000;
   @media (max-width: 767px) {
     background: url(../../../public/Mbanner-pics.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+.download-app-wrapper {
+  background: url(../../../public/friends.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-attachment: scroll;
+  @media (max-width: 767px) {
+    background: url(../../../public/friends.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
