@@ -26,51 +26,38 @@ nav {
     .navbar-items {
       display: flex;
       align-items: center;
-      gap: 2rem;
-
-      // @media (max-width: 1200px) {
-      //   flex-wrap: wrap;
-      // }
-      // @media (max-width: 959px) {
-      //   gap: 1.4rem;
-      //   margin-right: -2rem;
-      // }
-      // @media (max-width: 830px) {
-      //   gap: 1.1rem;
-      // }
-
-      .dropdown-menu {
-        padding-left: 5px;
-        padding-right: 5px;
-      }
-
-      .dropdown-toggle::after {
-        content: url("https://api.iconify.design/pepicons/angle-down.svg?color=white");
-      }
-
-      .dropdown-item {
-        font-size: 1.3rem;
+      gap: 4rem;
+      .dropdown {
+        position: relative;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        font-size: 1.4rem;
         color: $black-000;
-        padding-block: 0.7rem;
-        border-radius: none;
-        margin-top: 5px;
-        margin-bottom: 5px;
-      }
-
-      .dropdown-item:nth-child(odd) {
-        background: #e9e8e8 !important;
-      }
-
-      .dropdown-item:nth-child(odd):hover {
-        background: #ebeaea !important;
-      }
-
-      .dropdown-item:nth-child(even) {
-        background: #ede6e6 !important;
-      }
-
-      .dropdown-item:nth-child(even):hover {
-        background: #ebeaea !important;
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f9f9f9;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba($black-000, 0.2);
+          padding: 1rem;
+          z-index: 1;
+          border-radius: 0 1rem 1rem 1rem;
+          left: 7px;
+          p {
+            padding: 0.5rem;
+            cursor: pointer;
+            &:hover {
+              display: block;
+              color: $primary-500;
+              background-color: rgba($primary-600, 0.2);
+              border-radius: 0.4rem;
+            }
+          }
+        }
+        &:hover .dropdown-content {
+          display: block;
+        }
       }
 
       .btn {

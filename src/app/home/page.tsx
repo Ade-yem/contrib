@@ -1,7 +1,8 @@
-import { GrowYourSavings } from "@/components/growYourSavings";
+import { DownloadApp } from "@/components/home/downloadApp";
+import { GrowYourSavings } from "@/components/home/growYourSavings";
 import { Homebanner } from "@/components/home/homebanner";
-import { ChooseUs } from "@/components/whyChooseUs";
-import Image from "next/image";
+import { OustandingGroup } from "@/components/home/outstandingGroup";
+import { ChooseUs } from "@/components/home/whyChooseUs";
 
 export default function Home() {
   return (
@@ -9,6 +10,8 @@ export default function Home() {
       <Homebanner />
       <GrowYourSavings />
       <ChooseUs />
+      <OustandingGroup />
+      <DownloadApp />
     </main>
   );
 }
