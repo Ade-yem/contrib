@@ -139,7 +139,7 @@ export const LoginModal = ({
             </div>
 
             <div className="col-lg-6 d-mobile col-12 order-lg-2">
-              <div className="NewUser-bg pb-5 px-7">
+              <div className="NewUser-bg pb-5 px-7 text-white-000">
                 <div className="close-modal" onClick={closeModal}>
                   <Icon icon="charm:square-cross" />
                 </div>
@@ -152,7 +152,7 @@ export const LoginModal = ({
                   }}
                 >
                   <Image
-                    src={"/imgs/profile-placeholder.jpeg"}
+                    src={"/loginImg.svg"}
                     alt="A pretty lady"
                     width={120}
                     height={120}
@@ -160,12 +160,13 @@ export const LoginModal = ({
                   />
                 </div>
                 <p className="text-xs mt-4">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Facilis totam cumque quibusdam ab magni, est aliquam delectus
-                  animi fuga aut!
+                  Create a Jekajodawo account to manage your savings, connect
+                  with other members, and contribute to your thrift group faster
+                  next time. Group administrators can also register here to
+                  create and manage a thrift group.
                 </p>
                 <button
-                  className="btn btn-md text-xs btn-blue-dark w-100 mt-5"
+                  className="btn btn-md text-xs btn-black w-100 mt-5"
                   onClick={() => setShowModal("register")}
                 >
                   Sign Up
