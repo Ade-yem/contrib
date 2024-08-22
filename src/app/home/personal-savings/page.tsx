@@ -1,5 +1,3 @@
-import { ChooseUs } from "@/components/home/whyChooseUs";
-import { OurTeam } from "@/components/shared/ourTeam";
 import { SubPageBanner } from "@/components/shared/subPageBanner";
 import Image from "next/image";
 
@@ -14,13 +12,17 @@ export default function PersonalSavingsPage() {
       />
       <div className="container my-6">
         <h2 className="sub-title  fw-bold">
+          Save with <span className="text-primary-500">Purpose</span>, Reach
+          Your <span className="text-primary-500">Dreams</span>
+        </h2>
+        <p className="text-xl">
+          You Can Personally Save Towards Your Goals Why You Should
+        </p>
+        {/* <h2 className="sub-title  fw-bold">
           You Can <span className="text-primary-500">Personally Save</span>{" "}
           Towards Your Goals Why You Should
         </h2>
-        <p className="text-xl">
-          Your Personal Savings revolves around distinctive financial goals, You
-          can save periodically.
-        </p>
+        <p className="text-xl">Save with Purpose, Reach Your Dreams</p> */}
       </div>
       <div className="py-5_6 bg-primary-300">
         <div className="container">
@@ -52,7 +54,7 @@ export default function PersonalSavingsPage() {
         <div className=" mt-5_6 py-2  text-white-000">
           <div className="bg-primary-500 py-6">
             <div className="container">
-              <h2 className="sub-title  mb-5_6 fw-bold">
+              <h2 className="sub-title  mb-4 fw-bold">
                 Pick Your Saving Plans
               </h2>
               <p className="text-xl">

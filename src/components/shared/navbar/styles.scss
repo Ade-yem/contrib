@@ -6,13 +6,25 @@
   width: 100%;
   top: 0;
 }
-
+.sidebar {
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  min-height: 60vh;
+  top: 0;
+  display: none;
+  background-color: red;
+  @media (max-width: 800px) {
+    display: block;
+  }
+}
 nav {
   padding-block: 1rem;
   background-color: $white-000;
 
   .nav-logo {
-    // width: 19rem;
+    width: 19rem;
+    height: auto;
     object-fit: contain;
   }
   .d-nil {
@@ -61,6 +73,15 @@ nav {
 
       .btn {
         border-radius: 1rem;
+      }
+      @media (max-width: 800px) {
+        display: none;
+      }
+    }
+    .mobile-menu {
+      display: none;
+      @media (max-width: 800px) {
+        display: block;
       }
     }
   }
