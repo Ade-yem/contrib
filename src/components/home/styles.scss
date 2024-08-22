@@ -12,6 +12,8 @@
   padding: 3rem;
   text-align: center;
   @media (max-width: 767px) {
+    height: 65vh;
+
     background: url(../../../public/Mbanner-pics.svg);
     background-position: center;
     background-repeat: no-repeat;

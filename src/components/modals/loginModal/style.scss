@@ -26,6 +26,10 @@
   &:hover {
     opacity: 1;
   }
+  @media (max-width: 800px) {
+    color: $primary-500;
+    right: 1rem;
+  }
 }
 .place {
   min-height: 4rem !important;

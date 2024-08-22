@@ -1,11 +1,6 @@
-import { Footer } from "@/components/footer";
-import Navbar from "@/components/navbar";
+import { Footer } from "@/components/shared/footer";
+import Navbar from "@/components/shared/navbar";
 import React, { ReactNode } from "react";
-// import { Sidebar } from "sharedComponents/sidebar";
-// import { Navbar } from "sharedComponents/navbar";
-// import "./styles.scss";
-
-// import { Footer } from "sharedComponents/footer";
 
 export default function MainLayout({
   children,

@@ -60,10 +60,16 @@
 
 .title {
   font-size: 5.4rem;
+  @media (max-width: 700px) {
+    font-size: 4.4rem;
+  }
 }
 
 .sub-title {
   font-size: 2.7rem;
+  @media (max-width: 700px) {
+    font-size: 2.4rem;
+  }
 }
 .xsub-title {
   font-size: 2.5rem;

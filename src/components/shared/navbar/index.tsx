@@ -39,7 +39,7 @@ const Navbar = () => {
   return (
     <nav className="nav-fixed">
       <div className="container navbar d-flex justify-content-between align-items-center">
-        <Link href="/">
+        <Link href="/home">
           <Image
             src={"/JEKAJODAWO-LOGO.svg"}
             alt="logo"
@@ -52,7 +52,7 @@ const Navbar = () => {
         <div className="navbar-items ms-auto">
           <div className="dropdown">
             <div>
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center click">
                 Savings
                 <Icon
                   className="ms-3"
@@ -62,15 +62,33 @@ const Navbar = () => {
                 />
               </div>
               <div className="dropdown-content">
-                <p className="hover-link">Personal Savings</p>
-                <p className="hover-link" role="button">
-                  Group Savings
-                </p>
+                <Link
+                  href={"personal-savings"}
+                  className="text-sm text-decoration-none text-black-000 hover-link click"
+                >
+                  <p>Personal Savings</p>
+                </Link>
+                <Link
+                  href={"/group-savings"}
+                  className="text-sm text-decoration-none text-black-000 hover-link click"
+                >
+                  <p>Group Savings</p>
+                </Link>
               </div>
             </div>
           </div>
-          <div className="text-sm">About Us</div>
-          <div className="text-sm">Contact Us</div>
+          <Link
+            href={"/about"}
+            className="text-sm text-decoration-none text-black-000"
+          >
+            About Us
+          </Link>
+          <Link
+            href={"#"}
+            className="text-sm text-decoration-none text-black-000"
+          >
+            Contact Us
+          </Link>
           <div className="dropdown">
             <div>
               <div className="d-flex align-items-center ">
