@@ -6,19 +6,9 @@ footer {
   background-color: $primary-600;
 
   .logo-img {
+    width: 19rem;
+    height: auto;
     object-fit: contain;
-    width: 21rem;
-    @media (max-width: 1117px) {
-      margin-bottom: 0.8rem;
-    }
-    @media (max-width: 767px) {
-      width: 18rem;
-      margin-bottom: 0;
-    }
-
-    @media (max-width: 400px) {
-      width: 13rem;
-    }
   }
 
   .cards-img {

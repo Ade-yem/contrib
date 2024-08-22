@@ -61,18 +61,17 @@ const Socials = () => {
 
 export const Footer = () => {
   return (
-    <footer className="mt-auto py-5">
+    <footer className="mt-auto">
       <div className="container">
         <div className="row gy-5_6 mt-2">
           <div className="col-lg-6 col-md-4 col-12 mx-auto ">
             <div className="d-md-block d-flex justify-content-center flex-column align-items-center">
               <Image
-                // src={"../"}
                 src={"/JEKAJODAWO LOGO-BLACK.svg"}
                 alt="logo"
                 width={120}
                 height={70}
-                className="nav-logo"
+                className="logo-img mb-5"
               />
               {/* <p className="text-decoration-none text-xsm text-white mb-2 mt-3_5 d-md-block d-none">
                 Expert-vetted stays managed by <br /> experienced hosts.
@@ -81,7 +80,7 @@ export const Footer = () => {
                 Expert-vetted stays managed by experienced hosts.
               </p> */}
 
-              <div className="mb-4 mt-2 d-md-flex d-none">
+              <div className="d-md-flex d-none">
                 <a
                   href="https://www.facebook.com/"
                   target="_blank"
@@ -205,18 +204,7 @@ export const Footer = () => {
                     Partnership
                   </Link>
                 </li>
-                <li className="mb-4 gap-4 mt-5 d-md-flex d-none">
-                  {/* <Link href="" className="text-decoration-none ">
-                    <img className="app-img" src={appstore} alt="appstore" />
-                  </Link>
-                  <Link href="" className="text-decoration-none ">
-                    <img
-                      className="app-img"
-                      src={googleplay}
-                      alt="googleplay"
-                    />
-                  </Link> */}
-                </li>
+                <li className="mb-4 gap-4 mt-5 d-md-flex d-none"></li>
               </ul>
             </div>
           </div>

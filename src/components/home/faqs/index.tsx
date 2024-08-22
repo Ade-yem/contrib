@@ -38,7 +38,7 @@ const Faqs = () => {
         </h2>
         {accordionList.map((item, index) => (
           <div key={index}>
-            <div className="bg-white-000 d-flex align-items-center justify-content-between p-4_5 px-5_6 rounded-10 mt-4">
+            <div className="bg-white-000 d-flex align-items-center justify-content-between p-4_5 px-sm-5_6 px-4 rounded-10 mt-4">
               <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
               <Icon
                 icon={

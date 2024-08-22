@@ -10,7 +10,7 @@ export const SubPageBanner = ({
 }) => {
   return (
     <div className="sub-page-banner text-white-000">
-      <h2
+      <h1
         className="title text-white-000 mb-4"
         dangerouslySetInnerHTML={{
           __html: title || " ",
