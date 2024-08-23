@@ -70,28 +70,28 @@ export default function Contactpage() {
             <input
               type="text"
               placeholder="Your Name*"
-              className="form-control border-top-0 border-start-0 border-end-0"
+              className="form-control border-top-0 border-start-0 border-end-0 rounded-0"
             />
           </div>
           <div className="col-lg-3 col-md-6 col-12">
             <input
               type="text"
               placeholder="Email*"
-              className="form-control border-top-0 border-start-0 border-end-0"
+              className="form-control border-top-0 border-start-0 border-end-0 rounded-0"
             />
           </div>
           <div className="col-lg-3 col-md-6 col-12">
             <input
               type="text"
               placeholder="Phone Number*"
-              className="form-control border-top-0 border-start-0 border-end-0"
+              className="form-control border-top-0 border-start-0 border-end-0 rounded-0"
             />
           </div>
           <div className="col-lg-3 col-md-6 col-12">
             <input
               type="text"
               placeholder="Type of Account*"
-              className="form-control border-top-0 border-start-0 border-end-0"
+              className="form-control border-top-0 border-start-0 border-end-0 rounded-0"
             />
           </div>
           <div className="col-12 mt-4">
@@ -101,7 +101,7 @@ export default function Contactpage() {
               cols={30}
               rows={5}
               placeholder="Send Us A Message*"
-              className="form-control border-top-0 border-start-0 border-end-0 "
+              className="form-control border-top-0 border-start-0 border-end-0 rounded-0"
             ></textarea>
           </div>
           <div className="d-flex justify-content-center mt-5">

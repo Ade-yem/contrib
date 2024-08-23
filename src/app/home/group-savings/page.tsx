@@ -51,24 +51,31 @@ export default function GroupSavingsPage() {
         <div className="container">
           <div className="row">
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Set Up Your Account</p>
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  {" "}
+                  Set Up Your <br /> Account
+                </p>
               </div>
             </div>
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Pick A Saving Plan & Amount</p>
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Join a Private or <br /> Public Group
+                </p>
               </div>
             </div>
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Schedule Withdrawal Time</p>
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Scratch A Number <br /> to Pick a Turn
+                </p>
               </div>
             </div>
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold">
-                  Fund Your Account with Your Bank Card
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Maintain Your Reputation as a <br /> Group Member
                 </p>
               </div>
             </div>
@@ -81,7 +88,7 @@ export default function GroupSavingsPage() {
           These are teams known for maintaining good reputation for the past 3
           Months!
         </p>
-        <div className="d-flex align-items-center gap-4 justify-content-center mb-6">
+        <div className="d-flex flex-wrap align-items-center gap-4 justify-content-center mb-6">
           <button className="btn btn-md text-white-000 bg-green">
             Enter Voucher
           </button>
@@ -108,7 +115,9 @@ export default function GroupSavingsPage() {
             <h2 className="sub-title  mb-4 fw-bold">Join A Group</h2>
             <p className="text-xl">Save Collectively and Collaboratively!</p>
             <div className="d-flex align-items-center justify-content-center">
-              <button className="btn btn-md btn-black">See More Groups</button>
+              <button className="btn btn-md btn-black px-md-5 px-4">
+                See More Groups
+              </button>
             </div>
           </div>
         </div>
