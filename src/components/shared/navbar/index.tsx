@@ -134,81 +134,149 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      {/* {isSideBarOpen && (
-        // <Sidebar closeSidebar={() => setIsSideBarOpen(false)} />
-      )} */}
+      {isSideBarOpen && (
+        <Sidebar
+          closeSidebar={() => setIsSideBarOpen(false)}
+          openSidebar={isSideBarOpen}
+          handleShowLogin={handleShowLogin}
+        />
+      )}
     </>
   );
 };
 
 export default Navbar;
 
-const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
+const Sidebar = ({
+  closeSidebar,
+  openSidebar,
+  handleShowLogin,
+}: {
+  closeSidebar: () => void;
+  openSidebar: boolean;
+  handleShowLogin: () => void;
+}) => {
   const [openAccordion, setOpenAccordion] = useState<number | null>(-2);
 
   const accordionList = [
     {
-      title: " How does group savings works?",
-      answer: "Personal Savings",
-      answer2: "Personal Savings",
+      title: "Sign In",
+      link: "Sign In",
+      link2: "Sign Up",
     },
     {
-      title: " How does group savings works?",
-      answer: "Personal Savings",
-      answer2: "Personal Savings",
+      title: "Savings",
+      link: "Personal Savings",
+      link2: "Group Savings",
     },
   ];
   const handleToggle = (index: number) => {
     setOpenAccordion(openAccordion === index ? null : index);
   };
   return (
-    <div className="sidebar bg-primary-300">
-      <div className="bg-pink">
-        <div className="container d-flex justify-content-between align-items-center py-4">
-          <div>
-            <Icon
-              icon="quill:hamburger-sidebar"
-              width="3rem"
-              height="3rem"
-              onClick={closeSidebar}
-            />
-          </div>
-          <Link
-            href="/group-savings"
-            className="text-decoration-none desktop-item"
-          >
-            <button className="btn p-lg-3 btn-primary" type="button">
-              <span className="text-base"> Join a Team</span>
-            </button>
-          </Link>
-        </div>
-      </div>
-      <hr />
-      <div className="container">
-        {accordionList.map((item, index) => (
-          <div key={index}>
-            <div className="bg-white-000 d-flex align-items-center justify-content-between p-4_5 px-sm-5_6 px-4 rounded-10 mt-4">
-              <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
+    <div className={`sidebar ${openSidebar && "animate-open"}`}>
+      <div className="sidebar-content bg-primary-500 pb-7">
+        <div className="bg-white-000">
+          <div className="container d-flex justify-content-between align-items-center py-4">
+            <div>
               <Icon
-                icon={
-                  openAccordion === index
-                    ? "simple-line-icons:minus"
-                    : "simple-line-icons:plus"
-                }
+                icon="mdi:hamburger-open"
                 width="3rem"
                 height="3rem"
-                className="text-black-00"
-                role="button"
-                onClick={() => handleToggle(index)}
+                onClick={closeSidebar}
+                rotate={180}
               />
             </div>
-            {openAccordion === index && (
-              <div className="bg-white-000 mt-4 p-4_5 px-5_6 rounded-10">
-                <p className="text-sm fw-small lh-lg mb-0">{item.answer}</p>
-              </div>
-            )}
+            <Link
+              href="/group-savings"
+              className="text-decoration-none desktop-item"
+            >
+              <button className="btn p-lg-3 btn-primary" type="button">
+                <span className="text-base"> Join a Team</span>
+              </button>
+            </Link>
           </div>
-        ))}
+        </div>
+        <div className="container mt-5">
+          {accordionList.map((item, index) => (
+            <div key={index}>
+              <div className="border border-white-000 border-top-0 border-start-0 border-end-0">
+                <div className=" d-flex align-items-center text-white-000 justify-content-between p-4_5 px-sm-5_6 px-4 my-3">
+                  <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
+                  <Icon
+                    icon={
+                      openAccordion === index
+                        ? "mingcute:arrows-up-line"
+                        : "mingcute:arrows-down-line"
+                    }
+                    width="3rem"
+                    height="3rem"
+                    className="text-black-00"
+                    role="button"
+                    onClick={() => handleToggle(index)}
+                  />
+                </div>
+                {openAccordion === index && (
+                  <div className="overlay">
+                    <div className="bg-white-000 p-4_5 px-sm-5_6 px-4">
+                      <p
+                        className="text-sm fw-small mb-0"
+                        role="button"
+                        onClick={() => {
+                          handleShowLogin;
+                          closeSidebar;
+                        }}
+                      >
+                        {item.link}
+                      </p>
+                    </div>
+                    <hr className="my-0" />
+                    <div className="bg-white-000 p-4_5 px-sm-5_6 px-4">
+                      <p
+                        className="text-sm fw-small mb-0"
+                        role="button"
+                        onClick={handleShowLogin}
+                      >
+                        {item.link2}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <div className="border border-white-000 border-top-0 border-start-0 border-end-0">
+            {/* <NavLink
+              className={({ isActive }) =>
+                isActive ? "active border-none" : "border-none"
+              }
+              to="/home"
+              onClick={closeSidebar}
+            >
+              <div className="for">Careers</div>
+            </NavLink> */}
+            <div className="text-xl fw-bold p-4_5 px-sm-5_6 px-4 my-3">
+              <Link
+                href={"/home/about"}
+                className="text-decoration-none text-white-000"
+                onClick={closeSidebar}
+              >
+                About Us
+              </Link>
+            </div>
+          </div>
+          <div className="border border-white-000 border-top-0 border-start-0 border-end-0">
+            <div className="text-xl fw-bold p-4_5 px-sm-5_6 px-4 my-3">
+              <Link
+                href={"/home/contact"}
+                className="text-decoration-none text-white-000"
+                onClick={closeSidebar}
+              >
+                Contact
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

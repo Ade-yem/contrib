@@ -28,24 +28,30 @@ export default function PersonalSavingsPage() {
         <div className="container">
           <div className="row">
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Set Up Your Account</p>
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Set Up Your <br /> Account
+                </p>
               </div>
             </div>
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Pick A Saving Plan & Amount</p>
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Pick A Saving <br /> Plan & Amount
+                </p>
               </div>
             </div>
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Schedule Withdrawal Time</p>
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Schedule <br /> Withdrawal Time
+                </p>
               </div>
             </div>
             <div className="col-lg-3 col-sm-6 col-12 my-3">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold">
-                  Fund Your Account with Your Bank Card
+              <div className="default-card default-shadow d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">
+                  Fund Your <br /> Account with Your Bank Card
                 </p>
               </div>
             </div>
@@ -72,24 +78,24 @@ export default function PersonalSavingsPage() {
       <div className="container">
         <div className="py-6">
           <div className="row">
-            <div className="col-lg-3 col-sm-6 col-12 my-3 px-3_5">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold">Daily</p>
+            <div className="col-lg-3 col-sm-6 col-12 my-3 ">
+              <div className="default-card default-shadow mx-5 d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">Daily</p>
               </div>
             </div>
-            <div className="col-lg-3 col-sm-6 col-12 my-3 px-3_5">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Weekly</p>
+            <div className="col-lg-3 col-sm-6 col-12 my-3 ">
+              <div className="default-card default-shadow mx-5 d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">Weekly</p>
               </div>
             </div>
-            <div className="col-lg-3 col-sm-6 col-12 my-3 px-3_5">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold"> Monthly</p>
+            <div className="col-lg-3 col-sm-6 col-12 my-3 ">
+              <div className="default-card default-shadow mx-5 d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">Monthly</p>
               </div>
             </div>
-            <div className="col-lg-3 col-sm-6 col-12 my-3 px-3_5">
-              <div className="default-card default-shadow">
-                <p className="text-xl fw-bold">Annually</p>
+            <div className="col-lg-3 col-sm-6 col-12 my-3 ">
+              <div className="default-card default-shadow mx-5 d-flex align-items-center justify-content-center">
+                <p className="text-2xl fw-bold my-6">Annually</p>
               </div>
             </div>
           </div>
