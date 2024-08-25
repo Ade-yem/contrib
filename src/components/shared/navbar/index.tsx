@@ -19,7 +19,9 @@ const Navbar = () => {
 
   const handleShowLogin = () => {
     setShowModal("login");
-    console.log("first");
+  };
+  const handleShowRegister = () => {
+    setShowModal("register");
   };
   // const handleShowLogin = () => {
   //   if (!user) {
@@ -109,7 +111,11 @@ const Navbar = () => {
                   >
                     Sign In
                   </p>
-                  <p className="hover-link" role="button">
+                  <p
+                    className="hover-link"
+                    role="button"
+                    onClick={handleShowRegister}
+                  >
                     Sign Up
                   </p>
                 </div>
@@ -138,7 +144,7 @@ const Navbar = () => {
         <Sidebar
           closeSidebar={() => setIsSideBarOpen(false)}
           openSidebar={isSideBarOpen}
-          handleShowLogin={handleShowLogin}
+          // handleShowLogin={handleShowLogin}
         />
       )}
     </>
@@ -150,12 +156,22 @@ export default Navbar;
 const Sidebar = ({
   closeSidebar,
   openSidebar,
-  handleShowLogin,
+  // handleShowLogin,
 }: {
   closeSidebar: () => void;
   openSidebar: boolean;
-  handleShowLogin: () => void;
+  // handleShowLogin: () => void;
 }) => {
+  const {
+    setShowModal,
+  }: {
+    setShowModal: (value: ModalTypes) => void;
+  } = useContext(LayoutContext);
+
+  const handleShowLogin = () => {
+    setShowModal("login");
+    console.log("first");
+  };
   const [openAccordion, setOpenAccordion] = useState<number | null>(-2);
 
   const accordionList = [
@@ -201,7 +217,10 @@ const Sidebar = ({
           {accordionList.map((item, index) => (
             <div key={index}>
               <div className="border border-white-000 border-top-0 border-start-0 border-end-0">
-                <div className=" d-flex align-items-center text-white-000 justify-content-between p-4_5 px-sm-5_6 px-4 my-3">
+                <div
+                  className=" d-flex align-items-center text-white-000 justify-content-between p-4_5 px-sm-5_6 px-4 my-3"
+                  onClick={() => handleToggle(index)}
+                >
                   <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
                   <Icon
                     icon={
@@ -213,32 +232,57 @@ const Sidebar = ({
                     height="3rem"
                     className="text-black-00"
                     role="button"
-                    onClick={() => handleToggle(index)}
                   />
                 </div>
                 {openAccordion === index && (
                   <div className="overlay">
                     <div className="bg-white-000 p-4_5 px-sm-5_6 px-4">
-                      <p
-                        className="text-sm fw-small mb-0"
-                        role="button"
-                        onClick={() => {
-                          handleShowLogin;
-                          closeSidebar;
-                        }}
-                      >
-                        {item.link}
-                      </p>
+                      {item.link === "Sign In" ? (
+                        <p
+                          className="text-sm fw-small mb-0"
+                          role="button"
+                          onClick={() => {
+                            handleShowLogin;
+                            // closeSidebar;
+                          }}
+                        >
+                          {item.link}
+                        </p>
+                      ) : (
+                        <p className="text-sm fw-small mb-0">
+                          <Link
+                            href={"/home/personal-savings"}
+                            className="text-decoration-none text-black-000"
+                            onClick={closeSidebar}
+                          >
+                            {item.link}
+                          </Link>
+                        </p>
+                      )}
                     </div>
                     <hr className="my-0" />
                     <div className="bg-white-000 p-4_5 px-sm-5_6 px-4">
-                      <p
-                        className="text-sm fw-small mb-0"
-                        role="button"
-                        onClick={handleShowLogin}
-                      >
-                        {item.link2}
-                      </p>
+                      {item.link2 === "Sign Up" ? (
+                        <p
+                          className="text-sm fw-small mb-0"
+                          role="button"
+                          onClick={() => {
+                            handleShowLogin;
+                          }}
+                        >
+                          {item.link2}
+                        </p>
+                      ) : (
+                        <p className="text-sm fw-small mb-0">
+                          <Link
+                            href={"/home/group-savings"}
+                            className="text-decoration-none text-black-000"
+                            onClick={closeSidebar}
+                          >
+                            {item.link2}
+                          </Link>
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
