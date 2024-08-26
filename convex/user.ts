@@ -18,7 +18,7 @@ export const getInviteLink = query({
         const res = await ctx.db.query("invites").filter((inv) => inv.eq(inv.field("group_id"), args_0.group_id)).collect();
         const inv_code = res[0].code
         const link = process.env.SITE_URL;
-        return `${link}/inv_code`
+        return `${link}/${inv_code}`
     },
 })
 

@@ -18,7 +18,7 @@ export default function GoogleSignIn() {
         xmlnsXlink="http://www.w3.org/1999/xlink"
         fill="#000000"
       >
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
         <g
           id="SVGRepo_tracerCarrier"
           strokeLinecap="round"
@@ -31,9 +31,9 @@ export default function GoogleSignIn() {
           <g
             id="Icons"
             stroke="none"
-            stroke-width="1"
+            strokeWidth="1"
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
           >
             {" "}
             <g id="Color-" transform="translate(-401.000000, -860.000000)">

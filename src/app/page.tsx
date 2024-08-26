@@ -12,6 +12,8 @@ import { api } from "../../convex/_generated/api";
 import Button from "@/components/buttons/BaseButton";
 import { Id } from "../../convex/_generated/dataModel";
 import { useState } from "react";
+import { useAuthActions } from "@convex-dev/auth/react";
+
 
 export default function Home() {
   const user = useQuery(api.user.getUser);
@@ -21,6 +23,7 @@ export default function Home() {
   const addGroup = useMutation(api.group.createGroup);
   const createInvite = useMutation(api.group.createInvite);
   const joinGroup = useMutation(api.group.createMembership);
+  const {signOut} = useAuthActions();
 
   const createGroup = async () => {
     const group = await addGroup({
@@ -82,7 +85,7 @@ export default function Home() {
         </div>
         <div></div>
         <div></div>
-        <div></div>
+        <span className="btn-danger" onClick={signOut}>Logout</span>
       </Authenticated>
     </main>
   );

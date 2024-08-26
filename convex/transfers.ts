@@ -1,3 +1,4 @@
+"use node";
 // Create a transfer recipient
 // Generate a transfer reference
 // Initiate a transfer

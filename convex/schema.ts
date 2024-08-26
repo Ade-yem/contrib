@@ -22,6 +22,11 @@ const schema = defineSchema({
     user_id: v.id("users"),
     collection_number: v.optional(v.float64()),
   }),
+  savings: defineTable({
+    user_id: v.id("users"),
+    amount: v.float64(),
+    name: v.string(),
+  }),
   transactions: defineTable({
     group_id: v.id("groups"),
     user_id: v.id("users"),
@@ -53,8 +58,7 @@ const schema = defineSchema({
     currency: v.union(v.literal("NGN"), v.literal("GHS")),
     bank_name: v.string(),
     account_number: v.string(),
-  })
-
+  }),
 });
 
 export default schema;

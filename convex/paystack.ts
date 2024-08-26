@@ -54,8 +54,7 @@ export const createTransaction = internalMutation({
     } else {
       const q = await ctx.db.query("transactions").filter(q => q.eq(q.field("reference"), args_0.reference)).collect();
       await ctx.db.patch(q[0]._id, {status: args_0.status});
-    }
-    
+    }   
   },
 })
 
@@ -72,7 +71,9 @@ const subscriptionNotRenew = async (data: any) => {}
 const transferFailed = async (data: any) => {}
 const transferSuccess = async (data: any) => {}
 const transferReversed = async (data: any) => {}
-const chargeSuccess = async (data: any) => {}
+const chargeSuccess = async (data: any) => {
+    
+}
 
 
 /**

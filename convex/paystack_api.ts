@@ -36,7 +36,7 @@ class PaystackAPI {
   };
 
   constructor() {
-    if (process.env.PAYSTACK_SECRET) throw new Error("PAYSTACK_SECRET is not set");
+    if (!process.env.PAYSTACK_SECRET) throw new Error("PAYSTACK_SECRET is not set");
     this.paystack = {
       secret_key: process.env.PAYSTACK_SECRET as string,
       // public_key: process.env.PAYSTACK_PUBLIC_KEY as string,
