@@ -7,10 +7,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
+import { Authenticated, Unauthenticated } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 const Navbar = () => {
-  // const [user, setUser] = useState(getStorageData(StorageKeys.user));
+  const { signOut } = useAuthActions();
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+
   const {
     setShowModal,
   }: {
@@ -92,35 +95,82 @@ const Navbar = () => {
             >
               Contact Us
             </Link>
-            <div className="dropdown">
-              <div>
-                <div className="d-flex align-items-center ">
-                  Sign In
-                  <Icon
-                    className="ms-3"
-                    icon="mingcute:down-fill"
-                    width="20"
-                    height="20"
-                  />
-                </div>
-                <div className="dropdown-content">
-                  <p
-                    className="hover-link"
-                    role="button"
-                    onClick={handleShowLogin}
-                  >
+            <Unauthenticated>
+              <div className="dropdown">
+                <div>
+                  <div className="d-flex align-items-center ">
                     Sign In
-                  </p>
-                  <p
-                    className="hover-link"
-                    role="button"
-                    onClick={handleShowRegister}
-                  >
-                    Sign Up
-                  </p>
+                    <Icon
+                      className="ms-3"
+                      icon="mingcute:down-fill"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className="dropdown-content">
+                    <p
+                      className="hover-link"
+                      role="button"
+                      onClick={handleShowLogin}
+                    >
+                      Sign In
+                    </p>
+                    <p
+                      className="hover-link"
+                      role="button"
+                      onClick={handleShowRegister}
+                    >
+                      Sign Up
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Unauthenticated>
+            <Authenticated>
+              <div className="dropdown">
+                <div>
+                  <div className="d-flex align-items-center gap-3 click">
+                    <Image
+                      src={"/avatar.svg"}
+                      alt="profile"
+                      width={30}
+                      height={30}
+                      // className=""
+                    />
+                    Adelana
+                    <Icon icon="mingcute:down-fill" width="20" height="20" />
+                  </div>
+                  <div className="dropdown-content">
+                    <Link
+                      href={"/Dashboard"}
+                      className="text-sm text-decoration-none text-black-000 hover-link click"
+                    >
+                      <p>Dashboard</p>
+                    </Link>
+                    <Link
+                      href={"/home/group-savings"}
+                      className="text-sm text-decoration-none text-black-000  click"
+                    ></Link>
+
+                    <div
+                      className=" click hover-link sign-out"
+                      role="button"
+                      onClick={signOut}
+                    >
+                      <p className="d-flex align-items-center gap-2">
+                        <Icon
+                          icon="solar:logout-2-outline"
+                          className="icons"
+                          color="red"
+                          rotate={2}
+                        />
+                        Sign Out
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Authenticated>
             <Link
               href="/group-savings"
               className="text-decoration-none desktop-item"
@@ -131,12 +181,56 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="mobile-menu">
-            <Icon
-              icon="quill:hamburger-sidebar"
-              width="3rem"
-              height="3rem"
-              onClick={() => setIsSideBarOpen(true)}
-            />
+            <div className="d-flex align-items-center border border-black-000 rounded-01 p-2">
+              <Icon
+                icon="quill:hamburger-sidebar"
+                width="3rem"
+                height="3rem"
+                onClick={() => setIsSideBarOpen(true)}
+              />
+            </div>
+            <Authenticated>
+              <div className="dropdown">
+                <div>
+                  <div className="d-flex align-items-center click border border-black-000 rounded-01 p-2">
+                    <Image
+                      src={"/avatar.svg"}
+                      alt="profile"
+                      width={30}
+                      height={30}
+                    />
+                  </div>
+                  <div className="dropdown-content right">
+                    <Link
+                      href={"/Dashboard"}
+                      className="text-sm text-decoration-none text-black-000 hover-link click"
+                    >
+                      <p>Dashboard</p>
+                    </Link>
+                    <Link
+                      href={"/home/group-savings"}
+                      className="text-sm text-decoration-none text-black-000  click"
+                    ></Link>
+
+                    <div
+                      className=" click hover-link sign-out"
+                      role="button"
+                      onClick={signOut}
+                    >
+                      <p className="d-flex align-items-center gap-2">
+                        <Icon
+                          icon="solar:logout-2-outline"
+                          className="icons"
+                          color="red"
+                          rotate={2}
+                        />
+                        Sign Out
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Authenticated>
           </div>
         </div>
       </nav>

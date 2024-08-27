@@ -36,6 +36,7 @@ export const RegisterModal = ({
   const initialValues = {
     email: "",
     password: "",
+    signUp: "signUp",
   };
 
   const validationSchema = yup.object().shape({
@@ -43,19 +44,21 @@ export const RegisterModal = ({
     password: yup.string().label("Password").required(),
   });
 
-  const handleLogin = async (
-    values: { email: string; password: string },
+  const handleRegister = async (
+    values: { email: string; password: string; signUp: string },
     actions: any
   ) => {
     setSubmitting(true);
     const formData = new FormData();
     formData.append("email", values.email);
     formData.append("password", values.password);
+    formData.append("flow", values.signUp);
 
     signIn(provider ?? "password", formData)
       .then(() => {
         handleSent?.(values.email);
         actions.setSubmitting(false);
+        setShowModal(null);
       })
       .catch((error) => {
         console.error(error);
@@ -88,7 +91,7 @@ export const RegisterModal = ({
               <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={handleLogin}
+                onSubmit={handleRegister}
                 validateOnBlur={false}
               >
                 {({ handleSubmit, isValid }) => {
@@ -157,11 +160,11 @@ export const RegisterModal = ({
             </div>
 
             <div className="col-lg-6 d-mobile col-12 order-lg-2">
-              <div className="NewUser-bg pb-5 px-7 text-white-000">
+              <div className="NewUser-bg pb-5 px-7 d-lg-block d-none text-white-000">
                 <div className="close-modal" onClick={closeModal}>
                   <Icon icon="charm:square-cross" />
                 </div>
-                <h2 className="sub-title pt-5 mb-4">New Users...</h2>
+                <h2 className="sub-title pt-5 mb-4">Have an Account...</h2>
                 <div
                   style={{
                     width: "80%",

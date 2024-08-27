@@ -51,11 +51,13 @@ export const LoginModal = ({
     const formData = new FormData();
     formData.append("email", values.email);
     formData.append("password", values.password);
+    formData.append("flow", "signIn");
 
     signIn(provider ?? "password", formData)
       .then(() => {
         handleSent?.(values.email);
         actions.setSubmitting(false);
+        setShowModal(null);
       })
       .catch((error) => {
         console.error(error);
@@ -156,7 +158,7 @@ export const LoginModal = ({
             </div>
 
             <div className="col-lg-6 d-mobile col-12 order-lg-2">
-              <div className="NewUser-bg pb-5 px-7 text-white-000">
+              <div className="NewUser-bg pb-5 px-7 d-lg-block d-none text-white-000">
                 <div className="close-modal" onClick={closeModal}>
                   <Icon icon="charm:square-cross" />
                 </div>
