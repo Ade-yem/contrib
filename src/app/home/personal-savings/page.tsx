@@ -15,9 +15,7 @@ export default function PersonalSavingsPage() {
           Save with <span className="text-primary-500">Purpose</span>, Reach
           Your <span className="text-primary-500">Dreams</span>
         </h2>
-        <p className="text-xl">
-          You Can Personally Save Towards Your Goals Why You Should
-        </p>
+        <p className="text-xl">You Can Personally Save Towards Your Goals.</p>
         {/* <h2 className="sub-title  fw-bold">
           You Can <span className="text-primary-500">Personally Save</span>{" "}
           Towards Your Goals Why You Should

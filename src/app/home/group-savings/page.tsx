@@ -90,7 +90,7 @@ export default function GroupSavingsPage() {
         </p>
         <div className="d-flex flex-wrap align-items-center gap-4 justify-content-center mb-6">
           <button className="btn btn-md text-white-000 bg-green">
-            Enter Voucher
+            Enter Group Code
           </button>
           <button className="btn btn-md btn-primary">Create a New Group</button>
           <button className="btn btn-md btn-black">Join Existing Group</button>

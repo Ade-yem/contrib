@@ -43,19 +43,26 @@ export const LoginModal = ({
     password: yup.string().label("Password").required(),
   });
 
-  const handleLogin = async (e: any) => {
-    e.preventDefault();
+  const handleLogin = async (
+    values: { email: string; password: string },
+    actions: any
+  ) => {
     setSubmitting(true);
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData();
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+
     signIn(provider ?? "password", formData)
       .then(() => {
-        handleSent?.(formData.get("email") as string);
+        handleSent?.(values.email);
+        actions.setSubmitting(false);
       })
       .catch((error) => {
         console.error(error);
         const title = "Could not sign in, Try again";
         toast.error(title, { id: "auth" });
         setSubmitting(false);
+        actions.setSubmitting(false);
       });
   };
 
@@ -131,6 +138,16 @@ export const LoginModal = ({
                           <div className="col-4  border-line my-auto"></div>
                         </div>
                         <GoogleSignIn />
+                        <p className="text-sm text-center mt-4 d-desktop">
+                          Don&apos;t Have an Account Yet?{" "}
+                          <span
+                            className="text-primary-500"
+                            role="button"
+                            onClick={() => setShowModal("register")}
+                          >
+                            Sign Up
+                          </span>
+                        </p>
                       </>
                     </Form>
                   );
