@@ -1,12 +1,23 @@
 import { Icon } from "@iconify/react";
 import { Link, useLocation } from "react-router-dom";
-import { SideBarLink } from "../interfaces";
+// import { SideBarLink } from "../interfaces";
 
-interface CustomLinkProps extends SideBarLink {
-  className?: string;
-}
+// interface CustomLinkProps extends SideBarLink {
+//   className?: string;
+// }
 
-const CustomLink = ({ className, name, icon, path }: CustomLinkProps) => {
+// const CustomLink = ({ className, name, icon, path }: CustomLinkProps) => {
+const CustomLink = ({
+  className,
+  name,
+  icon,
+  path,
+}: {
+  className: string;
+  name: string;
+  icon: string;
+  path: string;
+}) => {
   const { pathname } = useLocation();
   const linkPath = `/dashboard${path}`;
 

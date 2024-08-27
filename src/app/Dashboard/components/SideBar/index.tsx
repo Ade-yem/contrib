@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Icon } from "@iconify/react";
-import CustomLink from "./CustomLink";
+// import CustomLink from "./CustomLink";
 import Image from "next/image";
 import "./styles.scss";
 import Link from "next/link";
