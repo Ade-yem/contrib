@@ -26,7 +26,7 @@
   &:hover {
     opacity: 1;
   }
-  @media (max-width: 800px) {
+  @media (max-width: 991px) {
     color: $primary-500;
     right: 1rem;
   }
@@ -43,7 +43,7 @@
   }
 }
 .d-desktop {
-  @media (min-width: 800px) {
+  @media (min-width: 992px) {
     display: none;
   }
 }

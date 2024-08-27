@@ -187,3 +187,49 @@ body {
 .rounded-10 {
   border-radius: 1.2rem;
 }
+.rounded-01 {
+  border-radius: 1rem;
+}
+.dropdown {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 1.4rem;
+  color: $black-000;
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba($black-000, 0.2);
+    padding: 1rem;
+    z-index: 1;
+    border-radius: 0 1rem 1rem 1rem;
+    &.right {
+      border-radius: 1rem 0 1rem 1rem;
+      right: 7px;
+    }
+    p {
+      padding: 0.5rem;
+      cursor: pointer;
+      &:hover {
+        display: block;
+        color: $primary-500;
+        background-color: rgba($primary-600, 0.2);
+        border-radius: 0.4rem;
+      }
+    }
+    .sign-out {
+      p {
+        &:hover {
+          color: $red !important;
+          background-color: rgba($red, 0.2);
+        }
+      }
+    }
+  }
+  &:hover .dropdown-content {
+    display: block;
+  }
+}
