@@ -1,6 +1,6 @@
 import { httpRouter } from "convex/server";
 import { auth } from "./auth";
-import { getResults } from "./paystack";
+import { getResults } from "./hookActions";
 
 const http = httpRouter();
 
