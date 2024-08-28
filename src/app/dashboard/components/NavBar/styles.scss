@@ -1,0 +1,14 @@
+.dashboard-navbar {
+    .add-listing-btn {
+        display: inline;
+    }
+}
+
+@media (max-width: 1100px) {
+    .dashboard-navbar {
+        .add-listing-btn {
+            display: none;
+        }
+    }
+    
+}
