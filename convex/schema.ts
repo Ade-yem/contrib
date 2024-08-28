@@ -7,20 +7,22 @@ const schema = defineSchema({
   groups: defineTable({
     creator_id: v.id("users"),
     name: v.string(),
+    description: v.optional(v.string()),
     number_of_people: v.float64(),
     number_of_people_present: v.float64(),
     interval: v.union(v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
     savings_per_interval: v.float64(),
-    subscription_plan_id: v.string(),
+    subscription_plan_id: v.optional(v.string()),
     status: v.union(v.literal("active"), v.literal("pending"), v.literal("closed")),
-    start_date: v.float64(),
-    elapsed_time: v.float64(),
+    start_date: v.optional(v.string()),
+    elapsed_time: v.optional(v.float64()),
     private: v.boolean()
   }),
   membership: defineTable({
     group_id: v.id("groups"),
     user_id: v.id("users"),
     collection_number: v.optional(v.float64()),
+    paid_deposit: v.optional(v.float64())
   }),
   savings: defineTable({
     user_id: v.id("users"),
@@ -28,12 +30,14 @@ const schema = defineSchema({
     name: v.string(),
   }),
   transactions: defineTable({
-    group_id: v.id("groups"),
+    group_id: v.optional(v.id("groups")),
     user_id: v.id("users"),
     amount: v.float64(),
-    type: v.union(v.literal("transfer"), v.literal("deposit")),
+    type: v.optional(v.union(v.literal("transfer"), v.literal("deposit"))),
     status: v.string(),
-    reference: v.string()
+    reference: v.string(),
+    details: v.optional(v.string()),
+    access_code: v.optional(v.string()),
   }),
   invites: defineTable({
     group_id: v.id("groups"),
@@ -59,6 +63,18 @@ const schema = defineSchema({
     bank_name: v.string(),
     account_number: v.string(),
   }),
+  users: defineTable({
+    email: v.optional(v.string()),
+    emailVerificationTime: v.optional(v.float64()),
+    image: v.optional(v.string()),
+    isAnonymous: v.optional(v.boolean()),
+    first_name: v.optional(v.string()),
+    last_name: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.float64()),
+  })
+    .index("email", ["email"])
+    .index("phone", ["phone"]),
 });
 
 export default schema;

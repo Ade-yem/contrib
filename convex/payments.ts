@@ -8,28 +8,30 @@ import crypto from "crypto"
 import { createPlanResponse, InitializeResponse } from "./types/subscriptions";
 import { VerificationResponse } from "./types/verification";
 
-export const createPaystackPlan = action ({
+export const createPaystackPlan = internalAction ({
     args: {
         name: v.string(),
         group_id: v.id("groups"),
         amount: v.number(),
-        description: v.string(),
+        description: v.optional(v.string()),
+        interval: v.union(v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
         currency: v.string(),
         invoiceLimit: v.number(),
     },
     handler: async (ctx, args_0) => {
-        const { name, group_id, amount, description, invoiceLimit } = args_0
+        const { name, group_id, amount, description, interval, invoiceLimit } = args_0
         const result: createPlanResponse | null = await paystack.createPlan({
             name: name,
             amount: amount,
-            interval: "monthly",
-            description: description,
-            invoiceLimit: invoiceLimit,
+            interval: interval,
+            description: description ? description : "",
+            invoiceLimit: invoiceLimit
         })
         if (result) {
-            ctx.runMutation(internal.paystack.createPlan, {group_id: group_id, subscription_plan_id: result.data.plan_code, start_date: 0, status: "pending"});
+            await ctx.runMutation(internal.paystack.createPlan, {group_id: group_id, subscription_plan_id: result.data.plan_code});
+            return result.message;
         }
-        return result;
+        return null;
     },
 })
 
@@ -37,13 +39,22 @@ export const initializePaystackTransaction = action ({
     args: {
         email: v.string(),
         amount: v.number(),
+        metadata: v.optional(v.object({
+            details: v.string(),
+            group_id: v.id("groups"),
+            user_id: v.id("users"),
+        }))
     },
     handler: async (ctx, args_0) => {
-        const { email, amount } = args_0
+        const { email, amount, metadata } = args_0
         const result: InitializeResponse = await paystack.initializeTransaction({
             email,
             amount,
+            metadata
         })
+        if (result) {
+            await ctx.runMutation(internal.paystack.createTransaction, {group_id: metadata?.group_id, user_id: metadata?.user_id, type: "deposit", new: true, access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata?.details})
+        }
         return result;
     },
 })
@@ -52,14 +63,16 @@ export const createSubscription = internalAction({
     args: {
         email: v.string(),
         plan: v.string(),
+        start_date: v.string(),
     },
     handler: async (_, args) => {
-        const {email, plan} = args;
+        const {email, plan, start_date} = args;
         const result = await paystack.createSubscription({
             customer: email,
-            plan: plan
+            plan: plan,
+            start_date: start_date,
         })
-        return result;
+        return {message: result.message, status: result.status};
     }
 })
 

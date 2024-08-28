@@ -44,10 +44,15 @@ class PaystackAPI {
     }
   }
 
-  async initializeTransaction(data: { email: string, amount: number }) {
+  async initializeTransaction(data: { email: string, amount: number, metadata: {
+    group_id: string;
+    user_id: string;
+    details: string;
+} | undefined }) {
     const params = JSON.stringify({
         "email": data.email,
         "amount": data.amount,
+        "metadata": data.metadata
       })
       const options = {
         hostname: this.paystack.hostname,
@@ -60,8 +65,7 @@ class PaystackAPI {
         }
       }
       const result = await makeHttpsRequest(options, params);
-      return result;
-      
+      return result;  
   }
 
   async createPlan(data: { name: string, amount: number, interval: string, invoiceLimit: number, description: string, }) {
@@ -85,10 +89,11 @@ class PaystackAPI {
     return await makeHttpsRequest(options, params);
   }
 
-  async createSubscription(data: { customer: string, plan: string}) {
+  async createSubscription(data: { customer: string, plan: string, start_date: string}) {
     const params = JSON.stringify({
       "customer": data.customer,
-      "plan": data.plan
+      "plan": data.plan,
+      "start_date": data.start_date,
     })
     const options = {
       hostname: this.paystack.hostname,

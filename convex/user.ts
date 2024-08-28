@@ -10,6 +10,15 @@ export const getUser = query({
     },
 });
 
+export const getUserz = query({
+    args: {
+        userId: v.id("users")
+    },
+    handler: async (ctx, args_0) => {
+        return await ctx.db.get(args_0.userId)
+    },
+});
+
 export const getInviteLink = query({
     args: {
         group_id: v.id("groups")
@@ -25,11 +34,12 @@ export const getInviteLink = query({
 export const editProfile = mutation({
     args: {
         image: v.optional(v.string()),
-        name: v.optional(v.string()),
+        first_name: v.optional(v.string()),
+        last_name: v.optional(v.string()),
         phone: v.optional(v.string()),
         user_id: v.id("users")
     },
     async handler(ctx, args_0) {
-        await ctx.db.patch(args_0.user_id, {image: args_0.image, name: args_0.name, phone: args_0.phone})
+        await ctx.db.patch(args_0.user_id, {image: args_0.image, first_name: args_0.first_name, last_name: args_0.last_name, phone: args_0.phone})
     }
 })

@@ -44,7 +44,8 @@ export const initiateTransfer = internalAction({
 		reason: v.string(),
 		recipient: v.string(),
 		group_id: v.id("groups"),
-		user_id: v.id("users")
+		user_id: v.id("users"),
+		details: v.string(),
 	},
 	async handler(ctx, args_0) {
 		const reference = generateReference();
@@ -53,8 +54,15 @@ export const initiateTransfer = internalAction({
 		})
 		if (result) {
 			await ctx.runMutation(internal.paystack.createTransaction, {
-				new: true, group_id: args_0.group_id, user_id: args_0.user_id, amount: result.data.amount, type: "transfer", status: result.data.status, reference: result.data.reference
+				new: true, group_id: args_0.group_id, user_id: args_0.user_id, amount: result.data.amount, type: "transfer", status: result.data.status, reference: result.data.reference, details: args_0.details
 			})
 		}
 	},
 });
+
+export const confirmTransfer = internalAction({
+	args: {},
+	async handler(ctx, args_0) {
+		
+	},
+})
