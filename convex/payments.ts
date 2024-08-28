@@ -99,6 +99,3 @@ export const confirmPaystackWebhook = action ({
         return hash;
     },
 })
-
-
-// give users authorization code and customer id after initialization
