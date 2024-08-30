@@ -66,6 +66,23 @@ const schema = defineSchema({
     bank_name: v.string(),
     account_number: v.string(),
   }),
+  authorizations: defineTable({
+    user_id: v.id('users'),
+    authorization_code: v.string(),
+    bin: v.string(),
+    last4: v.string(),
+    exp_month: v.string(),
+    exp_year: v.string(),
+    card_type: v.string(),
+    bank: v.string(),
+    country_code: v.string(),
+    brand: v.string(),
+    account_name: v.string(),
+  }),
+  default_payment_method: defineTable({
+    user_id: v.id('users'),
+    payment_method_id: v.id('payment_method')
+  }),
   users: defineTable({
     email: v.optional(v.string()),
     emailVerificationTime: v.optional(v.float64()),

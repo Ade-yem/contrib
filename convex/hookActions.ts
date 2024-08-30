@@ -1,7 +1,7 @@
 import { ActionCtx, httpAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
-import { ChargeSuccessData } from "./types/webhooks";
+import { ChargeSuccessData, Authorization } from "./types/webhooks";
 
 
 const paymentRequestPending = async (ctx: ActionCtx, data: any) => {}
@@ -53,12 +53,14 @@ const transferReversed = async (ctx: ActionCtx, data: any) => {
 };
 const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
     const metadata: {
-        details: 'join group' | "add savings";
-        group_id: string;
-        user_id: string;
+      details: 'join group' | "add savings";
+      group_id: string;
+      user_id: string;
     } = data.metadata;
+    const auth: Authorization = data.authorization;
     if (metadata.details === "join group") {
-        await ctx.runAction(api.actions.addMember, {group_id: metadata.group_id as Id<"groups">, user_id: metadata.user_id as Id<"users">, amount: data.amount})
+      await ctx.runAction(api.actions.addMember, {group_id: metadata.group_id as Id<"groups">, user_id: metadata.user_id as Id<"users">, amount: data.amount})
+      await ctx.runMutation(internal.group.createAuthorization, {user_id: metadata.user_id as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code, account_name: auth.account_name})
     }
     await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status})
 };

@@ -25,8 +25,6 @@ export const createGroup = mutation({
   }
 });
 
-
-
 export const getAllGroups = query({
   args: {},
   async handler(ctx, args_0) {
@@ -121,6 +119,7 @@ export const getGroupMembers = query({
     return membersList;
   },
 })
+
 export const startGroup = internalMutation({
   args: {
     group_id: v.id("groups"),
@@ -130,6 +129,7 @@ export const startGroup = internalMutation({
     return await ctx.db.patch(args_0.group_id, {start_date: args_0.start_date, status: "active"})
   },
 })
+
 export const endGroup = internalMutation({
   args: {
     group_id: v.id("groups"),
@@ -138,6 +138,7 @@ export const endGroup = internalMutation({
     return await ctx.db.patch(args_0.group_id, {status: "closed"})
   },
 })
+
 export const assignSlot = mutation({
   args: {
     group_id: v.id("groups")
@@ -178,3 +179,24 @@ export const createInvite = internalMutation({
     return code;
   }
 });
+
+export const createAuthorization = internalMutation({
+  args: {
+    user_id: v.id('users'),
+    authorization_code: v.string(),
+    bin: v.string(),
+    last4: v.string(),
+    exp_month: v.string(),
+    exp_year: v.string(),
+    card_type: v.string(),
+    bank: v.string(),
+    country_code: v.string(),
+    brand: v.string(),
+    account_name: v.string(),
+  },
+  handler: async (ctx, args) => {
+      const { user_id, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand, account_name } = args;
+      if (await ctx.db.query("authorizations").filter(q => q.eq(q.field("authorization_code"), authorization_code) && q.eq(q.field("account_name"), account_name)).first()) return;
+      await ctx.db.insert("authorizations", {user_id, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand, account_name});
+  }
+})

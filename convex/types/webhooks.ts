@@ -4,17 +4,17 @@ interface LogHistory {
     time: number;
   }
   
-  interface Log {
-    time_spent: number;
-    attempts: number;
-    authentication: string;
-    errors: number;
-    success: boolean;
-    mobile: boolean;
-    input: any[];
-    channel: string | null;
-    history: LogHistory[];
-  }
+interface Log {
+  time_spent: number;
+  attempts: number;
+  authentication: string;
+  errors: number;
+  success: boolean;
+  mobile: boolean;
+  input: any[];
+  channel: string | null;
+  history: LogHistory[];
+}
   
   interface Customer {
     id: number;
@@ -33,18 +33,18 @@ interface LogHistory {
     user_id: string;
   }
   
-  interface Authorization {
-    authorization_code: string;
-    bin: string;
-    last4: string;
-    exp_month: string;
-    exp_year: string;
-    card_type: string;
-    bank: string;
-    country_code: string;
-    brand: string;
-    account_name: string;
-  }
+export interface Authorization {
+  authorization_code: string;
+  bin: string;
+  last4: string;
+  exp_month: string;
+  exp_year: string;
+  card_type: string;
+  bank: string;
+  country_code: string;
+  brand: string;
+  account_name: string;
+}
   
   export interface ChargeSuccessData {
     id: number;
