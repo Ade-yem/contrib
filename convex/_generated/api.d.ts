@@ -22,6 +22,7 @@ import type * as http from "../http.js";
 import type * as payments from "../payments.js";
 import type * as paystack from "../paystack.js";
 import type * as paystack_api from "../paystack_api.js";
+import type * as recipient from "../recipient.js";
 import type * as resetPassword_resend from "../resetPassword/resend.js";
 import type * as resetPassword_ResetPasswordMail from "../resetPassword/ResetPasswordMail.js";
 import type * as resetPassword_VerifyPasswordMail from "../resetPassword/VerifyPasswordMail.js";
@@ -51,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   payments: typeof payments;
   paystack: typeof paystack;
   paystack_api: typeof paystack_api;
+  recipient: typeof recipient;
   "resetPassword/resend": typeof resetPassword_resend;
   "resetPassword/ResetPasswordMail": typeof resetPassword_ResetPasswordMail;
   "resetPassword/VerifyPasswordMail": typeof resetPassword_VerifyPasswordMail;

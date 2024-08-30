@@ -39,11 +39,11 @@ export const initializePaystackTransaction = action ({
     args: {
         email: v.string(),
         amount: v.number(),
-        metadata: v.optional(v.object({
-            details: v.string(),
-            group_id: v.id("groups"),
+        metadata: v.object({
+            details: v.union(v.literal("join group"), v.literal("add savings")),
+            group_id: v.union(v.id("groups")),
             user_id: v.id("users"),
-        }))
+        })
     },
     handler: async (ctx, args_0) => {
         const { email, amount, metadata } = args_0
@@ -53,7 +53,7 @@ export const initializePaystackTransaction = action ({
             metadata
         })
         if (result) {
-            await ctx.runMutation(internal.paystack.createTransaction, {group_id: metadata?.group_id, user_id: metadata?.user_id, type: "deposit", new: true, access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata?.details})
+            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, group_id: metadata.group_id, user_id: metadata.user_id, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
         }
         return result;
     },

@@ -1,5 +1,5 @@
-import { internalMutation } from "./_generated/server";
-import { v } from "convex/values";
+import { internalMutation, internalQuery } from "./_generated/server";
+import { ConvexError, v } from "convex/values";
 
 export const createPlan = internalMutation ({
     args: {
@@ -37,26 +37,42 @@ export const createPaymentMethod = internalMutation({
 export const createTransaction = internalMutation({
   args: {
     group_id: v.optional(v.id("groups")),
-    user_id: v.optional(v.id("users")),
-    amount: v.optional(v.float64()),
+    user_id: v.id("users"),
+    amount: v.float64(),
     type: v.optional(v.union(v.literal("transfer"), v.literal("deposit"))),
     status: v.string(),
     reference: v.string(),
-    new: v.boolean(),
     details: v.optional(v.string()),
     access_code: v.optional(v.string()),
+    transfer_code: v.optional(v.string())
   },
   async handler(ctx, args_0) {
-    console.info("creating transaction");
-    if (args_0.new && args_0.group_id && args_0.user_id && args_0.amount) {
       const res = await ctx.db.insert("transactions", {
-        type: args_0.type, status: args_0.status, group_id: args_0.group_id, user_id: args_0.user_id, amount: args_0.amount, reference: args_0.reference, details: args_0.details, access_code: args_0.access_code
+        type: args_0.type, status: args_0.status, group_id: args_0.group_id, user_id: args_0.user_id, amount: args_0.amount, reference: args_0.reference, details: args_0.details, access_code: args_0.access_code, transfer_code: args_0.transfer_code
       })
-      console.info("result => ", res);
-    } else {
-      console.info("not creating this time");
-      const q = await ctx.db.query("transactions").filter(q => q.eq(q.field("reference"), args_0.reference)).first();
-      if (q) await ctx.db.patch(q._id, {status: args_0.status});
-    }   
+      if (!res) throw new ConvexError("Could not create transaction");  
+  },
+})
+
+export const updateTransaction = internalMutation({
+  args: {
+    status: v.string(),
+    reference: v.string(),
+  },
+  async handler(ctx, args_0) {
+    const q = await ctx.db.query("transactions").filter(q => q.eq(q.field("reference"), args_0.reference)).first();
+    if (q) return await ctx.db.patch(q._id, {status: args_0.status});
+    else throw new ConvexError("Could not update transaction");
+  },
+})
+
+export const getTransaction = internalQuery({
+  args: {
+    reference: v.string()
+  },
+  async handler(ctx, args_0) {
+    const q = await ctx.db.query("transactions").filter(q => q.eq(q.field("reference"), args_0.reference)).first();
+    if (q) return q;
+    else throw new ConvexError("Could not get transaction of reference " + args_0.reference);
   },
 })

@@ -22,7 +22,8 @@ const schema = defineSchema({
     group_id: v.id("groups"),
     user_id: v.id("users"),
     collection_number: v.optional(v.float64()),
-    paid_deposit: v.optional(v.float64())
+    paid_deposit: v.optional(v.float64()),
+    subscription_code: v.optional(v.string())
   }),
   savings: defineTable({
     user_id: v.id("users"),
@@ -38,7 +39,9 @@ const schema = defineSchema({
     reference: v.string(),
     details: v.optional(v.string()),
     access_code: v.optional(v.string()),
-  }),
+    transfer_code: v.optional(v.string()),
+  }).index("reference", ["reference"]),
+
   invites: defineTable({
     group_id: v.id("groups"),
     status: v.string(),

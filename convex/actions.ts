@@ -1,7 +1,6 @@
-import { internalMutation,internalAction, mutation, query, action } from "./_generated/server";
+import { action } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { ConvexError, v } from "convex/values";
-import { Id } from "./_generated/dataModel";
 
 export const addGroupAction = action({
     args: {
@@ -17,10 +16,9 @@ export const addGroupAction = action({
       if (await ctx.auth.getUserIdentity()) {
         const group = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval, private: args.private, description: args.description});
         if (group) {
-          await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, group_id: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"})
+          await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, group_id: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});
+          await ctx.runMutation(internal.group.createInvite, {status: "pending", group_id: group._id});
         } else throw new ConvexError("Could not create group");
-        
-
       } else throw new ConvexError("The user is not authenticated");
      }
   })

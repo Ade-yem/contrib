@@ -4,27 +4,27 @@ interface TransferRecipientDetails {
     account_name: string | null;
     bank_code: string;
     bank_name: string;
-  }
+}
   
-  interface TransferRecipientData {
-    active: boolean;
-    createdAt: string;
-    currency: string;
-    domain: string;
-    id: number;
-    integration: number;
-    name: string;
-    recipient_code: string;
-    type: string;
-    updatedAt: string;
-    is_deleted: boolean;
-    details: TransferRecipientDetails;
-  }
+interface TransferRecipientData {
+  active: boolean;
+  createdAt: string;
+  currency: string;
+  domain: string;
+  id: number;
+  integration: number;
+  name: string;
+  recipient_code: string;
+  type: string;
+  updatedAt: string;
+  is_deleted: boolean;
+  details: TransferRecipientDetails;
+}
   
 export interface TransferRecipientResponse {
-    status: boolean;
-    message: string;
-    data: TransferRecipientData;
+  status: boolean;
+  message: string;
+  data: TransferRecipientData;
 }
 
 interface Bank {
@@ -42,15 +42,15 @@ interface Bank {
     id: number;
     createdAt: string;
     updatedAt: string;
-  }
+}
   
-  export interface BanksResponse {
+export interface BanksResponse {
     status: boolean;
     message: string;
     data: Bank[];
-  }
+}
   
-  interface TransferData {
+interface TransferData {
     reference: string;
     integration: number;
     domain: string;
@@ -64,11 +64,10 @@ interface Bank {
     id: number;
     createdAt: string;
     updatedAt: string;
-  }
+}
   
-  export interface TransferResponse {
+export interface TransferResponse {
     status: boolean;
     message: string;
     data: TransferData;
-  }
-  
+}
