@@ -5,6 +5,10 @@ import paystack from "./paystack_api";
 import { ConvexError, v } from "convex/values";
 import { BanksResponse } from "./types/transfers";
 
+/**
+ * @dev get all banks in Nigeria or Ghana
+ * @param currency can be NGN or GHS
+ */
 export const getBanks = action({
   args: {
     currency: v.union(v.literal("NGN"), v.literal("GHS"))
