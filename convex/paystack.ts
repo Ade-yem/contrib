@@ -37,6 +37,7 @@ export const createPaymentMethod = internalMutation({
 export const createTransaction = internalMutation({
   args: {
     group_id: v.optional(v.id("groups")),
+    savings_id: v.optional(v.id("savings")),
     user_id: v.id("users"),
     amount: v.float64(),
     type: v.optional(v.union(v.literal("transfer"), v.literal("deposit"))),
@@ -48,8 +49,17 @@ export const createTransaction = internalMutation({
   },
   async handler(ctx, args_0) {
       const res = await ctx.db.insert("transactions", {
-        type: args_0.type, status: args_0.status, group_id: args_0.group_id, user_id: args_0.user_id, amount: args_0.amount, reference: args_0.reference, details: args_0.details, access_code: args_0.access_code, transfer_code: args_0.transfer_code
-      })
+        type: args_0.type,
+        status: args_0.status,
+        group_id: args_0.group_id,
+        user_id: args_0.user_id,
+        amount: args_0.amount,
+        reference: args_0.reference,
+        details: args_0.details,
+        access_code: args_0.access_code,
+        transfer_code: args_0.transfer_code,
+        savings_id: args_0.savings_id
+     })
       if (!res) throw new ConvexError("Could not create transaction");  
   },
 })

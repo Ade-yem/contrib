@@ -32,6 +32,7 @@ const schema = defineSchema({
   }),
   transactions: defineTable({
     group_id: v.optional(v.id("groups")),
+    savings_id: v.optional(v.id("savings")),
     user_id: v.id("users"),
     amount: v.float64(),
     type: v.optional(v.union(v.literal("transfer"), v.literal("deposit"))),

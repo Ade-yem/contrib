@@ -41,19 +41,27 @@ export const initializePaystackTransaction = action ({
         amount: v.number(),
         metadata: v.object({
             details: v.union(v.literal("join group"), v.literal("add savings")),
-            group_id: v.union(v.id("groups")),
+            group_id: v.optional(v.id("groups")),
+            savings_id: v.optional(v.id("savings")),
             user_id: v.id("users"),
         })
     },
     handler: async (ctx, args_0) => {
-        const { email, amount, metadata } = args_0
+        const { email, amount } = args_0
+        const metadata = {
+            details: args_0.metadata.details,
+            group_id: args_0.metadata.group_id ? args_0.metadata.group_id : "",
+            savings_id: args_0.metadata.savings_id ? args_0.metadata.savings_id : "",
+            user_id: args_0.metadata.user_id
+
+        }
         const result: InitializeResponse = await paystack.initializeTransaction({
             email,
             amount,
             metadata
         })
         if (result) {
-            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, group_id: metadata.group_id, user_id: metadata.user_id, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
+            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, savings_id: args_0.metadata.savings_id, group_id: args_0.metadata.group_id, user_id: metadata.user_id, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
         }
         return result;
     },

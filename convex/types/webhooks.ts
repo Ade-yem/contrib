@@ -30,6 +30,7 @@ interface Log {
   interface Metadata {
     details: 'join group' | "add savings";
     group_id: string;
+    savings_id: string;
     user_id: string;
   }
   
