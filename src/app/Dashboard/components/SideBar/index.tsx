@@ -35,33 +35,42 @@ const SideBar = () => {
       <hr className="divider" />
       <div className="py-3 px-5">
         {/* <CustomLink name="Profile" icon="solar:user-outline" path="/profile" /> */}
-        <div className="d-flex align-items-center gap-3">
-          <Icon
-            icon="iconamoon:profile-fill"
-            width="1.5rem"
-            height="1.5rem"
-            style={{ color: "black" }}
-          />
-          <span>Profile</span>
-        </div>
+        <Link
+          href={"/profile"}
+          className="text-decoration-none click text-black-000"
+        >
+          <div className="d-flex align-items-center gap-3">
+            <Icon
+              icon="iconamoon:profile-fill"
+              width="1.5rem"
+              height="1.5rem"
+            />
+            <span>Profile</span>
+          </div>
+        </Link>
       </div>
       <hr className="divider" />
       <div className="py-3 px-5">
-        <div className="d-flex align-items-center gap-3">
-          <Icon
-            icon="fluent:people-team-24-filled"
-            width="1.5rem"
-            height="1.5rem"
-            style={{ color: "black" }}
-          />
-          {/* <Icon
+        <Link
+          href={"/groups"}
+          className="text-decoration-none click text-black-000"
+        >
+          <div className="d-flex align-items-center gap-3">
+            <Icon
+              icon="fluent:people-team-24-filled"
+              width="1.5rem"
+              height="1.5rem"
+              style={{ color: "black" }}
+            />
+            {/* <Icon
             icon="fluent:people-audience-24-filled"
             width="1.5rem"
             height="1.5rem"
             style={{ color: "black" }}
           /> */}
-          <span>Groups</span>
-        </div>
+            <span>Groups</span>
+          </div>
+        </Link>
       </div>
       <hr className="divider" />
       {/* <CustomLink name="Message" icon="iconoir:mail" path="/messages" /> */}
