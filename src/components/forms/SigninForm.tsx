@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useContext, useState } from "react";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
+import { ConvexError } from "convex/values";
 
 export function SignInWithPassword({
   provider,
@@ -39,7 +40,7 @@ export function SignInWithPassword({
               handleSent?.(formData.get("email") as string);
             })
             .catch((error) => {
-              console.error(error);
+              console.error(error.data);
               const title =
                 flow === "signIn"
                   ? "Could not sign in, did you mean to sign up?"

@@ -6,61 +6,41 @@ import {
   Unauthenticated,
   useQuery,
   useAction,
-  useMutation,
 } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Button from "@/components/buttons/BaseButton";
 import { Id } from "../../convex/_generated/dataModel";
-import { useState } from "react";
+import { useAuthActions } from "@convex-dev/auth/react";
+
 
 export default function Home() {
   const user = useQuery(api.user.getUser);
   const initializeTransaction = useAction(api.payments.initializePaystackTransaction);
-  const createPlan = useAction(api.payments.createPaystackPlan);
-  // const createSubscription = useAction(api.payments.createSubscription);
-  const addGroup = useMutation(api.group.createGroup);
-  const createInvite = useMutation(api.group.createInvite);
-  const joinGroup = useMutation(api.group.createMembership);
+  const addGroup = useAction(api.actions.addGroupAction);
+  const {signOut} = useAuthActions();
 
   const createGroup = async () => {
-    const group = await addGroup({
+    await addGroup({
       creator_id: user?._id as Id<"users">,
       name: "Adeyemi Adejumo",
       number_of_people: 5,
-      number_of_people_present: 0,
       interval: "monthly",
       savings_per_interval: 10000,
-      subscription_plan_id: "",
-      status: "pending",
-      start_date: 0,
-      elapsed_time: 0,
-      private: false
+      private: false,
+      description: "test group"
     })
-    if (group) {
-      const plan = await createPlan({
-        name: group.name,
-        group_id: group._id,
-        amount: group.savings_per_interval,
-        description: "First paystack test",
-        currency: "NGN",
-        invoiceLimit: group.number_of_people,
-      })
-      console.log(plan);
-      const invite_code = await createInvite({
-        status: "pending",
-        group_id: group._id
-      })
-      console.log(invite_code);
-    }
   };
   const payMoney = async () => {
-    const res = await initializeTransaction({
-      amount: 10000,
-      email: user?.email as string,
-    });
-    if (res) {
-      window.location.href = res.data.authorization_url;
-    }
+  //   const res = await initializeTransaction({
+  //     amount: 10000,
+  //     email: user?.email as string,
+  //     metadata: {
+
+  //     }
+  //   });
+    // if (res) {
+    //   window.location.href = res.data.authorization_url;
+    // }
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -70,7 +50,7 @@ export default function Home() {
       </Unauthenticated>
       <Authenticated>
         <div className="card w-72 h-20">
-          <div>{user?.name ?? user?.email ?? user?.phone ?? "Anonymous"}</div>
+          <div>{user?.first_name ?? user?.email ?? user?.phone ?? "Anonymous"}</div>
         </div>
         <div>
           <h2>Pay money</h2>
@@ -82,7 +62,7 @@ export default function Home() {
         </div>
         <div></div>
         <div></div>
-        <div></div>
+        <span className="btn-danger" onClick={signOut}>Logout</span>
       </Authenticated>
     </main>
   );

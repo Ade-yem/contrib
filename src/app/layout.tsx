@@ -27,7 +27,7 @@ export default function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <LayoutProvider>
         <html lang="en">
-          <body className={`${inter.className} layout-wrapper`}>
+          <body className={`${inter.className} layout-wrapper`} suppressHydrationWarning={true} >
             <Toaster position="top-center" />
             <ConvexClientProvider>
               {/* <Navbar /> */}

@@ -14,9 +14,9 @@
 <rect x="633" y="747" width="70" height="70" rx="35" fill="url(#pattern11_144_375)"/>
 <rect x="691" y="747" width="70" height="70" rx="35" fill="url(#pattern12_144_375)"/>
 <path d="M1225.05 676.932L1200.84 663.756L1224.35 649.379L1225.05 676.932Z" fill="white"/>
-<path d="M1326.63 161.541C1280.34 181.505 1172.28 255.858 1227.81 305.259C1276.83 348.869 1355.74 205.056 1232.65 197.158C1109.55 189.259 1094 483.251 1212.01 658.178" stroke="white" stroke-width="4.77395" stroke-linejoin="round" stroke-dasharray="12.73 12.73"/>
+<path d="M1326.63 161.541C1280.34 181.505 1172.28 255.858 1227.81 305.259C1276.83 348.869 1355.74 205.056 1232.65 197.158C1109.55 189.259 1094 483.251 1212.01 658.178" stroke="white" strokeWidth="4.77395" stroke-linejoin="round" stroke-dasharray="12.73 12.73"/>
 <path d="M603.463 729.118L585.428 720.079L602.297 709.43L603.463 729.118Z" fill="white"/>
-<path opacity="0.5" d="M220 660.531C329.059 606.435 441.596 558.13 597.403 713.435" stroke="white" stroke-width="5" stroke-dasharray="9.21 9.21"/>
+<path opacity="0.5" d="M220 660.531C329.059 606.435 441.596 558.13 597.403 713.435" stroke="white" strokeWidth="5" stroke-dasharray="9.21 9.21"/>
 <rect x="80" y="73" width="70" height="70" rx="35" fill="url(#pattern13_144_375)"/>
 <rect x="135" y="91" width="70" height="70" rx="35" fill="url(#pattern14_144_375)"/>
 <defs>
