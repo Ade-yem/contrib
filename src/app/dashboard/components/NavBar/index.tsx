@@ -46,6 +46,12 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
                 </div>
                 <div className="dropdown-content">
                   <Link
+                    href={"/home"}
+                    className="text-sm text-decoration-none text-black-000 hover-link click"
+                  >
+                    <p>Home</p>
+                  </Link>
+                  <Link
                     href={"/dashboard"}
                     className="text-sm text-decoration-none text-black-000 hover-link click"
                   >
