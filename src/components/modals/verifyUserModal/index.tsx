@@ -4,7 +4,7 @@ import React, { useContext, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { useAuthActions } from "@convex-dev/auth/react";
 import toast from "react-hot-toast";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
@@ -33,20 +33,22 @@ export const VerifyUserModal = ({
   const { signIn } = useAuthActions();
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
-    email: "",
-    password: "",
+    bvn: "",
+    nin: "",
     dob: "",
+    address: "",
+    phoneNumber: "",
   };
 
   const validationSchema = yup.object().shape({
-    email: yup.string().label("Email Address").required(),
-    password: yup.string().label("Password").required(),
+    bvn: yup.string().label("BVN").required(),
+    nin: yup.string().label("NIN").required(),
+    dob: yup.string().label("Date of Birth").required(),
+    address: yup.string().label("Address").required(),
+    phoneNumber: yup.string().label("Phone Number").required(),
   });
 
-  const handleSave = async (
-    values: { email: string; password: string },
-    actions: any
-  ) => {
+  const handleSave = async (values: FormikValues, actions: any) => {
     setSubmitting(true);
     const formData = new FormData();
     formData.append("email", values.email);
@@ -153,13 +155,17 @@ export const VerifyUserModal = ({
                         className: "form-control w-100 border border-black00",
                       }}
                     />
-
+                    {!isValid && (
+                      <p className="text-xs text-red mt-4">
+                        *Note: Please fill in all the inputs to proceed.
+                      </p>
+                    )}
                     <div className="d-flex justify-content-center align-items-center mt-4 ">
                       <Button
                         title="Proceed"
                         type="submit"
-                        // disabled={isPending || !isValid}
-                        // loading={isPending}
+                        disabled={submitting || !isValid}
+                        loading={submitting}
                         loadingTitle={"Please wait..."}
                         className="btn btn-lg text-sm btn-primary letter-spacing-1"
                       />

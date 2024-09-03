@@ -4,7 +4,7 @@ import React, { useContext, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { useAuthActions } from "@convex-dev/auth/react";
 import toast from "react-hot-toast";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
@@ -37,19 +37,24 @@ export const CreateGroupModal = ({
   const { signIn } = useAuthActions();
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
-    email: "",
-    password: "",
+    groupName: "",
+    memberNo: "",
+    desc: "",
+    amountGoal: "",
+    gender: "",
+    keepGroupPrivate: false,
   };
 
   const validationSchema = yup.object().shape({
-    email: yup.string().label("Email Address").required(),
+    groupName: yup.string().label("Group Name").required(),
+    memberNo: yup.string().label("Number Of Members").required(),
+    desc: yup.string().label("Group Description").required(),
+    amountGoal: yup.string().label("Amount Goals").required(),
+    gender: yup.string().label("Gender").required(),
     password: yup.string().label("Password").required(),
   });
 
-  const handleSave = async (
-    values: { email: string; password: string },
-    actions: any
-  ) => {
+  const handleSave = async (values: FormikValues, actions: any) => {
     setSubmitting(true);
     const formData = new FormData();
     formData.append("email", values.email);
@@ -103,7 +108,7 @@ export const CreateGroupModal = ({
                     <Field
                       component={TextInput}
                       className="form-control"
-                      placeholder="Enter Desired Group Name"
+                      placeholder="Enter desired group name"
                       type="text"
                       name="groupName"
                       id="groupName"
@@ -114,10 +119,11 @@ export const CreateGroupModal = ({
                     <Field
                       component={TextInput}
                       className="form-control"
-                      placeholder="Enter Desired Group Name"
-                      type="text"
-                      name="groupName"
-                      id="groupName"
+                      placeholder="Enter desired number of member"
+                      type="number"
+                      min={0}
+                      name="memberNo"
+                      id="memberNo"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
                       Describe Group
@@ -125,21 +131,23 @@ export const CreateGroupModal = ({
                     <Field
                       component={TextInput}
                       className="form-control"
-                      placeholder="Enter Desired Group Name"
+                      placeholder="Enter group description"
                       type="text"
-                      name="groupName"
-                      id="groupName"
+                      name="desc"
+                      id="desc"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Amount Goals
+                      Amount Goals (#)
                     </label>
                     <Field
                       component={TextInput}
                       className="form-control"
-                      placeholder="Enter Desired Group Name"
-                      type="text"
-                      name="groupName"
-                      id="groupName"
+                      placeholder="i.e 1000"
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      name="amountGoal"
+                      id="amountGoal"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
                       Payment Frequency
@@ -157,15 +165,15 @@ export const CreateGroupModal = ({
                       )}
                     />
                     <label
-                      htmlFor="keepMeLoggedIn"
+                      htmlFor="keepGroupPrivate"
                       className="d-flex gap-3 align-items-center click mt-4"
                     >
                       <div>
                         <Field
                           className="form-check-input text-lg"
                           type="checkbox"
-                          name="keepMeLoggedIn"
-                          id="keepMeLoggedIn"
+                          name="keepGroupPrivate"
+                          id="keepGroupPrivate"
                         />
                       </div>
                       <p className="text-xs click mb-0">
@@ -182,8 +190,8 @@ export const CreateGroupModal = ({
                       <Button
                         title="Create Group"
                         type="submit"
-                        // disabled={isPending || !isValid}
-                        // loading={isPending}
+                        disabled={submitting || !isValid}
+                        loading={submitting}
                         loadingTitle={"Please wait..."}
                         className="btn btn-lg text-sm btn-primary letter-spacing-1"
                       />
