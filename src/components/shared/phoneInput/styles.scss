@@ -1,0 +1,13 @@
+@import "../../../../styles/base/variables";
+
+.react-tel-input .flag-dropdown {
+  background-color: transparent !important;
+  border: 0.1rem solid rgba($color: $black-000, $alpha: 0.5) !important;
+  &:hover {
+    border: 0.1rem solid rgba($color: $black-000, $alpha: 0.5) !important;
+  }
+  &.open {
+    border: 0.1rem solid rgba($color: $black-000, $alpha: 0.5) !important;
+    background: transparent;
+  }
+}

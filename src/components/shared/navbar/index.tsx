@@ -176,7 +176,7 @@ const Navbar = () => {
               className="text-decoration-none desktop-item"
             >
               <button className="btn p-lg-3 btn-primary" type="button">
-                <span className="text-base"> Join a Team</span>
+                <span className="text-base"> Join a Group</span>
               </button>
             </Link>
           </div>
@@ -302,7 +302,7 @@ const Sidebar = ({
               className="text-decoration-none desktop-item"
             >
               <button className="btn p-lg-3 btn-primary" type="button">
-                <span className="text-base"> Join a Team</span>
+                <span className="text-base"> Join a Group</span>
               </button>
             </Link>
           </div>

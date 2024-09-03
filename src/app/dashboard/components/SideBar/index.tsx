@@ -36,7 +36,7 @@ const SideBar = () => {
       <div className="py-3 px-5">
         {/* <CustomLink name="Profile" icon="solar:user-outline" path="/profile" /> */}
         <Link
-          href={"/profile"}
+          href={"/dashboard/profile"}
           className="text-decoration-none click text-black-000"
         >
           <div className="d-flex align-items-center gap-3">
@@ -52,7 +52,7 @@ const SideBar = () => {
       <hr className="divider" />
       <div className="py-3 px-5">
         <Link
-          href={"/groups"}
+          href={"/dashboard/groups"}
           className="text-decoration-none click text-black-000"
         >
           <div className="d-flex align-items-center gap-3">

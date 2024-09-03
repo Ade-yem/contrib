@@ -14,7 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "WealthWave",
+  title: "JEKAJODAWO",
   description: "We save together, we grow together",
 };
 
@@ -27,12 +27,13 @@ export default function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <LayoutProvider>
         <html lang="en">
-          <body className={`${inter.className} layout-wrapper`} suppressHydrationWarning={true} >
+          <body
+            className={`${inter.className} layout-wrapper`}
+            suppressHydrationWarning={true}
+          >
             <Toaster position="top-center" />
             <ConvexClientProvider>
-              {/* <Navbar /> */}
               <ThemeProvider>{children}</ThemeProvider>
-              {/* <Footer /> */}
             </ConvexClientProvider>
           </body>
         </html>

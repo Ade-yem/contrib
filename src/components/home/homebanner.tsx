@@ -12,7 +12,7 @@ export const Homebanner = () => {
         <br className="d-none d-md-block" /> unlock unlimited potentials.
       </h2>
       <div className="d-flex align-items-center justify-content-center gap-4">
-        <button className="btn btn-md btn-black">Team</button>
+        <button className="btn btn-md btn-black">Group</button>
         <button className="btn btn-md btn-black">Personal</button>
       </div>
     </div>
