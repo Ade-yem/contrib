@@ -109,7 +109,7 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             name="bvn"
             id="bvn"
             // value={user?.bvn}
-            //   disabled
+            disabled
           />
         </div>
         <div className="mb-4 pe-4_5">
@@ -149,7 +149,7 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             name="nin"
             id="nin"
             //   value={user?.lastName}
-            //   disabled
+            disabled
           />
         </div>
       </div>
