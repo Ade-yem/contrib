@@ -7,12 +7,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { api } from "../../../../convex/_generated/api";
 
 const Navbar = () => {
   const { signOut } = useAuthActions();
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+  const user = useQuery(api.user.getUser);
 
   const {
     setShowModal,
@@ -26,20 +28,6 @@ const Navbar = () => {
   const handleShowRegister = () => {
     setShowModal("register");
   };
-  // const handleShowLogin = () => {
-  //   if (!user) {
-  //     setShowLogin(true);
-  //   }
-  // };
-
-  // const updateUser = () => {
-  //   setUser(getStorageData(StorageKeys.user));
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("storage", updateUser);
-  //   return () => window.removeEventListener("storage", updateUser);
-  // }, []);
 
   return (
     <>
@@ -137,7 +125,7 @@ const Navbar = () => {
                       height={30}
                       // className=""
                     />
-                    Adelana
+                    {user?.first_name ?? "Anonymous"}
                     <Icon icon="mingcute:down-fill" width="20" height="20" />
                   </div>
                   <div className="dropdown-content">
