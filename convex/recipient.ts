@@ -4,6 +4,7 @@ import { action } from "./_generated/server";
 import paystack from "./paystack_api";
 import { ConvexError, v } from "convex/values";
 import { BanksResponse } from "./types/transfers";
+import { ResolveAccount } from "./types/verification";
 
 /**
  * @dev get all banks in Nigeria or Ghana
@@ -29,8 +30,8 @@ export const resolveAccountNumber = action({
   },
   async handler(ctx, args_0) {
     const { account_number, bank_code } = args_0;
-    const res = await paystack.resolveAccountNumber({account_number, bank_code});
-    if (res) return res;
-    else throw new ConvexError("Could not resolvce account number");
+    const res: ResolveAccount = await paystack.resolveAccountNumber({account_number, bank_code});
+    if (res.status) return res;
+    else throw new ConvexError(res.message);
   },
 })

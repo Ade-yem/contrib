@@ -16,9 +16,13 @@ import type {
 } from "convex/server";
 import type * as actions from "../actions.js";
 import type * as auth from "../auth.js";
+import type * as common from "../common.js";
+import type * as cron from "../cron.js";
+import type * as cronlib from "../cronlib.js";
 import type * as group from "../group.js";
 import type * as hookActions from "../hookActions.js";
 import type * as http from "../http.js";
+import type * as intervalReport from "../intervalReport.js";
 import type * as payments from "../payments.js";
 import type * as paystack from "../paystack.js";
 import type * as paystack_api from "../paystack_api.js";
@@ -47,9 +51,13 @@ import type * as utils from "../utils.js";
 declare const fullApi: ApiFromModules<{
   actions: typeof actions;
   auth: typeof auth;
+  common: typeof common;
+  cron: typeof cron;
+  cronlib: typeof cronlib;
   group: typeof group;
   hookActions: typeof hookActions;
   http: typeof http;
+  intervalReport: typeof intervalReport;
   payments: typeof payments;
   paystack: typeof paystack;
   paystack_api: typeof paystack_api;
