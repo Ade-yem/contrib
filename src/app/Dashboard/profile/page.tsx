@@ -9,6 +9,9 @@ import { ProfileForm } from "./profileForm";
 import Button from "@/components/forms/Button";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 export default function ProfilePage() {
   const {
@@ -16,6 +19,9 @@ export default function ProfilePage() {
   }: {
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
+  const updateProfile = useMutation(api.user.editProfile);
+  const user = useQuery(api.user.getUser);
+
   const initialValues = {
     email: "",
     firstName: "",
@@ -29,19 +35,35 @@ export default function ProfilePage() {
   };
 
   const validationSchema = yup.object().shape({
-    email: yup.string().label("Email Address").required(),
+    // email: yup.string().label("Email Address").required(),
     firstName: yup.string().label("First Name").required(),
     lastName: yup.string().label("Last Name").required(),
     phoneNumber: yup.string().label("Last Name").required(),
-    bvn: yup.string().label("Bvn").required(),
-    nin: yup.string().label("NIN").required(),
+    // bvn: yup.string().label("Bvn").required(),
+    // nin: yup.string().label("NIN").required(),
     dob: yup.string().label("Field required").required(),
     homeAddress: yup.string().label("Home Address").required(),
     nationality: yup.string().label("Nationality").required(),
   });
   const handleSave = (values: FormikValues) => {
     console.log("first", values, values.gender.value);
+
+    updateProfile({
+      // email: values.email,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      phone: values.phoneNumber,
+      user_id: user?._id as Id<"users">,
+
+      // nin: values.nin,
+      // bvn: values.bvn,
+      // dob: values.dob,
+      // gender: values.gender.value,
+      // homeAddress: values.homeAddress,
+      // nationality: values.nationality,
+    });
   };
+
   return (
     <>
       <button

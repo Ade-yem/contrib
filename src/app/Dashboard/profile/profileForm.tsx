@@ -6,9 +6,11 @@ import { PhoneInputField } from "@/components/shared/phoneInput";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
 import { Gender } from "@/services/_schema";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useQuery } from "convex/react";
 import { Field, Form, Formik, FormikValues } from "formik";
 import Image from "next/image";
 import React from "react";
+import { api } from "../../../../convex/_generated/api";
 
 interface CustomDatePickerTypes {
   setDateValue: (e: any) => void;
@@ -21,6 +23,8 @@ const genderSelect = Object.entries(Gender).map((item) => ({
 }));
 
 export const ProfileForm = (props: CustomDatePickerTypes) => {
+  const user = useQuery(api.user.getUser);
+
   return (
     <div className="bg-white-000 rounded w-100 p-5 ">
       <p className="text-lg fw-bold">Personal Details</p>
@@ -52,7 +56,7 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             type="text"
             name="firstName"
             id="firstName"
-            //   value={user?.firstName}
+            value={user?.first_name}
             //   disabled
           />
         </div>
@@ -65,7 +69,7 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             type="text"
             name="lastName"
             id="lastName"
-            //   value={user?.lastName}
+            value={user?.last_name}
             //   disabled
           />
         </div>
@@ -79,6 +83,7 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
               id: "phoneNumber",
               className: "form-control w-100 border border-black00",
             }}
+            value={user?.phone}
           />
         </div>
         <div className="mb-4 pe-4_5">
@@ -90,8 +95,8 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             type="email"
             name="email"
             id="email"
-            //   value={user?.firstName}
-            //   disabled
+            value={user?.email}
+            disabled
           />
         </div>
         <div className="mb-4 pe-4_5">
@@ -103,8 +108,8 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             type="text"
             name="bvn"
             id="bvn"
-            //   value={user?.lastName}
-            //   disabled
+            // value={user?.bvn}
+            disabled
           />
         </div>
         <div className="mb-4 pe-4_5">
@@ -144,7 +149,7 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
             name="nin"
             id="nin"
             //   value={user?.lastName}
-            //   disabled
+            disabled
           />
         </div>
       </div>

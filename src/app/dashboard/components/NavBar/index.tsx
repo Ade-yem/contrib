@@ -6,6 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ModalTypes } from "@/services/_schema";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
 
 interface NavBarProps {
   setIsSideBarOpen: Dispatch<SetStateAction<boolean>>;
@@ -21,6 +23,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
   } = useContext(LayoutContext);
   const { currentDashboardPageTitle } = useContext(LayoutContext);
   const { signOut } = useAuthActions();
+  const user = useQuery(api.user.getUser);
 
   return (
     <div className="w-100 d-flex justify-content-between align-items-center dashboard-navbar">
@@ -57,7 +60,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
                     height={40}
                     className="rounded-circle"
                   />
-                  Adelana
+                  {user?.first_name ?? "Anonymous"}
                   <Icon icon="mingcute:down-fill" width="20" height="20" />
                 </div>
                 <div className="dropdown-content">
