@@ -5,14 +5,25 @@ import "./styles.scss";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { ModalTypes } from "@/services/_schema";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
 
 interface NavBarProps {
   setIsSideBarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
+  const {
+    showModal,
+    setShowModal,
+  }: {
+    showModal: ModalTypes;
+    setShowModal: (value: ModalTypes) => void;
+  } = useContext(LayoutContext);
   const { currentDashboardPageTitle } = useContext(LayoutContext);
   const { signOut } = useAuthActions();
+  const user = useQuery(api.user.getUser);
 
   return (
     <div className="w-100 d-flex justify-content-between align-items-center dashboard-navbar">
@@ -28,8 +39,16 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
       </div>
 
       <div className="">
-        <div className="align-items-center gap-3 d-flex">
+        <div className="align-items-center gap-4 d-flex">
           {/* <Notifications /> */}
+          <div
+            className="btn btn-md d-md-inline d-none border border-black-000 py-3 fs-4"
+            onClick={() => setShowModal("createGroup")}
+          >
+            Create New Group
+            <Icon className="ms-3_5" icon="bi:arrow-up-right" width="2rem" />
+          </div>
+
           <div className="desktop-item">
             <div className="dropdown">
               <div>
@@ -41,10 +60,16 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
                     height={40}
                     className="rounded-circle"
                   />
-                  Adelana
+                  {user?.first_name ?? "Anonymous"}
                   <Icon icon="mingcute:down-fill" width="20" height="20" />
                 </div>
                 <div className="dropdown-content">
+                  <Link
+                    href={"/home"}
+                    className="text-sm text-decoration-none text-black-000 hover-link click"
+                  >
+                    <p>Home</p>
+                  </Link>
                   <Link
                     href={"/dashboard"}
                     className="text-sm text-decoration-none text-black-000 hover-link click"
@@ -69,14 +94,6 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
                 </div>
               </div>
             </div>
-            {/* <div className="btn btn-md d-md-inline d-none btn-outline py-3 fs-4">
-              Adelana
-              <Icon className="ms-3_5" icon="bi:arrow-up-right" width="2rem" />
-            </div>
-            <div className="btn btn-md d-md-inline d-none btn-outline py-3 fs-4">
-              Adeyemi
-              <Icon className="ms-3_5" icon="bi:arrow-up-right" width="2rem" />
-            </div> */}
           </div>
         </div>
       </div>

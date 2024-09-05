@@ -2,192 +2,107 @@
 import TextInput from "@/components/forms/TextInput";
 import { Field, Form, Formik, FormikValues } from "formik";
 import Image from "next/image";
-import React from "react";
+import React, { useContext } from "react";
 import * as yup from "yup";
+import { AddressLocation } from "./addressLocation";
+import { ProfileForm } from "./profileForm";
+import Button from "@/components/forms/Button";
+import { ModalTypes } from "@/services/_schema";
+import { LayoutContext } from "@/context/layoutContext";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 export default function ProfilePage() {
+  const {
+    setShowModal,
+  }: {
+    setShowModal: (value: ModalTypes) => void;
+  } = useContext(LayoutContext);
+  const updateProfile = useMutation(api.user.editProfile);
+  const user = useQuery(api.user.getUser);
+
   const initialValues = {
     email: "",
-    password: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    nin: "",
+    bvn: "",
+    dob: "",
+    homeAddress: "",
+    nationality: "",
   };
 
   const validationSchema = yup.object().shape({
-    email: yup.string().label("Email Address").required(),
-    password: yup.string().label("Password").required(),
+    // email: yup.string().label("Email Address").required(),
+    firstName: yup.string().label("First Name").required(),
+    lastName: yup.string().label("Last Name").required(),
+    phoneNumber: yup.string().label("Last Name").required(),
+    // bvn: yup.string().label("Bvn").required(),
+    // nin: yup.string().label("NIN").required(),
+    dob: yup.string().label("Field required").required(),
+    homeAddress: yup.string().label("Home Address").required(),
+    nationality: yup.string().label("Nationality").required(),
   });
-  const handleLogin = () => {
-    console.log("first");
+  const handleSave = (values: FormikValues) => {
+    console.log("first", values, values.gender.value);
+
+    updateProfile({
+      // email: values.email,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      phone: values.phoneNumber,
+      user_id: user?._id as Id<"users">,
+
+      // nin: values.nin,
+      // bvn: values.bvn,
+      // dob: values.dob,
+      // gender: values.gender.value,
+      // homeAddress: values.homeAddress,
+      // nationality: values.nationality,
+    });
   };
+
   return (
-    <div>
-      {/* ProfilePageProfilePageProfilePageProfilePageProfilePageProfilePage
-      ProfilePage ProfilePage ProfilePage ProfilePage ProfilePage ProfilePage
-      ProfilePage */}
-      <div className="bg-white-000 rounded w-100 p-5">
-        <p className="text-lg">Personal Details</p>
-        <Image src={"/avatar.svg"} width={70} height={70} alt="profile-pics" />
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleLogin}
-          validateOnBlur={false}
-        >
-          {({ handleSubmit, isValid }) => {
-            return (
-              <Form className="mt-4_5" onSubmit={handleSubmit}>
-                <div className="row row-cols-1 row-cols-md-3 mb-4">
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">First Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      //   value={user?.firstName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">Last Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      //   value={user?.lastName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">Last Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      //   value={user?.lastName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">First Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      //   value={user?.firstName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">Last Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      //   value={user?.lastName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">Last Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      //   value={user?.lastName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">First Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      //   value={user?.firstName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">Last Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      //   value={user?.lastName}
-                      //   disabled
-                    />
-                  </div>
-                  <div className="mb-4 pe-4_5">
-                    <label className="text-xs mb-0">Last Name*</label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="Johny"
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      //   value={user?.lastName}
-                      //   disabled
-                    />
-                  </div>
-                </div>
-              </Form>
-            );
-          }}
-        </Formik>
-      </div>
-    </div>
+    <>
+      <button
+        className="btn btn-md btn-primary ms-auto mb-4"
+        onClick={() => setShowModal("verifyUser")}
+      >
+        Verify your account
+      </button>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSave}
+        validateOnBlur={false}
+      >
+        {({ handleSubmit, isValid, values, setFieldValue }) => {
+          return (
+            <Form onSubmit={handleSubmit}>
+              <ProfileForm
+                dateValue={values.dob}
+                setDateValue={(value: Date | null) => {
+                  setFieldValue("dob", value);
+                }}
+              />
+              <AddressLocation />
+              <div className="d-flex gap-5 align-items-center mt-5 mb-6 justify-content-end">
+                <p className="text-red mb-0">Cancel</p>
+                <Button
+                  title="Save"
+                  type="submit"
+                  // disabled={submitting || !isValid}
+                  // loading={submitting}
+                  loadingTitle={"Please wait..."}
+                  className="btn btn-md text-xs btn-primary text-sm"
+                />
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
+    </>
   );
 }
-
-//   <div className="row row-cols-1 row-cols-md-2 mb-4">
-//     <div className="mb-md-0 mb-4">
-//       <label className="text-xs mb-0">First Name*</label>
-//       <Field
-//         component={TextInput}
-//         className="form-control"
-//         placeholder="Johny"
-//         type="text"
-//         name="firstName"
-//         id="firstName"
-//         //   value={user?.firstName}
-//         //   disabled
-//       />
-//     </div>
-//     <div>
-//       <label className="text-xs mb-0">Last Name*</label>
-//       <Field
-//         component={TextInput}
-//         className="form-control"
-//         placeholder="Johny"
-//         type="text"
-//         name="lastName"
-//         id="lastName"
-//         //   value={user?.lastName}
-//         //   disabled
-//       />
-//     </div>
-//   </div>;
