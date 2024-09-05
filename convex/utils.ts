@@ -35,3 +35,12 @@ export const parseToMilliSeconds = (length: "hourly" | "daily" | "weekly" | "mon
     }
     
 }
+
+
+/**
+ * encode a string in base64
+ */
+export const encode = (str: string ): string => {
+    let buffer = Buffer.from(str);
+    return buffer.toString("base64");
+} 

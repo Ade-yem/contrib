@@ -1,6 +1,7 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, action, internalMutation } from "./_generated/server";
 import { auth } from "./auth";
 import { v, ConvexError } from "convex/values";
+import {Id} from "./_generated/dataModel";
 
 export const getUser = query({
   handler: async (ctx) => {
@@ -50,6 +51,11 @@ export const editProfile = mutation({
 })
 
 export const generateUploadUrl = mutation(async (ctx) => {
+  const userId = await auth.getUserId(ctx);
+  if (!userId) throw new ConvexError("User is not verified");
+  const user = await ctx.db.get(userId);
+  if (!user) throw new ConvexError("User is not found");
+  await ctx.storage.delete(user.imageId as Id<"_storage">);
   return await ctx.storage.generateUploadUrl();
 });
 
@@ -61,7 +67,9 @@ export const saveImageId = mutation({
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new ConvexError("User is not verified");
     const {imageId} = args_0;
-    await ctx.db.patch(userId, {imageId})
+    const image = await ctx.storage.getUrl(imageId);
+    if (!image) throw new ConvexError("Could not get image from storage")
+    await ctx.db.patch(userId, {imageId, image})
   },
 })
 
@@ -75,9 +83,18 @@ export const kycVerification = mutation({
   },
   async handler(ctx, args_0) {
     const userId = await auth.getUserId(ctx);
-    const { phone, dob, bvn, nin, homeAddress } = args_0;
+    const { phone, dob, bvn, homeAddress, nin } = args_0;
     if (!userId) throw new ConvexError("User is not verified");
-    await ctx.db.patch(userId, {phone, dob, bvn, nin, homeAddress, kycVerified: true})
+    await ctx.db.patch(userId, {phone, dob, bvn, homeAddress, kycVerified: true, nin})
   },
 })
 
+export const addNin = internalMutation({
+  args: {nin: v.string()},
+  async handler(ctx, args) {
+    const {nin} = args;
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new ConvexError("User is not authenticated!");
+    await ctx.db.patch(userId, {nin});
+  }
+})

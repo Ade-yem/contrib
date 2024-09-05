@@ -132,6 +132,14 @@ const schema = defineSchema({
     cronId: v.optional(v.id("crons")),
     
   }).index("groupId", ["groupId"]),
+
+  chats: defineTable({
+    groupId: v.id("groups"),
+    userId: v.id("users"),
+    message: v.string(),
+    image: v.optional(v.string()),
+    imageId: v.optional(v.id("_storage")),
+  }),
 });
 
 export default schema;
