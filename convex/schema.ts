@@ -89,7 +89,7 @@ const schema = defineSchema({
     email: v.optional(v.string()),
     emailVerificationTime: v.optional(v.float64()),
     image: v.optional(v.string()),
-    gender: v.union(v.literal("male"), v.literal("female")),
+    gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
     isAnonymous: v.optional(v.boolean()),
     first_name: v.optional(v.string()),
     last_name: v.optional(v.string()),
@@ -100,7 +100,7 @@ const schema = defineSchema({
     homeAddress: v.optional(v.string()),
     phoneVerificationTime: v.optional(v.float64()),
     nationality: v.optional(v.float64()),
-    kycVerified: v.boolean(),
+    kycVerified: v.optional(v.boolean()),
     imageId: v.optional(v.id("_storage"))
   })
     .index("email", ["email"])
