@@ -3,18 +3,18 @@ import { ConvexError, v } from "convex/values";
 
 export const createPlan = internalMutation ({
     args: {
-        group_id: v.id("groups"),
+        groupId: v.id("groups"),
         subscription_plan_id: v.string(),
     },
     handler(ctx, args_0) {
-        const { group_id, subscription_plan_id } = args_0
-        ctx.db.patch(group_id, {subscription_plan_id: subscription_plan_id})
+        const { groupId, subscription_plan_id } = args_0
+        ctx.db.patch(groupId, {subscription_plan_id: subscription_plan_id})
     },
 })
 
 export const createPaymentMethod = internalMutation({
     args: {
-        user_id: v.id('users'),
+        userId: v.id('users'),
         type: v.union(v.literal("ghpss"), v.literal("nuban")),
         account_name: v.string(),
         recipient_code: v.string(),
@@ -25,7 +25,7 @@ export const createPaymentMethod = internalMutation({
     },
     async handler(ctx, args_0) {
         const id = await ctx.db.insert("payment_methods", {
-            type: args_0.type, user_id: args_0.user_id, account_name: args_0.account_name,
+            type: args_0.type, userId: args_0.userId, account_name: args_0.account_name,
             account_number: args_0.account_number, recipient_code: args_0.recipient_code,
             authorization_code: args_0.authorization_code,
             currency: args_0.currency, bank_name: args_0.bank_name
@@ -36,9 +36,9 @@ export const createPaymentMethod = internalMutation({
 
 export const createTransaction = internalMutation({
   args: {
-    group_id: v.optional(v.id("groups")),
-    savings_id: v.optional(v.id("savings")),
-    user_id: v.id("users"),
+    groupId: v.optional(v.id("groups")),
+    savingsId: v.optional(v.id("savings")),
+    userId: v.id("users"),
     amount: v.float64(),
     type: v.optional(v.union(v.literal("transfer"), v.literal("deposit"))),
     status: v.string(),
@@ -51,14 +51,14 @@ export const createTransaction = internalMutation({
       const res = await ctx.db.insert("transactions", {
         type: args_0.type,
         status: args_0.status,
-        group_id: args_0.group_id,
-        user_id: args_0.user_id,
+        groupId: args_0.groupId,
+        userId: args_0.userId,
         amount: args_0.amount,
         reference: args_0.reference,
         details: args_0.details,
         access_code: args_0.access_code,
         transfer_code: args_0.transfer_code,
-        savings_id: args_0.savings_id
+        savingsId: args_0.savingsId
      })
       if (!res) throw new ConvexError("Could not create transaction");  
   },

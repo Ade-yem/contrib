@@ -54,13 +54,12 @@ export default function ProfilePage() {
       last_name: values.lastName,
       phone: values.phoneNumber,
       user_id: user?._id as Id<"users">,
-
-      // nin: values.nin,
-      // bvn: values.bvn,
-      // dob: values.dob,
-      // gender: values.gender.value,
-      // homeAddress: values.homeAddress,
-      // nationality: values.nationality,
+      nin: values.nin,
+      bvn: values.bvn,
+      dob: values.dob,
+      gender: values.gender.value,
+      homeAddress: values.homeAddress,
+      nationality: values.nationality,
     });
   };
 

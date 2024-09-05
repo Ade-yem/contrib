@@ -29,9 +29,9 @@ interface Log {
 
   interface Metadata {
     details: 'join group' | "add savings";
-    group_id: string;
-    savings_id: string;
-    user_id: string;
+    groupId: string;
+    savingsId: string;
+    userId: string;
   }
   
 export interface Authorization {
@@ -70,5 +70,5 @@ export interface Authorization {
 //   {
 //     amount: 10000,
 //     email: "adejumoadeyemi32@gmail.com",
-//     metadata: { details: "join group", group_id: "k176ek00vz0z4y08m71xage9a96zn1yd", user_id: "jx76m0fbdf962z3c8bae5qjh4x6zjn9n" },
+//     metadata: { details: "join group", groupId: "k176ek00vz0z4y08m71xage9a96zn1yd", userId: "jx76m0fbdf962z3c8bae5qjh4x6zjn9n" },
 //   }

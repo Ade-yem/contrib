@@ -103,4 +103,14 @@ interface LogHistory {
     message: string;
     data: Data;
   }
-  
+
+  type ResolveData = {
+    account_number: string;
+    account_name: string;
+    bank_id: number;
+  }
+  export type ResolveAccount = {
+    status: boolean;
+    message: string;
+    data: ResolveData;
+  }

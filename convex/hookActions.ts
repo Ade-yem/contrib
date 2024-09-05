@@ -20,8 +20,8 @@ const invoiceCreated = async (ctx: ActionCtx, data: any) => {
   const amount = data.subscription.amount;
   const reference = data.transaction.reference;
   const member = await ctx.runQuery(internal.group.getMembershipWithSubscriptionCode, {subscription_code});
-  const user_id = member?.user_id as Id<"users">
-  await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", group_id: member?.group_id, details: "pay group", status: "pending", amount, reference, user_id})
+  const userId = member?.userId as Id<"users">
+  await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId})
 };
 
 /**
@@ -71,6 +71,11 @@ const transferFailed = async (ctx: ActionCtx, data: any) => {
  * @param data payload data
  */
 const transferSuccess = async (ctx: ActionCtx, data: any) => {
+  let details: 'savings payment' | "interval pay" | "refund method fee";
+  const {reason, reference, amount} = data;
+  if (reason === "savings payment") {
+    await ctx.runMutation(internal.savings.updateSavings, {reference, amount})
+  }
   await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status });
 };
 
@@ -82,9 +87,9 @@ const transferSuccess = async (ctx: ActionCtx, data: any) => {
 const transferReversed = async (ctx: ActionCtx, data: any) => {
   const transaction = await ctx.runQuery(internal.paystack.getTransaction, {reference: data.reference});
   await ctx.runAction(internal.transfers.initiateTransfer, {
-    group_id: transaction.group_id as Id<"groups">,
+    groupId: transaction.groupId as Id<"groups">,
     reference: data.reference,
-    user_id: transaction.user_id,
+    userId: transaction.userId,
     amount: data.amount,
     reason: data.reason,
     recipient: data.recipient.recipient_code,
@@ -98,17 +103,17 @@ const transferReversed = async (ctx: ActionCtx, data: any) => {
  */
 const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
     const metadata: {
-      details: 'join group' | "add savings";
-      group_id: string;
-      savings_id: string;
-      user_id: string;
+      details: 'join group' | "add savings" | "pay group";
+      groupId: string;
+      savingsId: string;
+      userId: string;
     } = data.metadata;
     const auth: Authorization = data.authorization;
     if (metadata.details === "join group") {
-      await ctx.runAction(api.actions.addMember, {group_id: metadata.group_id as Id<"groups">, user_id: metadata.user_id as Id<"users">, amount: data.amount})
-      await ctx.runMutation(internal.group.createAuthorization, {user_id: metadata.user_id as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code, account_name: auth.account_name})
+      await ctx.runAction(api.actions.addMember, {groupId: metadata.groupId as Id<"groups">, userId: metadata.userId as Id<"users">, amount: data.amount})
+      await ctx.runMutation(internal.group.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code, account_name: auth.account_name})
     } else if (metadata.details === "add savings") {
-      await ctx.runMutation(internal.savings.addSavings, {savings_id: metadata.savings_id as Id<"savings">, user_id: metadata.user_id as Id<"users">, amount: data.amount})
+      await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, userId: metadata.userId as Id<"users">, amount: data.amount})
     }
     await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status})
 };
@@ -168,5 +173,5 @@ export const getResults = httpAction(async (ctx, request) => {
 // {
     //     amount: 10000,
     //     email: "adejumoadeyemi32@gmail.com",
-    //     metadata: { details: "join group", group_id: "k176ek00vz0z4y08m71xage9a96zn1yd", user_id: "jx76m0fbdf962z3c8bae5qjh4x6zjn9n" },
+    //     metadata: { details: "join group", groupId: "k176ek00vz0z4y08m71xage9a96zn1yd", userId: "jx76m0fbdf962z3c8bae5qjh4x6zjn9n" },
     //   }
