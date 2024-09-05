@@ -3,7 +3,7 @@ import { auth } from "./auth";
 import { v, ConvexError } from "convex/values";
 
 export const getUser = query({
-  handler: async (ctx, _) => {
+  handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
     return userId !== null ? ctx.db.get(userId) : null;
   },
