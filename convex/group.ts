@@ -92,7 +92,10 @@ export const getGroup = query({
     groupId: v.id("groups")
   },
   async handler(ctx, args_0) {
-    return await ctx.db.get(args_0.groupId)
+    const group = await ctx.db.get(args_0.groupId);
+    if (!group) throw new ConvexError("Could not get group of id " + args_0.groupId);
+    const invite  = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), args_0.groupId)).first();
+    return {...group, inviteCode: invite ? invite.code : ""}
   },
 })
 

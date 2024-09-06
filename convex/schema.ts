@@ -139,7 +139,8 @@ const schema = defineSchema({
     message: v.string(),
     image: v.optional(v.string()),
     imageId: v.optional(v.id("_storage")),
-  }),
+    time: v.float64(),
+  }).index("by_time", ["time"]),
 });
 
 export default schema;

@@ -1,5 +1,6 @@
 import { mutation, query, internalMutation } from "./_generated/server";
 import { auth } from "./auth";
+import {paginationOptsValidator} from "convex/server";
 import { v, ConvexError } from "convex/values";
 import {Id} from "./_generated/dataModel";
 
@@ -109,15 +110,19 @@ type myGroup = {
   numOfMembers: number;
   numJoined: number;
   paymentPerInterval: number;
+  status: string;
 }
 
 export const getMyGroups = query({
-  async handler(ctx) {
+  args: {
+    paginationOpts: paginationOptsValidator
+  },
+  async handler(ctx, args) {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new ConvexError("User is not authenticated!");
-    const groups = await ctx.db.query("membership").filter((m) => m.eq(m.field("userId"), userId)).collect();
+    const groups = await ctx.db.query("membership").filter((m) => m.eq(m.field("userId"), userId)).paginate(args.paginationOpts);
     const memberships: myGroup[] = [];
-    for (const member of groups) {
+    for (const member of groups.page) {
       const group = await ctx.db.get(member.groupId);
       if (!group) throw new ConvexError("Gould not get group");
       const groupItem: myGroup = {
@@ -130,6 +135,7 @@ export const getMyGroups = query({
         numOfMembers: group.number_of_people,
         numJoined: group.number_of_people_present,
         paymentPerInterval: group.savings_per_interval,
+        status: group.status
       }
       memberships.push(groupItem);
     }
