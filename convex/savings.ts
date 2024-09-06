@@ -42,8 +42,8 @@ export const removeMoneyFromSavings = mutation({
     const default_payment_method = await ctx.db.query("default_payment_method").filter(d => d.eq(d.field("userId"), userId)).first();
     const payment_method = await ctx.db.get(default_payment_method?.paymentMethodId as Id<"payment_methods">)
     if(!payment_method) throw new ConvexError("Could not get payment method");
-    const result = await ctx.scheduler.runAt(new Date(), internal.transfers.initiateTransfer, {
-      savingsId, details: "add savings", userId, amount, recipient: payment_method.recipient_code, retry: false, reason: "savings payment"
+    await ctx.scheduler.runAt(new Date(), internal.transfers.initiateTransfer, {
+      savingsId, details: "cashout", userId, amount, recipient: payment_method.recipient_code, retry: false, reason: "cashout"
     })    
   },
 })
@@ -64,12 +64,11 @@ export const updateSavings = internalMutation({
 
 export const addSavings = internalMutation({
   args: {
-    userId: v.id("users"),
     amount: v.float64(),
     savingsId: v.id("savings")
   },
   async handler(ctx, args) {
-    const { userId, amount, savingsId } = args;
+    const { amount, savingsId } = args;
     const saving = await ctx.db.get(savingsId);
     if (!saving) throw new ConvexError("Could not get saving of id " + savingsId);
     await ctx.db.patch(savingsId, {amount: saving.amount + amount })

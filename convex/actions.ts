@@ -11,8 +11,8 @@ export const addGroupAction = action({
       interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
       savings_per_interval: v.float64(),
       private: v.boolean()
-     },
-     async handler(ctx, args) {
+    },
+    async handler(ctx, args) {
       if (await ctx.auth.getUserIdentity()) {
         const group = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval, private: args.private, description: args.description});
         if (group) {
@@ -20,7 +20,7 @@ export const addGroupAction = action({
           await ctx.runMutation(internal.group.createInvite, {status: "pending", groupId: group._id});
         } else throw new ConvexError("Could not create group");
       } else throw new ConvexError("The user is not authenticated");
-     }
+    }
   })
 
 export const addMember = action({

@@ -19,8 +19,10 @@ export const createChat = mutation({
   async handler(ctx, args_0) {
     const {groupId, message, userId, imageId} = args_0;
     const image = await ctx.storage.getUrl(imageId as Id<"_storage">);
-    if (!image) throw new ConvexError("Could not get image from storage")
-    return await ctx.db.insert("chats", {groupId ,message, image, userId, imageId })
+    if (!image) throw new ConvexError("Could not get image from storage");
+    const t = new Date();
+    const time = t.getTime();
+    return await ctx.db.insert("chats", {groupId ,message, image, userId, imageId, time })
   },
 })
 

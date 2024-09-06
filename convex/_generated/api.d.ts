@@ -35,6 +35,7 @@ import type * as resetPassword_ResetPasswordMail from "../resetPassword/ResetPas
 import type * as resetPassword_VerifyPasswordMail from "../resetPassword/VerifyPasswordMail.js";
 import type * as savings from "../savings.js";
 import type * as subscription from "../subscription.js";
+import type * as transactions from "../transactions.js";
 import type * as transfers from "../transfers.js";
 import type * as types_subscriptions from "../types/subscriptions.js";
 import type * as types_transfers from "../types/transfers.js";
@@ -73,6 +74,7 @@ declare const fullApi: ApiFromModules<{
   "resetPassword/VerifyPasswordMail": typeof resetPassword_VerifyPasswordMail;
   savings: typeof savings;
   subscription: typeof subscription;
+  transactions: typeof transactions;
   transfers: typeof transfers;
   "types/subscriptions": typeof types_subscriptions;
   "types/transfers": typeof types_transfers;
