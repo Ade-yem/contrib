@@ -1,9 +1,22 @@
 export const thousandFormatter = (number: number) => {
-  if (typeof number === "undefined") return 0;
+  if (typeof number === "undefined" || isNaN(number)) return "0";
 
-  const parts = parseFloat(number?.toString()).toFixed(2).split(".");
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return parts.join(".");
+  // Handle the conversion for thousands (k), millions (m), billions (b), etc.
+  const absNumber = Math.abs(number);
+
+  const formatNumber = (value: number) => {
+    return value % 1 === 0 ? value.toFixed(0) : value.toFixed(1); // Remove .0 for whole numbers
+  };
+
+  if (absNumber >= 1e9) {
+    return formatNumber(number / 1e9) + "b"; // Billions
+  } else if (absNumber >= 1e6) {
+    return formatNumber(number / 1e6) + "m"; // Millions
+  } else if (absNumber >= 1e3) {
+    return formatNumber(number / 1e3) + "k"; // Thousands
+  }
+
+  return formatNumber(number); // Less than 1,000, keep the original number
 };
 
 export const convertArrayToSelectOptions = (values: string[] | number[]) => {
