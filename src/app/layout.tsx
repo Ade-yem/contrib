@@ -25,20 +25,20 @@ export default function RootLayout({
 }) {
   return (
     <ConvexAuthNextjsServerProvider>
-      <LayoutProvider>
-        <html lang="en">
-          <body
-            className={`${inter.className} layout-wrapper`}
-            suppressHydrationWarning={true}
-          >
-            <Toaster position="top-center" />
-            <ConvexClientProvider>
+      <html lang="en">
+        <body
+          className={`${inter.className} layout-wrapper`}
+          suppressHydrationWarning={true}
+        >
+          <Toaster position="top-center" />
+          <ConvexClientProvider>
+            <LayoutProvider>
               <ThemeProvider>{children}</ThemeProvider>
-            </ConvexClientProvider>
-          </body>
-        </html>
-        <AuthContainer />
-      </LayoutProvider>
+              <AuthContainer />
+            </LayoutProvider>
+          </ConvexClientProvider>
+        </body>
+      </html>
     </ConvexAuthNextjsServerProvider>
   );
 }

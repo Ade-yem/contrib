@@ -1,10 +1,13 @@
 "use client";
 
 import { ModalTypes } from "@/services/_schema";
+import { useQuery } from "convex/react";
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { api } from "../../convex/_generated/api";
 export const LayoutContext = createContext<any>(undefined);
 
 export const LayoutProvider = ({ children }: { children: ReactNode }) => {
+  const user = useQuery(api.user.getUser);
   const [showModal, setShowModal] = useState<ModalTypes>();
   const [currentDashboardPageTitle, setCurrentDashboardPageTitle] =
     useState("Dashboard");
@@ -40,6 +43,7 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
         setCurrentDashboardPageTitle,
         countdown,
         setCountdown,
+        user,
       }}
     >
       {children}
