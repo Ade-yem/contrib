@@ -20,7 +20,7 @@ export const subscribeUsersToPlan = internalAction({
         schedule_date.setDate(schedule_date.getDate() + 3);
         const start = start_date.toISOString();
         for (const user of users) {
-          const userz = await ctx.runQuery(api.user.getUserz, {userId: user.userId})
+          const userz = await ctx.runQuery(api.user.getUserById, {userId: user.userId})
           if (userz) {
             const res = await ctx.runAction(internal.payments.createSubscription, {email: userz?.email as string, plan: group.subscription_plan_id as string, start_date: start })
             statuses[user._id] = res.status;

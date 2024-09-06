@@ -16,6 +16,6 @@ export const { auth, signIn, signOut, store } = convexAuth({
       }
     }
   }), Password
-    // ({reset: ResendOTPPasswordReset, verify: ResendOTP})
+  // ({reset: ResendOTPPasswordReset, verify: ResendOTP})
   ],
 });

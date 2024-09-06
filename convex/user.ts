@@ -1,4 +1,4 @@
-import { mutation, query, action, internalMutation } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { auth } from "./auth";
 import { v, ConvexError } from "convex/values";
 import {Id} from "./_generated/dataModel";
@@ -10,7 +10,7 @@ export const getUser = query({
   },
 });
 
-export const getUserz = query({
+export const getUserById = query({
   args: {
     userId: v.id("users")
   },
@@ -39,7 +39,7 @@ export const editProfile = mutation({
     bvn: v.optional(v.string()),
     nin: v.optional(v.string()),
     homeAddress: v.optional(v.string()),
-    nationality: v.optional(v.float64()),
+    nationality: v.optional(v.string()),
     first_name: v.optional(v.string()),
     last_name: v.optional(v.string()),
     user_id: v.id("users")
@@ -96,5 +96,74 @@ export const addNin = internalMutation({
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new ConvexError("User is not authenticated!");
     await ctx.db.patch(userId, {nin});
+  }
+})
+
+type myGroup = {
+  name: string;
+  groupId: Id<"groups">;
+  description: string | undefined;
+  collectionNumber: number | undefined;
+  membershipId: Id<"membership">;
+  amount: number;
+  numOfMembers: number;
+  numJoined: number;
+  paymentPerInterval: number;
+}
+
+export const getMyGroups = query({
+  async handler(ctx) {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new ConvexError("User is not authenticated!");
+    const groups = await ctx.db.query("membership").filter((m) => m.eq(m.field("userId"), userId)).collect();
+    const memberships: myGroup[] = [];
+    for (const member of groups) {
+      const group = await ctx.db.get(member.groupId);
+      if (!group) throw new ConvexError("Gould not get group");
+      const groupItem: myGroup = {
+        name: group.name,
+        groupId: group._id,
+        description: group.description,
+        collectionNumber: member.collection_number,
+        membershipId: member._id,
+        amount: group.number_of_people * group.savings_per_interval,
+        numOfMembers: group.number_of_people,
+        numJoined: group.number_of_people_present,
+        paymentPerInterval: group.savings_per_interval,
+      }
+      memberships.push(groupItem);
+    }
+    return memberships;
+  }
+})
+
+export const getTotalSavings = query({
+  async handler(ctx) {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new ConvexError("User is not authenticated!");
+    const savings = await ctx.db.query("savings").filter((m) => m.eq(m.field("userId"), userId)).collect();
+    let total = 0;
+    for (const saving of savings){
+      total += saving.amount;
+    }
+    return total;
+  }
+});
+
+export const getMySavings = query({
+  async handler(ctx) {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new ConvexError("User is not authenticated!");
+    return await ctx.db.query("savings").filter((m) => m.eq(m.field("userId"), userId)).collect();
+  }
+});
+
+export const getDefaultPAymentMethod = query({
+  async handler(ctx) {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new ConvexError("User is not authenticated!");
+    const payment = await ctx.db.query("default_payment_method").filter((m) => m.eq(m.field("userId"), userId)).first();
+    if (payment) return ctx.db.get(payment.paymentMethodId)
+    else throw new ConvexError("There is no default payment method");
   }
 })

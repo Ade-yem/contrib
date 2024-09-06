@@ -71,11 +71,11 @@ const transferFailed = async (ctx: ActionCtx, data: any) => {
  * @param data payload data
  */
 const transferSuccess = async (ctx: ActionCtx, data: any) => {
-  let details: 'savings payment' | "interval pay" | "refund method fee";
+  let details: 'savings payment' | "interval pay" | "refund method fee" | "cashout";
   const {reason, reference, amount} = data;
-  if (reason === "savings payment") {
+  if (reason === "cashout") {
     await ctx.runMutation(internal.savings.updateSavings, {reference, amount})
-  }
+  };
   await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status });
 };
 
@@ -113,7 +113,7 @@ const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
       await ctx.runAction(api.actions.addMember, {groupId: metadata.groupId as Id<"groups">, userId: metadata.userId as Id<"users">, amount: data.amount})
       await ctx.runMutation(internal.group.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code, account_name: auth.account_name})
     } else if (metadata.details === "add savings") {
-      await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, userId: metadata.userId as Id<"users">, amount: data.amount})
+      await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, amount: data.amount})
     }
     await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status})
 };

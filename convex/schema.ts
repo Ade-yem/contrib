@@ -99,7 +99,7 @@ const schema = defineSchema({
     nin: v.optional(v.string()),
     homeAddress: v.optional(v.string()),
     phoneVerificationTime: v.optional(v.float64()),
-    nationality: v.optional(v.float64()),
+    nationality: v.optional(v.string()),
     kycVerified: v.optional(v.boolean()),
     imageId: v.optional(v.id("_storage"))
   })
