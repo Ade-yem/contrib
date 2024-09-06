@@ -22,7 +22,7 @@ export const generateReport = internalMutation({
     const elapsed = group?.elapsedTime ? group?.elapsedTime : 0;
     const receiver = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId) && m.eq(m.field("collection_number"), elapsed)).first();
     const multiplier = interval === "hourly" ? 1 : interval === "daily" ? 24 : interval === "weekly" ? 24 * 7 : 24 * 7 * 30;
-    const timestamp = start_date.getMilliseconds()
+    const timestamp = start_date.getTime();
     let startOfInterval = elapsed * multiplier;
     let endOfInterval = elapsed * multiplier + multiplier;
     startOfInterval = convertToMilliSeconds(startOfInterval) + timestamp;

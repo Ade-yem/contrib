@@ -41,8 +41,8 @@ export const resolveAccountNumber = action({
 export const verifyNin = action({
   args: {nin: v.string()},
   async handler(ctx, args) {
-    // const user = await ctx.runQuery(api.user.getUser);
-    // if (!user) throw new ConvexError("User is not authenticated!")
+    const user = await ctx.runQuery(api.user.getUser);
+    if (!user) throw new ConvexError("User is not authenticated!")
     const res: {
       nin: string;
       lastName: string;
@@ -54,12 +54,12 @@ export const verifyNin = action({
   } | null = await monnify.verifyNin(args.nin);
   console.log(res);
     if (!res) throw new ConvexError("Could not verify user nin");
-    // if (res.firstName.toLowerCase() === user.first_name?.toLowerCase() &&
-    //     res.lastName.toLowerCase() === user.last_name?.toLowerCase() &&
-    //     res.gender.toLowerCase() === user.gender.toLowerCase()
-    // ) {
-    //   await ctx.runMutation(internal.user.addNin, {nin: args.nin})
-    // } else throw new ConvexError("Nin details does not match the user's profile");
+    if (res.firstName.toLowerCase() === user.first_name?.toLowerCase() &&
+        res.lastName.toLowerCase() === user.last_name?.toLowerCase() &&
+        res.gender.toLowerCase() === user.gender?.toLowerCase()
+    ) {
+      await ctx.runMutation(internal.user.addNin, {nin: args.nin})
+    } else throw new ConvexError("Nin details does not match the user's profile");
   }
 })
 
@@ -75,11 +75,5 @@ export const verifyBvn = action({
     const res = await monnify.verifyBvn({phone, name, dob, bvn});
     if (res.name.matchStatus === "NO MATCH") throw new ConvexError("The name does not match the bvn record");
     console.log(res);
-  },
-})
-
-export const initializeMonnify = action({
-  async handler(ctx) {
-    await monnify.init();
   },
 })
