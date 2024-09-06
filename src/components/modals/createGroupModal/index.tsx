@@ -2,7 +2,6 @@
 
 import React, { useContext, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { useAuthActions } from "@convex-dev/auth/react";
 import toast from "react-hot-toast";
 import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
@@ -12,68 +11,62 @@ import { ModalTypes, PaymentFrequency } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
+import { useAction } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 const paymentFrequencySelect = Object.entries(PaymentFrequency).map((item) => ({
   label: item[1],
   value: item[0],
 }));
 
-export const CreateGroupModal = ({
-  provider,
-  handleSent,
-  handlePasswordReset,
-}: {
-  provider?: string;
-  handleSent?: (email: string) => void;
-  handlePasswordReset?: () => void;
-}) => {
+export const CreateGroupModal = () => {
   const {
     showModal,
     setShowModal,
+    user,
   }: {
+    user: any;
     showModal: ModalTypes;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
-  const { signIn } = useAuthActions();
+  const addGroup = useAction(api.actions.addGroupAction);
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
     groupName: "",
     memberNo: "",
     desc: "",
     amountGoal: "",
-    gender: "",
+    frequency: "",
     keepGroupPrivate: false,
   };
-
   const validationSchema = yup.object().shape({
     groupName: yup.string().label("Group Name").required(),
     memberNo: yup.string().label("Number Of Members").required(),
     desc: yup.string().label("Group Description").required(),
     amountGoal: yup.string().label("Amount Goals").required(),
-    gender: yup.string().label("Gender").required(),
-    password: yup.string().label("Password").required(),
+    frequency: yup.object().label("Payment Frequency").required(),
   });
-
-  const handleSave = async (values: FormikValues, actions: any) => {
+  console.log("addGroup:", addGroup);
+  console.log("user id:", user?._id);
+  const handleCreateGroup = async (values: FormikValues) => {
+    console.log("Submitting group data...", values, values.frequency.value);
     setSubmitting(true);
-    const formData = new FormData();
-    formData.append("email", values.email);
-    formData.append("password", values.password);
-    formData.append("flow", "signIn");
-
-    signIn(provider ?? "password", formData)
-      .then(() => {
-        handleSent?.(values.email);
-        actions.setSubmitting(false);
-        setShowModal(null);
-      })
-      .catch((error) => {
-        console.error(error);
-        const title = "Could not sign in, Try again";
-        toast.error(title, { id: "auth" });
-        setSubmitting(false);
-        actions.setSubmitting(false);
+    try {
+      await addGroup({
+        creator_id: user?._id as Id<"users">,
+        name: values.groupName,
+        number_of_people: values.memberNo,
+        interval: values.frequency.value,
+        savings_per_interval: 10000,
+        private: values.keepGroupPrivate,
+        description: values.desc,
       });
+      console.log("Group created successfully");
+    } catch (error) {
+      console.error("Failed to create group:", error);
+    }
+    setSubmitting(false);
   };
 
   const closeModal = () => {
@@ -92,13 +85,15 @@ export const CreateGroupModal = ({
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSave}
+            onSubmit={handleCreateGroup}
             validateOnBlur={false}
           >
-            {({ handleSubmit, isValid }) => {
+            {({ handleSubmit, isValid, setFieldValue }) => {
               return (
                 <Form className="py-5 mx-sm-5 mx-4_5" onSubmit={handleSubmit}>
                   <>
+                    {console.log("Form valid or not:", isValid)}
+
                     <div className="text-center">
                       <h2 className="modal-sub-title">Create New Group</h2>
                     </div>
@@ -154,8 +149,8 @@ export const CreateGroupModal = ({
                     </label>
                     <Field
                       component={ThemedSelect}
-                      name="gender"
-                      id="gender"
+                      name="frequency"
+                      id="frequency"
                       size="base"
                       options={convertModelArrayToSelectOptions(
                         paymentFrequencySelect,
@@ -163,6 +158,10 @@ export const CreateGroupModal = ({
                         "label",
                         true
                       )}
+                      onChange={(selectedOption: any) => {
+                        // Ensure you extract the value from the selected option
+                        setFieldValue("frequency", selectedOption.value);
+                      }}
                     />
                     <label
                       htmlFor="keepGroupPrivate"
@@ -190,7 +189,7 @@ export const CreateGroupModal = ({
                       <Button
                         title="Create Group"
                         type="submit"
-                        disabled={submitting || !isValid}
+                        // disabled={submitting || !isValid}
                         loading={submitting}
                         loadingTitle={"Please wait..."}
                         className="btn btn-lg text-sm btn-primary letter-spacing-1"

@@ -23,7 +23,6 @@ export default function ProfilePage() {
   const user = useQuery(api.user.getUser);
 
   const initialValues = {
-    email: "",
     firstName: "",
     lastName: "",
     phoneNumber: "",
@@ -32,24 +31,24 @@ export default function ProfilePage() {
     dob: "",
     homeAddress: "",
     nationality: "",
+    gender: "",
   };
 
   const validationSchema = yup.object().shape({
-    // email: yup.string().label("Email Address").required(),
     firstName: yup.string().label("First Name").required(),
     lastName: yup.string().label("Last Name").required(),
     phoneNumber: yup.string().label("Last Name").required(),
     // bvn: yup.string().label("Bvn").required(),
     // nin: yup.string().label("NIN").required(),
-    dob: yup.string().label("Field required").required(),
-    homeAddress: yup.string().label("Home Address").required(),
-    nationality: yup.string().label("Nationality").required(),
+    // dob: yup.string().label("Field required").required(),
+    // homeAddress: yup.string().label("Home Address").required(),
+    // nationality: yup.string().label("Nationality").required(),
+    gender: yup.object().label("Gender").required(),
   });
   const handleSave = (values: FormikValues) => {
     console.log("first", values, values.gender.value);
 
     updateProfile({
-      // email: values.email,
       first_name: values.firstName,
       last_name: values.lastName,
       phone: values.phoneNumber,
@@ -61,12 +60,13 @@ export default function ProfilePage() {
       homeAddress: values.homeAddress,
       nationality: values.nationality,
     });
+    console.log("first", values, values.gender.value);
   };
 
   return (
     <>
       <button
-        className="btn btn-md btn-primary ms-auto mb-4"
+        className="btn btn-md btn-primary ms-auto mb-4 mt-md-6"
         onClick={() => setShowModal("verifyUser")}
       >
         Verify your account
