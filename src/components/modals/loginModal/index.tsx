@@ -139,22 +139,22 @@ export const LoginModal = ({
                           <div className="col-1 mx-auto text-lg">Or </div>
                           <div className="col-4  border-line my-auto"></div>
                         </div>
-                        <GoogleSignIn />
-                        <p className="text-sm text-center mt-4 d-desktop">
-                          Don&apos;t Have an Account Yet?{" "}
-                          <span
-                            className="text-primary-500"
-                            role="button"
-                            onClick={() => setShowModal("register")}
-                          >
-                            Sign Up
-                          </span>
-                        </p>
                       </>
                     </Form>
                   );
                 }}
               </Formik>
+              <GoogleSignIn />
+              <p className="text-sm text-center mt-4 d-desktop">
+                Don&apos;t Have an Account Yet?{" "}
+                <span
+                  className="text-primary-500"
+                  role="button"
+                  onClick={() => setShowModal("register")}
+                >
+                  Sign Up
+                </span>
+              </p>
             </div>
 
             <div className="col-lg-6 d-mobile col-12 order-lg-2">

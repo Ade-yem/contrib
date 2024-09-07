@@ -1,39 +1,24 @@
+"use client";
 import { GroupCard } from "@/components/shared/groupCard";
 import { OurTeam } from "@/components/shared/ourTeam";
 import { SubPageBanner } from "@/components/shared/subPageBanner";
-import Image from "next/image";
-
-import React from "react";
+import { useQuery } from "convex/react";
+import React, { useContext } from "react";
+import { api } from "../../../../convex/_generated/api";
+import EmptyData from "@/components/shared/EmptyData";
+import Link from "next/link";
+import Loader from "@/components/shared/Loader";
+import { ModalTypes } from "@/services/_schema";
+import { LayoutContext } from "@/context/layoutContext";
 
 export default function GroupSavingsPage() {
-  const cardList = [
-    {
-      img: "/friends.svg",
-      alt: "a beautiful lady",
-      title: "Encryptions and Security",
-      desc: "Your savings and data are protected with top-tier encryption",
-      privateGroup: true,
-    },
-    {
-      img: "/friends.svg",
-      title: "Automated Reminders",
-      desc: "You will never miss a contribution schedules through our Automated Reminder",
-      alt: "notification-settings",
-    },
-    {
-      img: "/friends.svg",
-      title: "Disputes Resolution",
-      desc: "We Resolve any Contribution and Group issues fairly and considerably.",
-      alt: "alternative-dispute-resolution",
-      privateGroup: true,
-    },
-    {
-      img: "/friends.svg",
-      title: "Support & Help",
-      desc: "Get Assistance with any help you need from us 24/7 through our trusted representatives.",
-      alt: "customer-service",
-    },
-  ];
+  const groupList = useQuery(api.group.getAllGroups);
+  const {
+    setShowModal,
+  }: {
+    setShowModal: (value: ModalTypes) => void;
+  } = useContext(LayoutContext);
+
   return (
     <div className="text-center">
       <SubPageBanner
@@ -89,24 +74,45 @@ export default function GroupSavingsPage() {
           Months!
         </p>
         <div className="d-flex flex-wrap align-items-center gap-4 justify-content-center mb-6">
-          <button className="btn btn-md text-white-000 bg-green">
+          <button
+            className="btn btn-md text-white-000 bg-green"
+            onClick={() => setShowModal("groupCode")}
+          >
             Enter Group Code
           </button>
-          <button className="btn btn-md btn-primary">Create a New Group</button>
-          <button className="btn btn-md btn-black">Join Existing Group</button>
+          <button
+            className="btn btn-md btn-primary"
+            onClick={() => setShowModal("createGroup")}
+          >
+            Create a New Group
+          </button>
+          <Link href="/home/groups" className="text-decoration-none">
+            <button className="btn btn-md btn-black">
+              Join Existing Group
+            </button>
+          </Link>
         </div>
         <div className="row px-6">
-          {cardList.map((item, index) => (
-            <GroupCard
-              key={index}
-              color={index}
-              img={item.img}
-              alt={item.alt}
-              title={item.title}
-              desc={item.desc}
-              privateGroup={item.privateGroup}
-            />
-          ))}
+          {!groupList ? (
+            <Loader description="Fetching" height="50vh" />
+          ) : groupList?.length === 0 ? (
+            <EmptyData height="40vh" text="No groups yet." />
+          ) : (
+            <>
+              {groupList?.slice(0, 4).map((item, index) => (
+                <GroupCard
+                  key={index}
+                  color={index}
+                  // img={item.img}
+                  // alt={item.alt}
+                  savings_per_interval={item.savings_per_interval}
+                  title={item.name}
+                  desc={item.description}
+                  privateGroup={item.private}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div className="mt-5_6 py-2  text-white-000">
@@ -115,9 +121,11 @@ export default function GroupSavingsPage() {
             <h2 className="sub-title  mb-4 fw-bold">Join A Group</h2>
             <p className="text-xl">Save Collectively and Collaboratively!</p>
             <div className="d-flex align-items-center justify-content-center">
-              <button className="btn btn-md btn-black px-md-5 px-4">
-                See More Groups
-              </button>
+              <Link href="/home/groups" className="text-decoration-none">
+                <button className="btn btn-md btn-black px-md-5 px-4">
+                  See More Groups
+                </button>
+              </Link>
             </div>
           </div>
         </div>

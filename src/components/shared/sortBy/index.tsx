@@ -1,41 +1,43 @@
-// import { Icon } from "@iconify/react";
-
 export const SortBy = ({
   setSort,
   sort,
-  // pagingInfo: { currentPage, itemCount, itemsPerPage, totalItems },
+  pagingInfo,
 }: {
   setSort: (e: string) => void;
   sort: string;
-  // pagingInfo: {
-  //   currentPage: number;
-  //   itemCount: number;
-  //   itemsPerPage: number;
-  //   totalItems: number;
-  // };
+  pagingInfo: {
+    privateCount: number;
+    nonPrivateCount: number;
+    total: number;
+  };
 }) => {
-  // const startIndex = (currentPage - 1) * itemsPerPage + 1;
-  // const endIndex = startIndex + itemCount - 1;
-
   return (
     <div className="d-flex align-items-center justify-content-between mb-4">
-      <p className="text-sm text-black-000 mb-0">
+      <p className="text-sm text-gray-400 mb-0">
         Showing{" "}
         <span className="text-black-000">
-          {/* {startIndex}-{endIndex} of {totalItems} */}
+          {sort === "all" && <>{pagingInfo.total}</>}
+          {sort === "private" && <>{pagingInfo.privateCount}</>}
+          {sort === "public" && <>{pagingInfo.nonPrivateCount}</>}
         </span>{" "}
-        results
+        results for{" "}
+        <span className="text-black-000">
+          {sort === "all" && <>all groups</>}
+          {sort === "private" && <>private groups</>}
+          {sort === "public" && <>public groups</>}
+        </span>
       </p>
       <div className="d-flex align-items-center gap-3 me-3">
-        <p className="text-sm text-black-000 mb-0 text-nowrap ">Sort by:</p>
+        <p className="text-sm text-gray-400 mb-0 text-nowrap ">Sort by:</p>
         <select
-          className="text-xs border rounded border-black-000"
+          className="text-lg bg-transparent text-black-000 border rounded border-black-000"
           id="sort-dropdown"
           onChange={(e) => setSort(e.target.value)}
           defaultValue={sort}
         >
-          <option value="popular">Popular</option>
-          <option value="latest">Latest</option>
+          <option value="all">All</option>
+          <option value="public">Public</option>
+          <option value="private">Private</option>
         </select>
         {/* <span className="sort-menu btn-transition">
           <Icon icon="iconoir:menu" width="1.2rem" height="1.2rem" />
