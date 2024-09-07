@@ -5,6 +5,7 @@ export type ModalTypes =
   | "createGroup"
   | "verifyUser"
   | "success"
+  | "groupCode"
   | null;
 
 export enum Gender {

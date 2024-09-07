@@ -139,13 +139,18 @@ body {
       margin-top: -4.5rem;
       .price {
         display: inline-block;
-        padding: 1rem;
+        padding: 0.5rem;
         background-color: $white-000;
-        border: 0.35rem solid $black-000;
+        border: 0.2rem solid $black-000;
         border-radius: 50%;
+        height: 5rem;
+        width: 5rem;
         text-align: center;
         white-space: nowrap;
         color: $black-000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         span {
           display: inline-block;
           // min-width: 1rem;

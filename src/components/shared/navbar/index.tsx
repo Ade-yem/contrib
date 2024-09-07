@@ -159,14 +159,22 @@ const Navbar = () => {
                 </div>
               </div>
             </Authenticated>
-            <Link
-              href="/group-savings"
-              className="text-decoration-none desktop-item"
-            >
-              <button className="btn p-lg-3 btn-primary" type="button">
-                <span className="text-base"> Join a Group</span>
+            <Authenticated>
+              <button
+                className="btn p-lg-3 btn-primary"
+                onClick={() => setShowModal("createGroup")}
+              >
+                <span className="text-base"> Create New Group</span>
               </button>
-            </Link>
+            </Authenticated>
+            <Unauthenticated>
+              <button
+                className="btn p-lg-3 btn-primary"
+                onClick={handleShowLogin}
+              >
+                <span className="text-base"> Create New Group</span>
+              </button>
+            </Unauthenticated>
           </div>
           <div className="mobile-menu">
             <div className="d-flex align-items-center border border-black-000 rounded-01 p-2">
@@ -226,7 +234,6 @@ const Navbar = () => {
         <Sidebar
           closeSidebar={() => setIsSideBarOpen(false)}
           openSidebar={isSideBarOpen}
-          // handleShowLogin={handleShowLogin}
         />
       )}
     </>
@@ -238,11 +245,9 @@ export default Navbar;
 const Sidebar = ({
   closeSidebar,
   openSidebar,
-  // handleShowLogin,
 }: {
   closeSidebar: () => void;
   openSidebar: boolean;
-  // handleShowLogin: () => void;
 }) => {
   const {
     setShowModal,
@@ -252,17 +257,21 @@ const Sidebar = ({
 
   const handleShowLogin = () => {
     setShowModal("login");
-    console.log("first");
+  };
+  const handleShowRegister = () => {
+    setShowModal("register");
   };
   const [openAccordion, setOpenAccordion] = useState<number | null>(-2);
 
   const accordionList = [
     {
+      id: 1,
       title: "Sign In",
       link: "Sign In",
       link2: "Sign Up",
     },
     {
+      id: 2,
       title: "Savings",
       link: "Personal Savings",
       link2: "Group Savings",
@@ -298,24 +307,47 @@ const Sidebar = ({
         <div className="container mt-5">
           {accordionList.map((item, index) => (
             <div key={index}>
-              <div className="border border-white-000 border-top-0 border-start-0 border-end-0">
-                <div
-                  className=" d-flex align-items-center text-white-000 justify-content-between p-4_5 px-sm-5_6 px-4 my-3"
-                  onClick={() => handleToggle(index)}
-                >
-                  <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
-                  <Icon
-                    icon={
-                      openAccordion === index
-                        ? "mingcute:arrows-up-line"
-                        : "mingcute:arrows-down-line"
-                    }
-                    width="3rem"
-                    height="3rem"
-                    className="text-black-00"
-                    role="button"
-                  />
-                </div>
+              <div>
+                {item.id === 1 ? (
+                  <Unauthenticated>
+                    <div
+                      className="border border-white-000 border-top-0 border-start-0 border-end-0 d-flex align-items-center text-white-000 justify-content-between py-5 px-sm-5_6 px-4"
+                      onClick={() => handleToggle(index)}
+                    >
+                      <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
+                      <Icon
+                        icon={
+                          openAccordion === index
+                            ? "mingcute:arrows-up-line"
+                            : "mingcute:arrows-down-line"
+                        }
+                        width="3rem"
+                        height="3rem"
+                        className="text-black-00"
+                        role="button"
+                      />
+                    </div>
+                  </Unauthenticated>
+                ) : (
+                  <div
+                    className="border border-white-000 border-top-0 border-start-0 border-end-0 d-flex align-items-center text-white-000 justify-content-between py-5 px-sm-5_6 px-4"
+                    onClick={() => handleToggle(index)}
+                  >
+                    <h2 className="text-xl fw-bold mb-0">{item.title}</h2>
+                    <Icon
+                      icon={
+                        openAccordion === index
+                          ? "mingcute:arrows-up-line"
+                          : "mingcute:arrows-down-line"
+                      }
+                      width="3rem"
+                      height="3rem"
+                      className="text-black-00"
+                      role="button"
+                    />
+                  </div>
+                )}
+
                 {openAccordion === index && (
                   <div className="overlay">
                     <div className="bg-white-000 p-4_5 px-sm-5_6 px-4">
@@ -323,10 +355,7 @@ const Sidebar = ({
                         <p
                           className="text-sm fw-small mb-0"
                           role="button"
-                          onClick={() => {
-                            handleShowLogin;
-                            // closeSidebar;
-                          }}
+                          onClick={handleShowLogin}
                         >
                           {item.link}
                         </p>
@@ -348,9 +377,7 @@ const Sidebar = ({
                         <p
                           className="text-sm fw-small mb-0"
                           role="button"
-                          onClick={() => {
-                            handleShowLogin;
-                          }}
+                          onClick={handleShowRegister}
                         >
                           {item.link2}
                         </p>
