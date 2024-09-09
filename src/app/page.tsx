@@ -1,6 +1,6 @@
 "use client";
-import GoogleSignIn from "@/components/buttons/Google";
-import { SignInWithPassword } from "@/components/forms/SigninForm";
+
+import { SignInFormPasswordAndVerifyViaCode } from "@/components/forms/auth/signinWithCodeAndPassword";
 import {
   Authenticated,
   Unauthenticated,
@@ -31,22 +31,24 @@ export default function Home() {
     })
   };
   const payMoney = async () => {
-  //   const res = await initializeTransaction({
-  //     amount: 10000,
-  //     email: user?.email as string,
-  //     metadata: {
+    const res = await initializeTransaction({
+      amount: 10000,
+      email: user?.email as string,
+      metadata: {
+        userId: user?._id as Id<"users">,
+        details: "pay group",
 
-  //     }
-  //   });
-    // if (res) {
-    //   window.location.href = res.data.authorization_url;
-    // }
+      }
+    });
+    if (res) {
+      window.location.href = res.data.authorization_url;
+    }
   };
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="d-flex mh-100 mt-10 flex-column align-items-center justify-content-between p-24">
       <Unauthenticated>
-        <SignInWithPassword />
-        <GoogleSignIn />
+        <SignInFormPasswordAndVerifyViaCode />
+        
       </Unauthenticated>
       <Authenticated>
         <div className="card w-72 h-20">

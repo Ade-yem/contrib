@@ -51,7 +51,7 @@ export const editProfile = mutation({
   }
 })
 
-export const generateUploadUrl = mutation(async (ctx) => {
+export const generateUserProfileUploadUrl = mutation(async (ctx) => {
   const userId = await auth.getUserId(ctx);
   if (!userId) throw new ConvexError("User is not verified");
   const user = await ctx.db.get(userId);
@@ -60,7 +60,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
 
-export const saveImageId = mutation({
+export const saveUserProfileImage = mutation({
   args: {
     imageId: v.id("_storage")
   },

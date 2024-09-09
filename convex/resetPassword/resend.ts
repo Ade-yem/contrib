@@ -19,10 +19,10 @@ export const ResendOTPPasswordReset = Email({
     const resend = new ResendAPI(provider.apiKey);
     const { error } = await resend.emails.send({
       // TODO: Update with your app name and email address
-      from: process.env.AUTH_EMAIL ?? "My App <onboarding@resend.dev>",
+      from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Adeyemi  at Jekajodawo",
       to: [email],
       // TODO: Update with your app name
-      subject: `Reset password in My App`,
+      subject: `Reset Jekajodawo password`,
       react: PasswordResetEmail({ code: token, expires }),
     });
 
@@ -47,11 +47,9 @@ export const ResendOTP = Email({
   }) {
     const resend = new ResendAPI(provider.apiKey);
     const { error } = await resend.emails.send({
-      // TODO: Update with your app name and email address
-      from: process.env.AUTH_EMAIL ?? "My App <onboarding@resend.dev>",
+      from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Adeyemi  at Jekajodawo",
       to: [email],
-      // TODO: Update with your app name
-      subject: `Sign in to My App`,
+      subject: `Email Verification`,
       react: VerificationCodeEmail({ code: token, expires }),
     });
 
