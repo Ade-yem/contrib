@@ -6,6 +6,8 @@ export type ModalTypes =
   | "verifyUser"
   | "success"
   | "groupCode"
+  | "createPersonalSavings"
+  | "withdrawFunds"
   | null;
 
 export enum Gender {

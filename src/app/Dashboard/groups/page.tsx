@@ -17,6 +17,12 @@ export default function GroupPage() {
 
   console.log(groupList);
 
+  // const { results, status, loadMore } = usePaginatedQuery(
+  //   api.user.getMyGroups,
+  //   {},
+  //   { initialNumItems: 5 }
+  // );
+
   return (
     <>
       <button

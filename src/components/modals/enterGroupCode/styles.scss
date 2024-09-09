@@ -1,0 +1,28 @@
+.enter-group-wrapper {
+  height: calc(100vh - 25rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (max-height: 550px) {
+    margin-block: 10rem;
+  }
+  @media (max-height: 450px) {
+    margin-block: 15rem;
+  }
+  .group-code-input {
+    width: 3.9rem;
+    height: 4.2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.5rem;
+    text-transform: capitalize;
+    padding-bottom: 0.5rem;
+    color: white;
+
+    @media (max-width: 320px) {
+      width: 3.4rem;
+      height: 3.9rem;
+    }
+  }
+}
