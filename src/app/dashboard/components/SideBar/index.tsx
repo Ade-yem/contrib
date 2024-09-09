@@ -22,15 +22,20 @@ const SideBar = () => {
       <hr className="divider" />
       <div className="py-3 px-5">
         {/* <CustomLink name="Dashboard" icon="radix-icons:dashboard" path="" /> */}
-        <div className="d-flex align-items-center gap-3">
-          <Icon
-            icon="streamline:dashboard-3-solid"
-            width="1.5rem"
-            height="1.5rem"
-            style={{ color: "black" }}
-          />
-          <span>Dashboard</span>
-        </div>
+        <Link
+          href={"/dashboard"}
+          className="text-decoration-none click text-black-000"
+        >
+          <div className="d-flex align-items-center gap-3">
+            <Icon
+              icon="streamline:dashboard-3-solid"
+              width="1.5rem"
+              height="1.5rem"
+              style={{ color: "black" }}
+            />
+            <span>Dashboard</span>
+          </div>
+        </Link>
       </div>
       <hr className="divider" />
       <div className="py-3 px-5">

@@ -34,7 +34,6 @@ export const EnterGroupCodeModal = () => {
   //       code: discountCode,
   //     });
   //     setShowModal("success");
-  //     console.log("Group created successfully");
   //   } catch (error: any) {
   //     toast.error("Unable to join group", error);
   //   }

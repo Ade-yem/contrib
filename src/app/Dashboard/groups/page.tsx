@@ -2,7 +2,7 @@
 import { LayoutContext } from "@/context/layoutContext";
 import { ModalTypes } from "@/services/_schema";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import React, { useContext } from "react";
 import { api } from "../../../../convex/_generated/api";
 
@@ -93,44 +93,6 @@ export default function GroupPage() {
                 </td>
               </tr>
             ))}
-            {/* <tr>
-              <td className="py-4_5 ps-4">Group...</td>
-              <td className="py-4_5 ps-4 desc">
-                Description... Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Temporibus accusantium sit voluptas
-                perspiciatis tempora quas nulla culpa eveniet at nis
-              </td>
-              <td className="py-4_5 ps-4">$100</td>
-              <td className="py-4_5 ps-4">5</td>
-              <td className="py-4_5 ps-4">12345</td>
-              <td className="py-4_5 ps-4">
-                <Icon
-                  icon="iconamoon:menu-kebab-vertical"
-                  width="2rem"
-                  role="button"
-                  data-toggle="dropdown"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td className="py-4_5 ps-4">Group...</td>
-              <td className="py-4_5 ps-4 desc">
-                Description... Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Temporibus accusantium sit voluptas
-                perspiciatis tempora quas nulla culpa eveniet at nis
-              </td>
-              <td className="py-4_5 ps-4">$100</td>
-              <td className="py-4_5 ps-4">5</td>
-              <td className="py-4_5 ps-4">12345</td>
-              <td className="py-4_5 ps-4">
-                <Icon
-                  icon="iconamoon:menu-kebab-vertical"
-                  width="2rem"
-                  role="button"
-                  data-toggle="dropdown"
-                />
-              </td>
-            </tr> */}
           </tbody>
         </table>
       </div>

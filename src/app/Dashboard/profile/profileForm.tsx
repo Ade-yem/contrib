@@ -44,14 +44,11 @@ export const ProfileForm = (props: profilePropTypes) => {
     const postUrl = await generateUploadUrl();
 
     // Step 2: POST the file to the URL
-    const result = await fetch(
-      "https://watchful-zebra-416.convex.cloud/api/storage/upload?token=017f70654591856906284a52daae76f57b084290d7bb06043756eba67cd0babf559bd427c6761dc1e04e9ff19b0169a342932343c5fae57309f93a7cb2946b5cacecd9a870",
-      {
-        method: "POST",
-        headers: { "Content-Type": selectedImage!.type },
-        body: selectedImage,
-      }
-    );
+    const result = await fetch(postUrl, {
+      method: "POST",
+      headers: { "Content-Type": selectedImage!.type },
+      body: selectedImage,
+    });
     const { imageId } = await result.json();
     // Step 3: Save the newly allocated storage id to the database
     await sendImage({ imageId });
