@@ -11,15 +11,15 @@ import { VerificationResponse } from "./types/verification";
 export const createPaystackPlan = internalAction ({
     args: {
         name: v.string(),
-        group_id: v.id("groups"),
+        groupId: v.id("groups"),
         amount: v.number(),
         description: v.optional(v.string()),
-        interval: v.union(v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
+        interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
         currency: v.string(),
         invoiceLimit: v.number(),
     },
     handler: async (ctx, args_0) => {
-        const { name, group_id, amount, description, interval, invoiceLimit } = args_0
+        const { name, groupId, amount, description, interval, invoiceLimit } = args_0
         const result: createPlanResponse | null = await paystack.createPlan({
             name: name,
             amount: amount,
@@ -28,7 +28,7 @@ export const createPaystackPlan = internalAction ({
             invoiceLimit: invoiceLimit
         })
         if (result) {
-            await ctx.runMutation(internal.paystack.createPlan, {group_id: group_id, subscription_plan_id: result.data.plan_code});
+            await ctx.runMutation(internal.paystack.createPlan, {groupId: groupId, subscription_plan_id: result.data.plan_code});
             return result.message;
         }
         return null;
@@ -39,21 +39,29 @@ export const initializePaystackTransaction = action ({
     args: {
         email: v.string(),
         amount: v.number(),
-        metadata: v.optional(v.object({
-            details: v.string(),
-            group_id: v.id("groups"),
-            user_id: v.id("users"),
-        }))
+        metadata: v.object({
+            details: v.union(v.literal("join group"), v.literal("add savings"), v.literal("pay group")),
+            groupId: v.optional(v.id("groups")),
+            savingsId: v.optional(v.id("savings")),
+            userId: v.id("users"),
+        })
     },
     handler: async (ctx, args_0) => {
-        const { email, amount, metadata } = args_0
+        const { email, amount } = args_0
+        const metadata = {
+            details: args_0.metadata.details,
+            groupId: args_0.metadata.groupId ? args_0.metadata.groupId : "",
+            savingsId: args_0.metadata.savingsId ? args_0.metadata.savingsId : "",
+            userId: args_0.metadata.userId
+
+        }
         const result: InitializeResponse = await paystack.initializeTransaction({
             email,
             amount,
             metadata
         })
         if (result) {
-            await ctx.runMutation(internal.paystack.createTransaction, {group_id: metadata?.group_id, user_id: metadata?.user_id, type: "deposit", new: true, access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata?.details})
+            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
         }
         return result;
     },

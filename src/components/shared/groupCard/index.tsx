@@ -1,3 +1,4 @@
+import { thousandFormatter } from "@/components/utilities";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import React from "react";
@@ -6,15 +7,17 @@ export const GroupCard = ({
   img,
   alt,
   title,
+  savings_per_interval,
   desc,
   key,
   privateGroup,
   color,
 }: {
-  img: string;
-  alt: string;
+  img?: string;
+  alt?: string;
   title: string;
-  desc: string;
+  savings_per_interval: number;
+  desc?: string;
   key: number;
   color: number;
   privateGroup?: boolean;
@@ -29,8 +32,10 @@ export const GroupCard = ({
         >
           <Image
             className="obj-cover"
-            src={img}
-            alt={alt}
+            // src={img}
+            // alt={alt}
+            src={"/friends.svg"}
+            alt={"alt"}
             width={100}
             height={100}
           />
@@ -44,9 +49,12 @@ export const GroupCard = ({
               className={`text-white-000 ${privateGroup ? "" : "invisible"}`}
             />
           </span>
-          <span className="price">
-            <span>#50</span>
+          <span className="price d-non">
+            <span>₦{thousandFormatter(savings_per_interval)}</span>
           </span>
+          {/* <span className="price">
+            <span>₦100</span>
+          </span> */}
         </div>
         <div className="d-flex justify-content-center align-items-center gap-3 my-4">
           <span>xxxxx</span>

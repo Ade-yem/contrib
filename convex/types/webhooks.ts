@@ -4,17 +4,17 @@ interface LogHistory {
     time: number;
   }
   
-  interface Log {
-    time_spent: number;
-    attempts: number;
-    authentication: string;
-    errors: number;
-    success: boolean;
-    mobile: boolean;
-    input: any[];
-    channel: string | null;
-    history: LogHistory[];
-  }
+interface Log {
+  time_spent: number;
+  attempts: number;
+  authentication: string;
+  errors: number;
+  success: boolean;
+  mobile: boolean;
+  input: any[];
+  channel: string | null;
+  history: LogHistory[];
+}
   
   interface Customer {
     id: number;
@@ -29,22 +29,23 @@ interface LogHistory {
 
   interface Metadata {
     details: 'join group' | "add savings";
-    group_id: string;
-    user_id: string;
+    groupId: string;
+    savingsId: string;
+    userId: string;
   }
   
-  interface Authorization {
-    authorization_code: string;
-    bin: string;
-    last4: string;
-    exp_month: string;
-    exp_year: string;
-    card_type: string;
-    bank: string;
-    country_code: string;
-    brand: string;
-    account_name: string;
-  }
+export interface Authorization {
+  authorization_code: string;
+  bin: string;
+  last4: string;
+  exp_month: string;
+  exp_year: string;
+  card_type: string;
+  bank: string;
+  country_code: string;
+  brand: string;
+  account_name: string;
+}
   
   export interface ChargeSuccessData {
     id: number;
@@ -69,5 +70,5 @@ interface LogHistory {
 //   {
 //     amount: 10000,
 //     email: "adejumoadeyemi32@gmail.com",
-//     metadata: { details: "join group", group_id: "k176ek00vz0z4y08m71xage9a96zn1yd", user_id: "jx76m0fbdf962z3c8bae5qjh4x6zjn9n" },
+//     metadata: { details: "join group", groupId: "k176ek00vz0z4y08m71xage9a96zn1yd", userId: "jx76m0fbdf962z3c8bae5qjh4x6zjn9n" },
 //   }

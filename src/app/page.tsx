@@ -31,13 +31,16 @@ export default function Home() {
     })
   };
   const payMoney = async () => {
-    const res = await initializeTransaction({
-      amount: 10000,
-      email: user?.email as string,
-    });
-    if (res) {
-      window.location.href = res.data.authorization_url;
-    }
+  //   const res = await initializeTransaction({
+  //     amount: 10000,
+  //     email: user?.email as string,
+  //     metadata: {
+
+  //     }
+  //   });
+    // if (res) {
+    //   window.location.href = res.data.authorization_url;
+    // }
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

@@ -45,8 +45,9 @@ class PaystackAPI {
   }
 
   async initializeTransaction(data: { email: string, amount: number, metadata: {
-    group_id: string;
-    user_id: string;
+    groupId: string;
+    savingsId: string;
+    userId: string;
     details: string;
 } | undefined }) {
     const params = JSON.stringify({
