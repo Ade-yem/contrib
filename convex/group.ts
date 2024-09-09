@@ -76,6 +76,17 @@ export const createMembership = internalMutation({
   }
 });
 
+export const accessGroupWithInviteCode = query({
+  args: {
+    code: v.string()
+  },
+  async handler(ctx, args) {
+    const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("code"), args.code)).first();
+    if (!invite) throw new ConvexError("There is not group like this");
+    return ctx.db.get(invite.groupId);
+  }
+})
+
 export const addSubscriptionCodeToMembership = internalMutation({
   args: {
     email: v.string(),

@@ -30,7 +30,9 @@ const schema = defineSchema({
   savings: defineTable({
     userId: v.id("users"),
     amount: v.float64(),
+    reason: v.string(),
     name: v.string(),
+    interval: v.optional(v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly"))),
   }),
   transactions: defineTable({
     groupId: v.optional(v.id("groups")),
@@ -54,11 +56,13 @@ const schema = defineSchema({
     groupId: v.id("groups"),
     receiver_id: v.id("users"),
     month: v.float64(),
-    members_payment_status: v.array(v.object({
+    members_payment_status: v.optional(v.array(v.object({
       userId: v.id("users"),
       status: v.union(v.literal("pending"), v.literal("paid")),
       amount: v.float64(),
-    }))
+    }))),
+    start: v.optional(v.float64()),
+    end: v.optional(v.float64()),
   }),
   payment_methods: defineTable({
     userId: v.id('users'),

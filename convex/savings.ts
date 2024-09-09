@@ -10,10 +10,13 @@ export const createSavings = mutation({
   args: {
     userId: v.id("users"),
     name: v.string(),
+    amount: v.float64(),
+    reason: v.string(),
+    interval: v.optional(v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly"))),
   },
   async handler(ctx, args_0) {
-    const { userId, name } = args_0;
-    await ctx.db.insert("savings", {userId, amount: 0, name});
+    const { userId, name, amount, reason, interval } = args_0;
+    await ctx.db.insert("savings", {userId, name, amount, reason, interval});
   },
 })
 
@@ -26,9 +29,9 @@ export const addMoneyToSavings = action({
   },
   async handler(ctx, args_0) {
     const {userId, email, amount, savingsId } = args_0;
-    const result = await ctx.runAction(api.payments.initializePaystackTransaction, {
+    await ctx.runAction(api.payments.initializePaystackTransaction, {
       metadata: {savingsId, details: "add savings", userId}, amount, email
-    })    
+    })
   },
 })
 export const removeMoneyFromSavings = mutation({
