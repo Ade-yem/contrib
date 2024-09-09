@@ -37,29 +37,29 @@ export const ProfileForm = (props: profilePropTypes) => {
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  async function handleSendImage(event: FormEvent) {
-    event.preventDefault();
+  // async function handleSendImage(event: FormEvent) {
+  //   event.preventDefault();
 
-    // Step 1: Get a short-lived upload URL
-    const postUrl = await generateUploadUrl();
+  //   // Step 1: Get a short-lived upload URL
+  //   const postUrl = await generateUploadUrl();
 
-    // Step 2: POST the file to the URL
-    const result = await fetch(postUrl, {
-      method: "POST",
-      headers: { "Content-Type": selectedImage!.type },
-      body: selectedImage,
-    });
-    const { imageId } = await result.json();
-    // Step 3: Save the newly allocated storage id to the database
-    await sendImage({ imageId });
+  //   // Step 2: POST the file to the URL
+  //   const result = await fetch(postUrl, {
+  //     method: "POST",
+  //     headers: { "Content-Type": selectedImage!.type },
+  //     body: selectedImage,
+  //   });
+  //   const { imageId } = await result.json();
+  //   // Step 3: Save the newly allocated storage id to the database
+  //   await sendImage({ imageId });
 
-    setSelectedImage(null);
-    imageInput.current!.value = "";
-    console.log("postUrl", postUrl);
-    console.log("result", result);
-    console.log("imageId", imageId);
-  }
-  console.log("generateUploadUrl", generateUploadUrl());
+  //   setSelectedImage(null);
+  //   imageInput.current!.value = "";
+  //   console.log("postUrl", postUrl);
+  //   console.log("result", result);
+  //   console.log("imageId", imageId);
+  // }
+  // console.log("generateUploadUrl", generateUploadUrl());
   return (
     <div className="bg-white-000 rounded w-100 p-5 ">
       <p className="text-lg fw-bold">Personal Details</p>
@@ -77,7 +77,7 @@ export const ProfileForm = (props: profilePropTypes) => {
               alt="profile-pics"
               className="rounded-circle"
             />
-            <form onSubmit={handleSendImage}>
+            {/* <form onSubmit={handleSendImage}>
               <input
                 type="file"
                 accept="image/*"
@@ -90,7 +90,7 @@ export const ProfileForm = (props: profilePropTypes) => {
                 value="Send Image"
                 disabled={selectedImage === null}
               />
-            </form>
+            </form> */}
 
             <label
               htmlFor="profilePicture"
