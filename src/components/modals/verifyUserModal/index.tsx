@@ -2,72 +2,61 @@
 
 import React, { useContext, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { useAuthActions } from "@convex-dev/auth/react";
 import toast from "react-hot-toast";
 import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
-import { ModalTypes, PaymentFrequency } from "@/services/_schema";
+import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import { CustomDatePicker } from "@/components/forms/dateRangePicker/datePicker";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { PhoneInputField } from "@/components/shared/phoneInput";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
-export const VerifyUserModal = ({
-  provider,
-  handleSent,
-  handlePasswordReset,
-}: {
-  provider?: string;
-  handleSent?: (email: string) => void;
-  handlePasswordReset?: () => void;
-}) => {
+export const VerifyUserModal = () => {
   const {
     showModal,
     setShowModal,
+    user,
   }: {
+    user: any;
     showModal: ModalTypes;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
-  const { signIn } = useAuthActions();
+  const kycVerification = useMutation(api.user.kycVerification);
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
     bvn: "",
     nin: "",
     dob: "",
-    address: "",
-    phoneNumber: "",
+    homeAddress: "",
+    phone: "",
   };
-
   const validationSchema = yup.object().shape({
     bvn: yup.string().label("BVN").required(),
     nin: yup.string().label("NIN").required(),
-    dob: yup.string().label("Date of Birth").required(),
-    address: yup.string().label("Address").required(),
-    phoneNumber: yup.string().label("Phone Number").required(),
+    dob: yup.string().label("Date Of Birth").required(),
+    homeAddress: yup.string().label("Home address").required(),
+    phone: yup.number().label("Phone No").required(),
   });
-
-  const handleSave = async (values: FormikValues, actions: any) => {
+  const handleProceed = async (values: FormikValues) => {
+    console.log("Submitting group data...", values);
     setSubmitting(true);
-    const formData = new FormData();
-    formData.append("email", values.email);
-    formData.append("password", values.password);
-    formData.append("flow", "signIn");
-
-    signIn(provider ?? "password", formData)
-      .then(() => {
-        handleSent?.(values.email);
-        actions.setSubmitting(false);
-        setShowModal(null);
-      })
-      .catch((error) => {
-        console.error(error);
-        const title = "Could not sign in, Try again";
-        toast.error(title, { id: "auth" });
-        setSubmitting(false);
-        actions.setSubmitting(false);
+    try {
+      await kycVerification({
+        bvn: values.bvn,
+        nin: values.nin,
+        dob: values.dob.toISOString(),
+        homeAddress: values.homeAddress,
+        phone: values.phone,
       });
+      setShowModal("success");
+    } catch (error: any) {
+      toast.error("Unable to verify:", error);
+    }
+    setSubmitting(false);
   };
 
   const closeModal = () => {
@@ -86,7 +75,7 @@ export const VerifyUserModal = ({
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSave}
+            onSubmit={handleProceed}
             validateOnBlur={false}
           >
             {({ handleSubmit, setFieldValue, values, isValid }) => {
@@ -140,8 +129,8 @@ export const VerifyUserModal = ({
                       className="form-control"
                       placeholder="No 2, XXXX Street"
                       type="text"
-                      name="address"
-                      id="address"
+                      name="homeAddress"
+                      id="homeAddress"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
                       Phone Number
@@ -149,9 +138,9 @@ export const VerifyUserModal = ({
                     <Field
                       component={PhoneInputField}
                       country={"ng"}
-                      name="phoneNumber"
+                      name="phone"
                       inputProps={{
-                        id: "phoneNumber",
+                        id: "phone",
                         className: "form-control w-100 border border-black00",
                       }}
                     />

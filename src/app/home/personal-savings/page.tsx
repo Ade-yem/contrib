@@ -1,9 +1,17 @@
+"use client";
 import { SubPageBanner } from "@/components/shared/subPageBanner";
+import { LayoutContext } from "@/context/layoutContext";
+import { ModalTypes } from "@/services/_schema";
 import Image from "next/image";
 
-import React from "react";
+import React, { useContext } from "react";
 
 export default function PersonalSavingsPage() {
+  const {
+    setShowModal,
+  }: {
+    setShowModal: (value: ModalTypes) => void;
+  } = useContext(LayoutContext);
   return (
     <div className="text-center">
       <SubPageBanner
@@ -67,7 +75,12 @@ export default function PersonalSavingsPage() {
                 <br className="d-none d-md-block" /> You can save periodically.
               </p>
               <div className="d-flex align-items-center justify-content-center">
-                <button className="btn btn-md btn-black">Get Started</button>
+                <button
+                  className="btn btn-md btn-black"
+                  onClick={() => setShowModal("createPersonalSavings")}
+                >
+                  Get Started
+                </button>
               </div>
             </div>
           </div>
