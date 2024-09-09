@@ -5,8 +5,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
 import { SavingsCard } from "../../shared/growSavingsCard";
 import { SliderNextArrow, SliderPrevArrow } from "../../customSliderArrows";
+import Loader from "@/components/shared/Loader";
 
-const Slider = dynamic(() => import("react-slick"), { ssr: false });
+const Slider = dynamic(() => import("react-slick"), {
+  ssr: false,
+  loading: () => <Loader height="30vh" />,
+});
 
 export const GrowYourSavings = () => {
   const responsive = [

@@ -28,7 +28,6 @@ export const AddressLocation = () => {
               type="text"
               name="homeAddress"
               id="homeAddress"
-              value={user?.homeAddress}
             />
           </div>
           <div className="mb-4 pe-4_5">
@@ -40,7 +39,6 @@ export const AddressLocation = () => {
               type="text"
               name="nationality"
               id="nationality"
-              value={user?.nationality}
             />
           </div>
         </div>

@@ -6,8 +6,9 @@ import toast from "react-hot-toast";
 import Button from "@/components/forms/Button";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
-import { useNavigate } from "react-router-dom";
 import "./styles.scss";
+import { useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
 export const EnterGroupCodeModal = () => {
   const {
@@ -24,27 +25,21 @@ export const EnterGroupCodeModal = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [inputValues, setInputValues] = useState(Array(6).fill(""));
   // const navigate = useNavigate();
+  // const accessGroupWithInviteCode = useQuery(api.group.accessGroupWithInviteCode);
 
-  const verifygroup = async () => {
-    setIsLoading(true);
-    // try {
-    //   await addGroup({
-    //     creator_id: user?._id as Id<"users">,
-    //     name: values.groupName,
-    //     number_of_people: values.memberNo,
-    //     interval: values.frequency.value,
-    //     savings_per_interval: values.amountGoal,
-    //     private: values.keepGroupPrivate,
-    //     description: values.desc,
-    //   });
-    //   setShowModal("success");
-    //   navigate(`/accept-group`);
-    //   console.log("Group created successfully");
-    // } catch (error: any) {
-    //   toast.error("Unable to join group", error);
-    // }
-    setIsLoading(false);
-  };
+  // const verifygroup = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     await accessGroupWithInviteCode({
+  //       code: discountCode,
+  //     });
+  //     setShowModal("success");
+  //     console.log("Group created successfully");
+  //   } catch (error: any) {
+  //     toast.error("Unable to join group", error);
+  //   }
+  //   setIsLoading(false);
+  // };
 
   const onChangeInput = (value: string, inputNumber: number) => {
     setErrorMessage("");
@@ -138,7 +133,7 @@ export const EnterGroupCodeModal = () => {
                   loadingTitle={"Please wait..."}
                   className="btn-lg btn btn-primary"
                   style={{ borderRadius: "1rem" }}
-                  onClick={verifygroup}
+                  // onClick={verifygroup}
                 />
               </div>
             </div>
