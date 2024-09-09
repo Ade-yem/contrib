@@ -6,7 +6,7 @@ import { PhoneInputField } from "@/components/shared/phoneInput";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
 import { Gender } from "@/services/_schema";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { Field, Form, Formik, FormikValues } from "formik";
 import Image from "next/image";
 import React, { FormEvent, useContext, useRef, useState } from "react";
@@ -23,7 +23,6 @@ const genderSelect = Object.entries(Gender).map((item) => ({
   label: item[1],
   value: item[0],
 }));
-const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
 
 export const ProfileForm = (props: CustomDatePickerTypes) => {
   const {
@@ -32,20 +31,27 @@ export const ProfileForm = (props: CustomDatePickerTypes) => {
     user: any;
   } = useContext(LayoutContext);
 
+  const generateUploadUrl = useMutation(api.user.generateUploadUrl);
+  const sendImage = useMutation(api.user.saveImageId);
+
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const [name] = useState(() => "User " + Math.floor(Math.random() * 10000));
   async function handleSendImage(event: FormEvent) {
     event.preventDefault();
 
-    // e.g. https://happy-animal-123.convex.site/sendImage?author=User+123
-    const sendImageUrl = new URL(`${convexSiteUrl}/sendImage`);
-    sendImageUrl.searchParams.set("author", "Jack Smith");
-
-    await fetch(sendImageUrl, {
+    // Step 1: Get a short-lived upload URL
+    const postUrl = await generateUploadUrl();
+    // Step 2: POST the file to the URL
+    const result = await fetch(postUrl, {
       method: "POST",
       headers: { "Content-Type": selectedImage!.type },
       body: selectedImage,
     });
+    const { imageId } = await result.json();
+    // Step 3: Save the newly allocated storage id to the database
+    await sendImage({ imageId });
 
     setSelectedImage(null);
     imageInput.current!.value = "";
