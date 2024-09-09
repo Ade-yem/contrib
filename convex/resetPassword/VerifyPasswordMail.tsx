@@ -21,8 +21,7 @@ import {
           <Head />
           <Container className="container px-20 font-sans">
             <Heading className="text-xl font-bold mb-4">
-              {/* TODO: Update with your app name */}
-              Sign in to My App
+              Verify your email address on Jekajodawo
             </Heading>
             <Text className="text-sm">
               Please enter the following code on the sign in page.

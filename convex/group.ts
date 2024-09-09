@@ -33,6 +33,21 @@ export const getAllGroups = query({
 }
 )
 
+export const generateGroupProfileUploadUrl = mutation(async (ctx) => await ctx.storage.generateUploadUrl());
+
+export const saveUserProfileImage = mutation({
+  args: {
+    imageId: v.id("_storage"),
+    groupId: v.id("groups")
+  },
+  async handler(ctx, args_0) {
+    const {imageId, groupId} = args_0;
+    const image = await ctx.storage.getUrl(imageId);
+    if (!image) throw new ConvexError("Could not get image from storage")
+    await ctx.db.patch(groupId, {imageId, image})
+  },
+})
+
 export const getUserMemberships = query({
   args: {
     userId: v.id("users")
@@ -46,17 +61,17 @@ export const createMembership = internalMutation({
   args: {
     groupId: v.id("groups"),
     userId: v.id("users"),
-    paid_deposit: v.float64(),
+    paid_deposit: v.optional(v.float64()),
   },
   handler: async (ctx, args) => {
     const group = await ctx.db.get(args.groupId);
+    const exists = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), args.groupId) && m.eq(m.field("userId"), args.userId)).first();
+    if (exists) throw new ConvexError("User is already a member");
     if (group && group.number_of_people_present <= group.number_of_people) {
       await ctx.db.insert("membership", {groupId: args.groupId, userId: args.userId, paid_deposit: args.paid_deposit});
       await ctx.db.patch(group._id, {number_of_people_present: group.number_of_people_present + 1})
     } else {
-      throw new ConvexError({
-        message: "The group does not exist or the group is full"
-      })
+      throw new ConvexError("The group does not exist or the group is full")
     }
   }
 });
@@ -201,11 +216,10 @@ export const createAuthorization = internalMutation({
     bank: v.string(),
     country_code: v.string(),
     brand: v.string(),
-    account_name: v.string(),
   },
   handler: async (ctx, args) => {
-      const { userId, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand, account_name } = args;
-      if (await ctx.db.query("authorizations").filter(q => q.eq(q.field("authorization_code"), authorization_code) && q.eq(q.field("account_name"), account_name)).first()) return;
-      await ctx.db.insert("authorizations", {userId, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand, account_name});
+      const { userId, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand } = args;
+      if (await ctx.db.query("authorizations").filter(q => q.eq(q.field("authorization_code"), authorization_code) || q.eq(q.field("userId"), userId) ).first()) return;
+      await ctx.db.insert("authorizations", {userId, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand});
   }
 })

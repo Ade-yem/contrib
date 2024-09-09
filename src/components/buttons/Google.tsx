@@ -6,7 +6,7 @@ export default function GoogleSignIn() {
   const { signIn } = useAuthActions();
   return (
     <button
-      className="btn btn-md text-xs btn-outline-purple w-100"
+      className="btn btn-primary text-sm btn-outline-secondary"
       onClick={() => void signIn("google")}
     >
       <svg

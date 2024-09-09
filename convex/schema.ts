@@ -16,7 +16,9 @@ const schema = defineSchema({
     status: v.union(v.literal("active"), v.literal("pending"), v.literal("closed")),
     start_date: v.optional(v.string()),
     elapsedTime: v.float64(),
-    private: v.boolean()
+    private: v.boolean(),
+    imageId: v.optional(v.id("_storage")),
+    image: v.optional(v.string())
   }),
   membership: defineTable({
     groupId: v.id("groups"),
@@ -79,7 +81,6 @@ const schema = defineSchema({
     bank: v.string(),
     country_code: v.string(),
     brand: v.string(),
-    account_name: v.string(),
   }),
   default_payment_method: defineTable({
     userId: v.id('users'),
