@@ -1,11 +1,15 @@
 import React from "react";
 
-export default function Button({children, onClick, className}: {children: React.ReactNode, onClick: React.MouseEventHandler<HTMLDivElement> | undefined; className?: string
-}) {
-    return(
-        <div className={className ? className : "btn btn-md btn-info"} onClick={onClick}>
-            {children}
-        </div>
-    )
-    
+export default function Button({children, onClick, className, type, disabled}:
+  {
+    children: React.ReactNode,
+    onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+    className?: string; type?: "submit" | "reset" | "button" | undefined;
+    disabled?: boolean;
+  }) {
+  return(
+    <button type={type} className={`btn btn-block btn-success ${className ? className : ""}`} onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  )
 }

@@ -15,7 +15,6 @@ export const generateReport = internalMutation({
     const groupId = job?.groupId as Id<"groups">
     const group = await ctx.db.get(groupId);
     if (!group) throw new ConvexError("Could not get group of id " + groupId);
-    // const groupMembers = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId)).collect();
     const groupTransactions = await ctx.db.query("transactions").filter(t => t.eq(t.field("groupId"), groupId) && t.eq(t.field("details"), "pay group")).order("desc").collect();
     const start_date = new Date(group?.start_date as string);
     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
@@ -37,6 +36,30 @@ export const generateReport = internalMutation({
       }
     }
     await ctx.db.insert("interval", {groupId, receiver_id: receiver?.userId as Id<"users">, month: elapsed, members_payment_status });
+  },
+})
+
+export const intervalRecord = internalMutation({
+  args: {
+    jobId: v.id("jobs"),
+  },
+  async handler(ctx, args_0) {
+    const { jobId } = args_0;
+    const job = await ctx.db.get(jobId);
+    const groupId = job?.groupId as Id<"groups">
+    const group = await ctx.db.get(groupId);
+    if (!group) throw new ConvexError("Could not get group of id " + groupId);
+    const elapsed = group?.elapsedTime ? group?.elapsedTime : 0;
+    const receiver = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId) && m.eq(m.field("collection_number"), elapsed)).first();
+    const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
+    const multiplier = interval === "hourly" ? 1 : interval === "daily" ? 24 : interval === "weekly" ? 24 * 7 : 24 * 7 * 30;
+    const start_date = new Date(group?.start_date as string);
+    const timestamp = start_date.getTime();
+    let startOfInterval = elapsed * multiplier;
+    let endOfInterval = elapsed * multiplier + multiplier;
+    startOfInterval = convertToMilliSeconds(startOfInterval) + timestamp;
+    endOfInterval = convertToMilliSeconds(endOfInterval) + timestamp;
+    await ctx.db.insert("interval", {groupId, receiver_id: receiver?.userId as Id<"users">, month: elapsed, start: startOfInterval, end: endOfInterval });
   },
 })
 
