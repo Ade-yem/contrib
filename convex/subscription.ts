@@ -8,7 +8,7 @@ export const subscribeUsersToPlan = internalAction({
       groupId: v.id("groups")
     },
     async handler(ctx, args) {
-      const users = await ctx.runQuery(api.group.getGroupMemberships, {groupId: args.groupId})
+      const users = await ctx.runQuery(api.memberships.getGroupMemberships, {groupId: args.groupId})
       const group = await ctx.runQuery(api.group.getGroup, {groupId: args.groupId});
       if (users.length > 0 && group) {
         
@@ -16,8 +16,8 @@ export const subscribeUsersToPlan = internalAction({
         // create a new date and add two days to it
         const start_date = new Date();
         const schedule_date = new Date();
-        start_date.setDate(start_date.getDate() + 2);
-        schedule_date.setDate(schedule_date.getDate() + 3);
+        start_date.setDate(start_date.getMinutes() + 3);
+        schedule_date.setDate(schedule_date.getMinutes() + 5);
         const start = start_date.toISOString();
         for (const user of users) {
           const userz = await ctx.runQuery(api.user.getUserById, {userId: user.userId})

@@ -1,8 +1,8 @@
 "use node";
 
 import paystack from "./paystack_api";
-import { internal } from "./_generated/api";
-import { action, internalAction } from "./_generated/server";
+import { internal, api } from "./_generated/api";
+import { action, internalAction, query } from "./_generated/server";
 import { v } from "convex/values";
 import crypto from "crypto"
 import { createPlanResponse, InitializeResponse } from "./types/subscriptions";
@@ -40,10 +40,12 @@ export const initializePaystackTransaction = action ({
         email: v.string(),
         amount: v.number(),
         metadata: v.object({
-            details: v.union(v.literal("join group"), v.literal("add savings"), v.literal("pay group")),
+            details: v.union(v.literal("join group"), v.literal("add savings"), v.literal("pay group"), v.literal("create savings")),
             groupId: v.optional(v.id("groups")),
             savingsId: v.optional(v.id("savings")),
             userId: v.id("users"),
+            name: v.optional(v.string()),
+            reason: v.optional(v.string()),
         })
     },
     handler: async (ctx, args_0) => {
@@ -52,13 +54,52 @@ export const initializePaystackTransaction = action ({
             details: args_0.metadata.details,
             groupId: args_0.metadata.groupId ? args_0.metadata.groupId : "",
             savingsId: args_0.metadata.savingsId ? args_0.metadata.savingsId : "",
+            name: args_0.metadata.name ? args_0.metadata.name : "",
+            reason: args_0.metadata.reason ? args_0.metadata.reason : "",
             userId: args_0.metadata.userId
-
         }
         const result: InitializeResponse = await paystack.initializeTransaction({
             email,
             amount,
             metadata
+        })
+        if (result) {
+            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
+        }
+        return result;
+    },
+})
+
+
+export const ChargeTransaction = action ({
+    args: {
+        email: v.string(),
+        amount: v.number(),
+        metadata: v.object({
+            details: v.union(v.literal("join group"), v.literal("add savings"), v.literal("pay group")),
+            groupId: v.optional(v.id("groups")),
+            savingsId: v.optional(v.id("savings")),
+            userId: v.id("users"),
+            name: v.optional(v.string()),
+            reason: v.optional(v.string()),
+        })
+    },
+    handler: async (ctx, args_0) => {
+        const { email, amount } = args_0
+        const metadata = {
+            details: args_0.metadata.details,
+            groupId: args_0.metadata.groupId ? args_0.metadata.groupId : "",
+            savingsId: args_0.metadata.savingsId ? args_0.metadata.savingsId : "",
+            userId: args_0.metadata.userId,
+            name: args_0.metadata.name ? args_0.metadata.name : "",
+            reason: args_0.metadata.reason ? args_0.metadata.reason : "",
+        }
+        const authorization_code = await ctx.runQuery(api.authorization.getAuthorization, {userId: metadata.userId})
+        const result: InitializeResponse = await paystack.chargeMoney({
+          authorization_code,
+          email,
+          amount,
+          metadata
         })
         if (result) {
             await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})

@@ -1,16 +1,19 @@
 "use client";
-import GoogleSignIn from "@/components/buttons/Google";
-import { SignInWithPassword } from "@/components/forms/SigninForm";
+
+import { SignInFormPasswordAndVerifyViaCode } from "@/components/forms/auth/signinWithCodeAndPassword";
 import {
   Authenticated,
   Unauthenticated,
   useQuery,
   useAction,
+  useMutation,
+  usePaginatedQuery,
 } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Button from "@/components/buttons/BaseButton";
 import { Id } from "../../convex/_generated/dataModel";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { FormEvent, useState } from "react";
 
 
 export default function Home() {
@@ -18,6 +21,9 @@ export default function Home() {
   const initializeTransaction = useAction(api.payments.initializePaystackTransaction);
   const addGroup = useAction(api.actions.addGroupAction);
   const {signOut} = useAuthActions();
+  const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
+  const saveImage = useMutation(api.user.saveUserProfileImage);
+  const [image, setImage] = useState<File | null>(null);
 
   const createGroup = async () => {
     await addGroup({
@@ -30,23 +36,43 @@ export default function Home() {
       description: "test group"
     })
   };
+  
   const payMoney = async () => {
-  //   const res = await initializeTransaction({
-  //     amount: 10000,
-  //     email: user?.email as string,
-  //     metadata: {
-
-  //     }
-  //   });
-    // if (res) {
-    //   window.location.href = res.data.authorization_url;
-    // }
+    const res = await initializeTransaction({
+      amount: 10000,
+      email: user?.email as string,
+      metadata: {
+        userId: user?._id as Id<"users">,
+        details: "pay group",
+      }
+    });
+    if (res) {
+      window.location.href = res.data.authorization_url;
+    }
   };
+
+  const handleProfileUpload = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const url = await generateUploadUrl();
+    const result = await fetch(url, {
+      method: "POST",
+      headers: {"Content-Type": image!?.type,},
+      body: image
+    })
+    const {storageId} = await result.json();
+    console.log(result.json());
+    console.info("Storage id")
+    console.log(storageId)
+    await saveImage({imageId: storageId as Id<"_storage">});
+    console.log(image);
+  }
+  const {results, status, loadMore} = usePaginatedQuery(api.user.getMyGroups, {userId: user!?._id}, {initialNumItems: 4});
+  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="d-flex mh-100 mt-10 flex-column align-items-center justify-content-between p-24">
       <Unauthenticated>
-        <SignInWithPassword />
-        <GoogleSignIn />
+        <SignInFormPasswordAndVerifyViaCode />
+        
       </Unauthenticated>
       <Authenticated>
         <div className="card w-72 h-20">
@@ -60,8 +86,34 @@ export default function Home() {
           <h2>Create group</h2>
           <Button onClick={createGroup}>Create a group</Button>
         </div>
-        <div></div>
-        <div></div>
+        <div>
+          <form action="" onSubmit={e => handleProfileUpload(e)}>
+            <label>Add Profile Image</label>
+            <input type="file" className="form-control" name="image" id="image" onChange={e => {
+              const files = e.target.files;
+              if (files && files.length > 0) {
+                setImage(files[0]);
+              }
+            }}/>
+            <Button type="submit">Upload file</Button>
+          </form>
+          
+          
+
+        </div>
+        <div>
+          <h2>My groups</h2>
+            {
+              results.map((v, i) => (
+                <div key={i} className="d-flex flex-column gap-2">
+                  <p className="b-2">{v.name}</p>
+                  <p className="b-2">People Expected {"=>"} {v.numOfMembers}</p>
+                  <p className="b-2">People joined {"=>"} {v.numJoined}</p>
+                </div>
+              ))
+            }
+            {/* <Button typ></Button> */}
+        </div>
         <span className="btn-danger" onClick={signOut}>Logout</span>
       </Authenticated>
     </main>

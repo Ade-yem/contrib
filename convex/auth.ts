@@ -15,6 +15,7 @@ export const { auth, signIn, signOut, store } = convexAuth({
         last_name: prof.family_name,
       }
     }
-  }), Password({id: "password-code", reset: ResendOTPPasswordReset, verify: ResendOTP})
+  }), Password
+  // ({id: "password-code", reset: ResendOTPPasswordReset, verify: ResendOTP})
   ],
 });

@@ -19,7 +19,7 @@ const invoiceCreated = async (ctx: ActionCtx, data: any) => {
   const subscription_code = data.subscription.subscription_code;
   const amount = data.subscription.amount;
   const reference = data.transaction.reference;
-  const member = await ctx.runQuery(internal.group.getMembershipWithSubscriptionCode, {subscription_code});
+  const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
   const userId = member?.userId as Id<"users">
   await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId})
 };
@@ -53,7 +53,7 @@ const subscriptionCreate = async (ctx: ActionCtx, data: any) => {
     const email = data.customer.email;
     const subscription_code = data.subscription_code;
     const plan_code = data.plan.plan_code;
-    await ctx.runMutation(internal.group.addSubscriptionCodeToMembership, {subscription_code, email, plan_code})
+    await ctx.runMutation(internal.memberships.addSubscriptionCodeToMembership, {subscription_code, email, plan_code})
 };
 
 /**
@@ -103,17 +103,24 @@ const transferReversed = async (ctx: ActionCtx, data: any) => {
  */
 const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
     const metadata: {
-      details: 'join group' | "add savings" | "pay group";
+      details: 'join group' | "add savings" | "pay group" | "create savings" | "add card";
       groupId: string;
       savingsId: string;
       userId: string;
+      name: string;
+      reason: string;
     } = data.metadata;
     const auth: Authorization = data.authorization;
     if (metadata.details === "join group") {
-      await ctx.runAction(api.actions.addMember, {groupId: metadata.groupId as Id<"groups">, userId: metadata.userId as Id<"users">, amount: data.amount})
-      await ctx.runMutation(internal.group.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code, account_name: auth.account_name})
+      await ctx.runAction(api.actions.addMember, {groupId: metadata.groupId as Id<"groups">, userId: metadata.userId as Id<"users">, amount: data.amount});
+      await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code})
     } else if (metadata.details === "add savings") {
       await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, amount: data.amount})
+    } else if (metadata.details === "create savings") {
+      await ctx.runMutation(api.savings.createSavings, {name: metadata.name, userId: metadata.userId as Id<"users">, amount: data.amount, reason: metadata.reason })
+    } else if (metadata.details === "add card") {
+      await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code});
+      await ctx.runMutation(internal.savings.addToFirstSavings, {userId: metadata.userId as Id<"users">, amount: data.amount});
     }
     await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status})
 };

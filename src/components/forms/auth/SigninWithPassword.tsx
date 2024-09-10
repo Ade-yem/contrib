@@ -30,7 +30,7 @@ export function SignInWithPassword({
   return (
     <>
       <form
-        className="flex flex-col"
+        className="flex flex-col w-70"
         onSubmit={(event) => {
           event.preventDefault();
           setSubmitting(true);
@@ -40,23 +40,28 @@ export function SignInWithPassword({
               handleSent?.(formData.get("email") as string);
             })
             .catch((error) => {
-              console.error(error.data);
-              const title =
+              console.error(error);
+              console.log("Message => ", error.message);
+              console.log("stack => ", error.stack);
+              console.log("cause => ", error.cause);
+
+              const msg = error instanceof ConvexError ? (error.data as {message: string }).message
+              :
                 flow === "signIn"
                   ? "Could not sign in, did you mean to sign up?"
                   : "Could not sign up, did you mean to sign in?";
-              toast.error(title, { id: "auth" });
+              toast.error(msg, { id: "auth" });
               setSubmitting(false);
             });
         }}
       >
         <label htmlFor="email">Email</label>
-        <input name="email" id="email" className="mb-4" autoComplete="email" />
-        <div className="flex items-center justify-between">
+        <input name="email" id="email" className="mb-4 form-control" autoComplete="email" />
+        <div className="d-flex align-items-center justify-content-between">
           <label htmlFor="password">Password</label>
           {handlePasswordReset && flow === "signIn" ? (
             <button
-              className="p-0 h-auto"
+              className="p-0 h-auto btn-link bg-transparent"
               type="button"
               onClick={handlePasswordReset}
             >
@@ -68,15 +73,15 @@ export function SignInWithPassword({
           type="password"
           name="password"
           id="password"
-          className="mb-4 "
+          className="mb-4 mt-2 form-control"
           autoComplete={flow === "signIn" ? "current-password" : "new-password"}
         />
         <input name="flow" value={flow} type="hidden" />
-        <button type="submit" disabled={submitting}>
+        <button className="btn btn-success" type="submit" disabled={submitting}>
           {flow === "signIn" ? "Sign in" : "Sign up"}
         </button>
-        <button
-          type="button"
+        <p
+          className="text-center cursor-pointer mt-2 p-2 font-semibold"
           onClick={() => {
             setFlow(flow === "signIn" ? "signUp" : "signIn");
           }}
@@ -84,10 +89,9 @@ export function SignInWithPassword({
           {flow === "signIn"
             ? "Don't have an account? Sign up"
             : "Already have an account? Sign in"}
-        </button>
+        </p>
       </form>
-      <br /> <br />
-      <button onClick={handleShowLogin}>Show login</button>
+      {/* <button onClick={handleShowLogin}>Show login</button> */}
     </>
   );
 }
