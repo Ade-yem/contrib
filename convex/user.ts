@@ -116,11 +116,11 @@ type myGroup = {
 
 export const getMyGroups = query({
   args: {
+    userId: v.optional(v.id("users")),
     paginationOpts: paginationOptsValidator
   },
   async handler(ctx, args) {
-    const userId = await auth.getUserId(ctx) as Id<"users">;
-    // if (!userId) throw new ConvexError("User is not authenticated!");
+    const {userId} = args;
     const groups = await ctx.db.query("membership").filter((m) => m.eq(m.field("userId"), userId)).paginate(args.paginationOpts);
     const memberships: myGroup[] = [];
     for (const member of groups.page) {

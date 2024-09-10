@@ -66,12 +66,7 @@ export default function Home() {
     await saveImage({imageId: storageId as Id<"_storage">});
     console.log(image);
   }
-  // try{
-  const {results, status, loadMore} = usePaginatedQuery(api.user.getMyGroups, {}, {initialNumItems: 4});
-  //   if (results) setGroups(results);
-  // } catch(error: any) {
-  //   console.error(error.data)
-  // }
+  const {results, status, loadMore} = usePaginatedQuery(api.user.getMyGroups, {userId: user!?._id}, {initialNumItems: 4});
   
   return (
     <main className="d-flex mh-100 mt-10 flex-column align-items-center justify-content-between p-24">
