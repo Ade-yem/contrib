@@ -32,6 +32,8 @@ interface Log {
     groupId: string;
     savingsId: string;
     userId: string;
+    name: string;
+    reason: string;
   }
   
 export interface Authorization {

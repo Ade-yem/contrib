@@ -8,7 +8,7 @@ export const subscribeUsersToPlan = internalAction({
       groupId: v.id("groups")
     },
     async handler(ctx, args) {
-      const users = await ctx.runQuery(api.group.getGroupMemberships, {groupId: args.groupId})
+      const users = await ctx.runQuery(api.memberships.getGroupMemberships, {groupId: args.groupId})
       const group = await ctx.runQuery(api.group.getGroup, {groupId: args.groupId});
       if (users.length > 0 && group) {
         

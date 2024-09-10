@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as actions from "../actions.js";
 import type * as auth from "../auth.js";
+import type * as authorization from "../authorization.js";
 import type * as chat from "../chat.js";
 import type * as common from "../common.js";
 import type * as cron from "../cron.js";
@@ -24,6 +25,7 @@ import type * as group from "../group.js";
 import type * as hookActions from "../hookActions.js";
 import type * as http from "../http.js";
 import type * as intervalReport from "../intervalReport.js";
+import type * as memberships from "../memberships.js";
 import type * as monnify from "../monnify.js";
 import type * as monnify_api from "../monnify_api.js";
 import type * as payments from "../payments.js";
@@ -55,6 +57,7 @@ import type * as utils from "../utils.js";
 declare const fullApi: ApiFromModules<{
   actions: typeof actions;
   auth: typeof auth;
+  authorization: typeof authorization;
   chat: typeof chat;
   common: typeof common;
   cron: typeof cron;
@@ -63,6 +66,7 @@ declare const fullApi: ApiFromModules<{
   hookActions: typeof hookActions;
   http: typeof http;
   intervalReport: typeof intervalReport;
+  memberships: typeof memberships;
   monnify: typeof monnify;
   monnify_api: typeof monnify_api;
   payments: typeof payments;
