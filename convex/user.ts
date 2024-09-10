@@ -111,6 +111,7 @@ type myGroup = {
   numJoined: number;
   paymentPerInterval: number;
   status: string;
+  inviteCode: string;
 }
 
 export const getMyGroups = query({
@@ -118,13 +119,14 @@ export const getMyGroups = query({
     paginationOpts: paginationOptsValidator
   },
   async handler(ctx, args) {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new ConvexError("User is not authenticated!");
+    const userId = await auth.getUserId(ctx) as Id<"users">;
+    // if (!userId) throw new ConvexError("User is not authenticated!");
     const groups = await ctx.db.query("membership").filter((m) => m.eq(m.field("userId"), userId)).paginate(args.paginationOpts);
     const memberships: myGroup[] = [];
     for (const member of groups.page) {
       const group = await ctx.db.get(member.groupId);
-      if (!group) throw new ConvexError("Gould not get group");
+      const invite = await ctx.db.query("invites").filter((m) => m.eq(m.field("groupId"), member.groupId)).first();
+      if (!group) throw new ConvexError("Could not get group");
       const groupItem: myGroup = {
         name: group.name,
         groupId: group._id,
@@ -135,11 +137,12 @@ export const getMyGroups = query({
         numOfMembers: group.number_of_people,
         numJoined: group.number_of_people_present,
         paymentPerInterval: group.savings_per_interval,
-        status: group.status
+        status: group.status,
+        inviteCode: invite?.code || ""
       }
       memberships.push(groupItem);
     }
-    return memberships;
+    return {...groups, page: memberships};
   }
 })
 

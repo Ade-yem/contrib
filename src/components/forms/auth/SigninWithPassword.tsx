@@ -41,6 +41,10 @@ export function SignInWithPassword({
             })
             .catch((error) => {
               console.error(error);
+              console.log("Message => ", error.message);
+              console.log("stack => ", error.stack);
+              console.log("cause => ", error.cause);
+
               const msg = error instanceof ConvexError ? (error.data as {message: string }).message
               :
                 flow === "signIn"

@@ -1,4 +1,4 @@
-import { action, mutation } from "./_generated/server";
+import { action } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { ConvexError, v } from "convex/values";
 
@@ -30,7 +30,7 @@ export const addMember = action({
     amount: v.optional(v.float64()),
   },
   async handler(ctx, args_0) {
-    await ctx.runMutation(internal.group.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
+    await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
     const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId})
     if (!group) throw new ConvexError("Unable to find group");
     if (group.number_of_people === group.number_of_people_present) {
