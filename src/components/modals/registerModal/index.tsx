@@ -62,7 +62,7 @@ export const RegisterModal = ({
       })
       .catch((error) => {
         console.error(error);
-        const title = "Could not sign in, Try again";
+        const title = "Could not sign up, Try again";
         toast.error(title, { id: "auth" });
         setSubmitting(false);
         actions.setSubmitting(false);

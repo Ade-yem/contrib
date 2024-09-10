@@ -119,11 +119,11 @@ const Navbar = () => {
                 <div>
                   <div className="d-flex align-items-center gap-3 click">
                     <Image
-                      src={"/avatar.svg"}
+                      src={user?.image || "/avatar.svg"}
                       alt="profile"
                       width={30}
                       height={30}
-                      // className=""
+                      className="rounded-circle"
                     />
                     {user?.first_name ?? "Anonymous"}
                     <Icon icon="mingcute:down-fill" width="20" height="20" />

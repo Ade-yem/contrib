@@ -52,8 +52,8 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
             <div>
               <div className="d-flex align-items-center gap-3 click">
                 <Image
-                  src={"/avatar.svg"}
-                  alt="logo"
+                  src={user?.image || "/avatar.svg"}
+                  alt="profile"
                   width={40}
                   height={40}
                   className="rounded-circle"
