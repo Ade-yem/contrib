@@ -77,3 +77,18 @@ export const addSavings = internalMutation({
     await ctx.db.patch(savingsId, {amount: saving.amount + amount })
   }
 })
+export const addToFirstSavings = internalMutation({
+  args: {
+    amount: v.float64(),
+    userId: v.id("users")
+  },
+  async handler(ctx, args) {
+    const { amount, userId } = args;
+    const saving = await ctx.db.query("savings").filter(s => s.eq(s.field("userId"), userId)).first();
+    if (!saving) {
+      await ctx.db.insert("savings", {userId, name: "First saving plan", amount, reason: "Casual saving"});
+      return;
+    };
+    await ctx.db.patch(saving._id, {amount: saving.amount + amount });
+  }
+})

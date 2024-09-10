@@ -41,12 +41,17 @@ export function SignInWithPassword({
             })
             .catch((error) => {
               console.error(error);
-              const msg =
-                error instanceof ConvexError
-                  ? (error.data as { message: string }).message
-                  : flow === "signIn"
-                    ? "Could not sign in, did you mean to sign up?"
-                    : "Could not sign up, did you mean to sign in?";
+
+              console.log("Message => ", error.message);
+              console.log("stack => ", error.stack);
+              console.log("cause => ", error.cause);
+
+              const msg = error instanceof ConvexError ? (error.data as {message: string }).message
+              :
+                flow === "signIn"
+                  ? "Could not sign in, did you mean to sign up?"
+                  : "Could not sign up, did you mean to sign in?";
+
               toast.error(msg, { id: "auth" });
               console.log("tester  error", msg);
               setSubmitting(false);

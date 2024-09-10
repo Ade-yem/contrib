@@ -49,6 +49,8 @@ class PaystackAPI {
     savingsId: string;
     userId: string;
     details: string;
+    name: string;
+    reason: string;
 } | undefined }) {
     const params = JSON.stringify({
         "email": data.email,
@@ -66,7 +68,38 @@ class PaystackAPI {
         }
       }
       const result = await makeHttpsRequest(options, params);
-      return result;  
+      return result;
+  }
+
+  async chargeMoney(data: {
+    authorization_code: string, email: string, amount: number, 
+    metadata: {
+    groupId: string;
+    savingsId: string;
+    userId: string;
+    details: string;
+    name: string;
+    reason: string;
+    } | undefined 
+  }) {
+    const params = JSON.stringify({
+      "authorization_code": data.authorization_code,
+      "email": data.email,
+      "amount": data.amount,
+      "metadata": data.metadata
+    })
+    const options = {
+      hostname: this.paystack.hostname,
+      port: 443,
+      path: '/transaction/charge_authorization',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + this.paystack.secret_key,
+        'Content-Type': 'application/json'
+      }
+    }
+    return await makeHttpsRequest(options, params);
+
   }
 
   async createPlan(data: { name: string, amount: number, interval: string, invoiceLimit: number, description: string, }) {
@@ -148,7 +181,7 @@ class PaystackAPI {
     return await makeHttpsRequest(options, '');
   }
 
-  async createTransferRecipient(data: { type: "ghpss" | "nuban", name: string, account_number: string, bank_code: string, currency: string }) {
+  async createTransferRecipient(data: { type: "nuban" | "ghpss", name: string, account_number: string, bank_code: string, currency: string }) {
     const params = JSON.stringify({
       "type": data.type,
       "name": data.name,
