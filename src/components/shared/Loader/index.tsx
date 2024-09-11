@@ -1,3 +1,4 @@
+import Skeleton from "react-skeleton-loader";
 import "./styles.scss";
 
 interface LoaderProps {
@@ -22,3 +23,29 @@ const Loader = ({ description, height = "100%" }: LoaderProps) => {
 };
 
 export default Loader;
+
+export const TableLoading = ({
+  count,
+  row,
+}: {
+  count: number;
+  row?: number;
+}) => {
+  return (
+    <div>
+      <table className="table table-hoverable text-nowrap">
+        <tbody>
+          {[...Array(row || 10)].map((e, index) => (
+            <tr key={index}>
+              {[...Array(count)].map((value, index) => (
+                <td key={index}>
+                  <Skeleton color="#ced4da" width="100%" height="25px" />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};

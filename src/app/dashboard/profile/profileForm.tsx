@@ -13,6 +13,8 @@ import React, { FormEvent, useContext, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { LayoutContext } from "@/context/layoutContext";
 import Loader from "@/components/shared/Loader";
+import { Id } from "../../../../convex/_generated/dataModel";
+import Button from "@/components/forms/Button";
 
 interface profilePropTypes {
   setDateValue: (e: any) => void;
@@ -30,36 +32,50 @@ export const ProfileForm = (props: profilePropTypes) => {
   }: {
     user: any;
   } = useContext(LayoutContext);
-  console.log(user);
+
   const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
-  const sendImage = useMutation(api.user.saveUserProfileImage);
+  const saveImage = useMutation(api.user.saveUserProfileImage);
+  const [image, setImage] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const imageInput = useRef<HTMLInputElement>(null);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const handleProfileUpload = async (image: File) => {
+    try {
+      setSubmitting(true);
+      const url = await generateUploadUrl();
 
-  // async function handleSendImage(event: FormEvent) {
-  //   event.preventDefault();
+      const result = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": image.type },
+        body: image,
+      });
 
-  //   // Step 1: Get a short-lived upload URL
-  //   const postUrl = await generateUploadUrl();
+      const { storageId } = await result.json();
+      console.log(storageId); // Successfully received the storageId
 
-  //   // Step 2: POST the file to the URL
-  //   const result = await fetch(postUrl, {
+      await saveImage({ imageId: storageId as Id<"_storage"> });
+    } catch (error) {
+      console.error("Error uploading the image", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // const handleProfileUpload = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   const url = await generateUploadUrl();
+  //   const result = await fetch(url, {
   //     method: "POST",
-  //     headers: { "Content-Type": selectedImage!.type },
-  //     body: selectedImage,
+  //     headers: { "Content-Type": image!?.type },
+  //     body: image,
   //   });
-  //   const { imageId } = await result.json();
-  //   // Step 3: Save the newly allocated storage id to the database
-  //   await sendImage({ imageId });
+  //   const { storageId } = await result.json();
+  //   console.log(result.json());
+  //   console.info("Storage id");
+  //   console.log(storageId);
+  //   await saveImage({ imageId: storageId as Id<"_storage"> });
+  //   console.log(image);
+  // };
 
-  //   setSelectedImage(null);
-  //   imageInput.current!.value = "";
-  //   console.log("postUrl", postUrl);
-  //   console.log("result", result);
-  //   console.log("imageId", imageId);
-  // }
-  // console.log("generateUploadUrl", generateUploadUrl());
   return (
     <div className="bg-white-000 rounded w-100 p-5 ">
       <p className="text-lg fw-bold">Personal Details</p>
@@ -70,40 +86,58 @@ export const ProfileForm = (props: profilePropTypes) => {
         <>
           <div className="d-flex gap-4 align-items-center">
             <Image
-              // src={"/avatar.svg"}
-              src={user?.image}
+              src={user?.image || "/avatar.svg"}
               width={70}
               height={70}
               alt="profile-pics"
               className="rounded-circle"
             />
-            {/* <form onSubmit={handleSendImage}>
+            {/* <form action="" onSubmit={(e) => handleProfileUpload(e)}>
+              <label>Add Profile Image</label>
               <input
                 type="file"
-                accept="image/*"
-                ref={imageInput}
-                onChange={(event) => setSelectedImage(event.target.files![0])}
-                disabled={selectedImage !== null}
+                className="form-control"
+                name="image"
+                id="image"
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length > 0) {
+                    setImage(files[0]);
+                  }
+                }}
               />
-              <input
-                type="submit"
-                value="Send Image"
-                disabled={selectedImage === null}
-              />
+              <Button type="submit" title="submit">
+                Upload file
+              </Button>
             </form> */}
+            <form>
+              <input
+                type="file"
+                name="image"
+                id="image"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length > 0) {
+                    setImage(files[0]); // You can add any image validation here if needed
+                    handleProfileUpload(files[0]); // Call the upload function here directly
+                  }
+                }}
+              />
 
-            <label
-              htmlFor="profilePicture"
-              className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500"
-            >
-              Upload new photo
-            </label>
-            <label
-              htmlFor="profilePicture"
-              className="d-sm-none d-flex text-sm px-2 btn h-100 border border-primary-500 text-primary-500"
-            >
-              Upload photo
-            </label>
+              <label
+                htmlFor="image"
+                className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500"
+              >
+                Upload new photo
+              </label>
+              <label
+                htmlFor="image"
+                className="d-sm-none d-flex text-sm px-2 btn h-100 border border-primary-500 text-primary-500"
+              >
+                Upload photo
+              </label>
+            </form>
             <p className="mb-0 text-xs text-red click">Remove</p>
           </div>
 

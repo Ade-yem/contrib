@@ -55,50 +55,52 @@ export default function Page() {
             </div>
           </div>
           <p className="text-xl fw-bold">Transactions</p>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Groups
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Desc
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Amounts
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Member
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  My Number
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {groupList?.slice(0, 6).map((group, index) => (
-                <tr key={index}>
-                  <td className="py-3 text-nowrap ps-4">{group.name}</td>
-                  <td className="py-3  ps-4 desc">{group.description}</td>
-                  <td className="py-3 text-nowrap ps-4">
-                    {group.savings_per_interval}
-                  </td>
-                  <td className="py-3 text-nowrap ps-4">
-                    {group.number_of_people}
-                  </td>
-                  <td className="py-3 text-nowrap ps-4">
-                    {group.number_of_people_present}
-                  </td>
-                  <td className="py-3 text-nowrap px-4">
-                    {group.number_of_people_present}
-                  </td>
+          <div className="table-reponsive">
+            <table className="table w-100">
+              <thead>
+                <tr>
+                  <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                    Groups
+                  </th>
+                  <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                    Desc
+                  </th>
+                  <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                    Amounts
+                  </th>
+                  <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                    Member
+                  </th>
+                  <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                    My Number
+                  </th>
+                  <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                    Status
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {groupList?.slice(0, 6).map((group, index) => (
+                  <tr key={index}>
+                    <td className="py-3 text-nowrap ps-4">{group.name}</td>
+                    <td className="py-3  ps-4 desc">{group.description}</td>
+                    <td className="py-3 text-nowrap ps-4">
+                      {group.savings_per_interval}
+                    </td>
+                    <td className="py-3 text-nowrap ps-4">
+                      {group.number_of_people}
+                    </td>
+                    <td className="py-3 text-nowrap ps-4">
+                      {group.number_of_people_present}
+                    </td>
+                    <td className="py-3 text-nowrap px-4">
+                      {group.number_of_people_present}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="col-lg-5 col-md-6 col-12">
           <div className="bg-white-000 rounded-10 p-4 ">
