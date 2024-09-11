@@ -48,11 +48,9 @@ export default function ProfilePage() {
   const handleSave = (values: FormikValues) => {
     setSubmitting(true);
 
-    // Convert dob to Date object if necessary
     const dob =
       typeof values.dob === "string" ? new Date(values.dob) : values.dob;
 
-    // Ensure dob is a valid Date before calling toISOString, otherwise set it to undefined
     const formattedDob =
       dob instanceof Date && !isNaN(dob.getTime())
         ? dob.toISOString()
@@ -86,7 +84,10 @@ export default function ProfilePage() {
         dob: user.dob,
         homeAddress: user.homeAddress,
         nationality: user.nationality,
-        gender: { value: user.gender, label: toUpperLetter(user.gender) },
+        // gender: { value: user.gender, label: toUpperLetter(user.gender) },
+        gender: user.gender
+          ? { value: user.gender, label: toUpperLetter(user.gender) }
+          : { value: "", label: "Select.." },
       });
     }
   }, [user]);
