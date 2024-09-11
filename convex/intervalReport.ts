@@ -82,7 +82,13 @@ export const payNextCustomer = internalMutation({
       recipient: payment_method?.recipient_code as string, retry: false,
       reason: "interval payment"
     })
-    await ctx.db.patch(groupId, {elapsedTime: group.elapsedTime + 1})
+    if (group.elapsedTime < group.number_of_people) {
+      await ctx.db.patch(groupId, {elapsedTime: group.elapsedTime + 1});
+    } else {
+      await ctx.db.patch(groupId, {status: "closed"});
+      
+    }
+    
   }
 })
 
@@ -91,6 +97,30 @@ export const refundCustomer = internalMutation({
     groupId: v.id("groups")
   },
   async handler(ctx, args_0) {
-    
+    const { groupId } = args_0;
+    const members = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId)).collect();
+    for (const member of members) {
+      await ctx.scheduler.runAt(new Date(), internal.savings.addToFirstSavings, {userId: member.userId, amount: member.paid_deposit as number});
+    }
+  },
+})
+
+export const addPaidCustomersToInterval = internalMutation({
+  args: {
+    timestamp: v.string(),
+    groupId: v.id("groups"),
+    userId: v.id("users"),
+    amount: v.float64(),
+  },
+  async handler(ctx, args_0) {
+    const { timestamp, groupId, userId, amount } = args_0;
+    const time = new Date(timestamp);
+    const timeInMilliSeconds = time.getTime();
+    const interval = await ctx.db.query("interval").filter(i => i.eq(i.field("groupId"), groupId) && i.gte(timeInMilliSeconds, i.field("start")) && i.lte(timeInMilliSeconds, i.field("end")) ).first();
+    if (!interval) throw new ConvexError("Could not get interval");
+    const members_payment_status = [...(interval.members_payment_status || []), {
+      userId, status: "pending" as "pending" | "paid", amount
+    }]
+    await ctx.db.patch(interval._id, {members_payment_status});
   },
 })

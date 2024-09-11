@@ -14,6 +14,7 @@ import Button from "@/components/buttons/BaseButton";
 import { Id } from "../../convex/_generated/dataModel";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { FormEvent, useState } from "react";
+import Image from "next/image";
 
 
 export default function Home() {
@@ -60,11 +61,7 @@ export default function Home() {
       body: image
     })
     const {storageId} = await result.json();
-    console.log(result.json());
-    console.info("Storage id")
-    console.log(storageId)
     await saveImage({imageId: storageId as Id<"_storage">});
-    console.log(image);
   }
   const {results, status, loadMore} = usePaginatedQuery(api.user.getMyGroups, {userId: user!?._id}, {initialNumItems: 4});
   
@@ -96,10 +93,12 @@ export default function Home() {
               }
             }}/>
             <Button type="submit">Upload file</Button>
-          </form>
-          
-          
+          </form>          
 
+        </div>
+        <div className="">
+          <h2>Profile image</h2>
+          <Image src={user?.image ?? "/avatar.svg"} alt="profile image" width={16} height={16} />
         </div>
         <div>
           <h2>My groups</h2>
@@ -112,7 +111,7 @@ export default function Home() {
                 </div>
               ))
             }
-            {/* <Button typ></Button> */}
+            <Button type="button" onClick={() => loadMore(5)} disabled={status === "LoadingMore" || status === "Exhausted"}>Load more</Button>
         </div>
         <span className="btn-danger" onClick={signOut}>Logout</span>
       </Authenticated>

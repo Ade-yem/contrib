@@ -56,9 +56,18 @@ export const generateUserProfileUploadUrl = mutation(async (ctx) => {
   if (!userId) throw new ConvexError("User is not verified");
   const user = await ctx.db.get(userId);
   if (!user) throw new ConvexError("User is not found");
-  await ctx.storage.delete(user.imageId as Id<"_storage">);
+  if (user.imageId) await ctx.storage.delete(user.imageId as Id<"_storage">);
   return await ctx.storage.generateUploadUrl();
 });
+
+export const removeUserImage = mutation (async (ctx) => {
+  const userId = await auth.getUserId(ctx);
+  if (!userId) throw new ConvexError("User is not verified");
+  const user = await ctx.db.get(userId);
+  if (!user) throw new ConvexError("User is not found");
+  if (user.imageId) await ctx.storage.delete(user.imageId as Id<"_storage">);
+  if (user.image) await ctx.db.patch(userId, {image: undefined, imageId: undefined})
+})
 
 export const saveUserProfileImage = mutation({
   args: {

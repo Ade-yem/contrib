@@ -40,7 +40,7 @@ export const initializePaystackTransaction = action ({
         email: v.string(),
         amount: v.number(),
         metadata: v.object({
-            details: v.union(v.literal("join group"), v.literal("add savings"), v.literal("pay group"), v.literal("create savings")),
+            details: v.union(v.literal("join group"), v.literal("add savings"), v.literal("pay group"), v.literal("create savings"), v.literal("add card")),
             groupId: v.optional(v.id("groups")),
             savingsId: v.optional(v.id("savings")),
             userId: v.id("users"),
@@ -121,7 +121,11 @@ export const createSubscription = internalAction({
             plan: plan,
             start_date: start_date,
         })
-        return {message: result.message, status: result.status};
+        console.log(result);
+        return {
+            message: result.message,
+            status: result.status === false && result.code == "duplicate_subscription" ? true : result.status,
+        }
     }
 })
 

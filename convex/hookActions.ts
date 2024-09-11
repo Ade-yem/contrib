@@ -113,7 +113,7 @@ const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
     const auth: Authorization = data.authorization;
     if (metadata.details === "join group") {
       await ctx.runAction(api.actions.addMember, {groupId: metadata.groupId as Id<"groups">, userId: metadata.userId as Id<"users">, amount: data.amount});
-      await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code})
+      // await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code})
     } else if (metadata.details === "add savings") {
       await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, amount: data.amount})
     } else if (metadata.details === "create savings") {
