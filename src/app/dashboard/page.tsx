@@ -10,12 +10,19 @@ import { ModalTypes } from "@/services/_schema";
 
 export default function Page() {
   const user = useQuery(api.user.getUser);
-  const {setShowModal}: {setShowModal: (value: ModalTypes) => void;} = React.useContext(LayoutContext)
+  const { setShowModal }: { setShowModal: (value: ModalTypes) => void } =
+    React.useContext(LayoutContext);
   const savings = useQuery(api.user.getMySavings);
-  const {results, status, loadMore} = usePaginatedQuery(api.transactions.getMyTransactions, {userId: user!?._id}, {initialNumItems: 5});
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.transactions.getMyTransactions,
+    { userId: user!?._id },
+    { initialNumItems: 5 }
+  );
   const card = useQuery(api.user.getCard);
   const totalSavings = useQuery(api.user.getTotalSavings);
-  const initializeTransaction = useAction(api.payments.initializePaystackTransaction);
+  const initializeTransaction = useAction(
+    api.payments.initializePaystackTransaction
+  );
   const [visible, setVisible] = React.useState(false);
   const addCard = async () => {
     const res = await initializeTransaction({
@@ -24,12 +31,12 @@ export default function Page() {
       metadata: {
         userId: user?._id as Id<"users">,
         details: "add card",
-      }
+      },
     });
     if (res) {
       window.open(res.data.authorization_url, "_blank");
     }
-  }
+  };
   return (
     <div>
       <div className="row">
@@ -39,9 +46,14 @@ export default function Page() {
               <div className="bg-white-000 rounded-10 p-4 d-flex justify-content-between">
                 <div>
                   <p className="text-pink text-sm">Personal savings</p>
-                  <p className="text-sm mb-0">&#8358; {visible ? (totalSavings ?? 0) / 100 : "*****"}</p>
+                  <p className="text-sm mb-0">
+                    &#8358; {visible ? (totalSavings ?? 0) / 100 : "*****"}
+                  </p>
                 </div>
-                <div className="mt-auto click" onClick={() => setVisible(prev => !prev)}>
+                <div
+                  className="mt-auto click"
+                  onClick={() => setVisible((prev) => !prev)}
+                >
                   <Icon
                     icon="weui:eyes-on-outlined"
                     width="2.5rem"
@@ -52,10 +64,16 @@ export default function Page() {
               </div>
             </div>
             <div className="col-3 d-flex flex-column justify-content-between">
-              <button className="btn btn-sm rounded-01 btn-green" onClick={() => setShowModal("withdrawFunds")}>
+              <button
+                className="btn btn-sm rounded-01 btn-green"
+                onClick={() => setShowModal("createRecipient")}
+              >
                 Add Money
               </button>
-              <button className="btn btn-sm rounded-01 btn-primary" onClick={() => setShowModal("createRecipient")}>
+              <button
+                className="btn btn-sm rounded-01 btn-primary"
+                onClick={() => setShowModal("withdrawFunds")}
+              >
                 Withdraw
               </button>
             </div>
@@ -67,19 +85,30 @@ export default function Page() {
                 You can use your Bank Cards for <br /> Payment, No hidden
                 charges !
               </p>
-              <button className="btn btn-sm rounded-01 btn-primary" onClick={addCard}>
+              <button
+                className="btn btn-sm rounded-01 btn-primary"
+                onClick={addCard}
+              >
                 {card ? "Change card details" : "Add Card"}
               </button>
             </div>
             <div className="ms-auto bg-purple rounded-5 p-4 col-6 d-flex flex-column justify-content-between gap-4">
               <div className="d-flex justify-content-between">
                 <p className="text-white-000 text-xs fw-bold">{card?.bank}</p>
-                <p className="text-white-000 text-xs">{card?.brand.toUpperCase()}</p>
+                <p className="text-white-000 text-xs">
+                  {card?.brand.toUpperCase()}
+                </p>
               </div>
-              <p className="text-white-000 text-xs">{card?.bin} **** **** {card?.last4}</p>
+              <p className="text-white-000 text-xs">
+                {card?.bin} **** **** {card?.last4}
+              </p>
               <div className="d-flex justify-content-between">
-                <p className="text-white-000 text-xs">{user?.first_name} {user?.last_name}</p>
-                <p className="text-white-000 text-xs">{card?.exp_month}/{card?.exp_year}</p>
+                <p className="text-white-000 text-xs">
+                  {user?.first_name} {user?.last_name}
+                </p>
+                <p className="text-white-000 text-xs">
+                  {card?.exp_month}/{card?.exp_year}
+                </p>
               </div>
             </div>
           </div>
@@ -108,7 +137,9 @@ export default function Page() {
               {results?.map((transaction, index) => (
                 <tr key={index}>
                   <td className="py-3 text-nowrap ps-4">{transaction.name}</td>
-                  <td className="py-3  ps-4 desc">&#8358; {transaction.amount}</td>
+                  <td className="py-3  ps-4 desc">
+                    &#8358; {transaction.amount}
+                  </td>
                   <td className="py-3 text-nowrap ps-4">
                     {transaction.details}
                   </td>
@@ -126,19 +157,26 @@ export default function Page() {
         <div className="col-lg-5 col-md-6 col-12">
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-center">My Savings Plans</p>
-            <button className="btn btn-sm rounded-01 btn-primary text-center" onClick={() => setShowModal("createPersonalSavings")}>Add new plan</button>
+            <button
+              className="btn btn-sm rounded-01 btn-primary text-center"
+              onClick={() => setShowModal("createPersonalSavings")}
+            >
+              Add new plan
+            </button>
             <div className="row">
-              {
-                savings?.map((saving, index) => (
-                  <div className="col-6 my-2" key={index}>
-                    <div className="bg-purple rounded-10 p-4 d-flex flex-column justify-content-between">
-                      <p className="text-white-000 text-xs fw-bold">{saving.name}</p>
-                      <p className="text-white-000 text-xs">&#8358; {saving.amount / 100}</p>
-                      <p className="text-white-000 text-xs">{saving.reason}</p>
-                    </div>
+              {savings?.map((saving, index) => (
+                <div className="col-6 my-2" key={index}>
+                  <div className="bg-purple rounded-10 p-4 d-flex flex-column justify-content-between">
+                    <p className="text-white-000 text-xs fw-bold">
+                      {saving.name}
+                    </p>
+                    <p className="text-white-000 text-xs">
+                      &#8358; {saving.amount / 100}
+                    </p>
+                    <p className="text-white-000 text-xs">{saving.reason}</p>
+                  </div>
                 </div>
-                ))
-              }
+              ))}
             </div>
           </div>
         </div>

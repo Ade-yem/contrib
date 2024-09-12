@@ -7,7 +7,12 @@ import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
-import { ModalTypes, PaymentFrequency, Categories, PaymentMethod } from "@/services/_schema";
+import {
+  ModalTypes,
+  PaymentFrequency,
+  Categories,
+  PaymentMethod,
+} from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
@@ -54,7 +59,7 @@ export const CreatePersonalSavingsModal = () => {
   };
   const validationSchema = yup.object().shape({
     savingName: yup.string().label("Savings Name").required(),
-    amount: yup.string().label("Initial Amount").optional(),
+    amount: yup.number().label("Initial Amount").optional(),
     category: yup.object().label("Category").required(),
     frequency: yup.object().label("Frequency of Savings").optional(),
     payment: yup.object().label("Payment Method").optional(),
@@ -69,7 +74,7 @@ export const CreatePersonalSavingsModal = () => {
       } else {
         await addSavings({
           userId: user?._id as Id<"users">,
-          amount: values.amount, 
+          amount: values.amount,
           name: values.savingName,
           reason: values.category.value,
           interval: values.frequency.value,
@@ -93,11 +98,11 @@ export const CreatePersonalSavingsModal = () => {
         name: values.savingName,
         reason: values.category.value,
         savingsInterval: values.frequency.value,
-      }
+      },
     });
-    const stat = await confirmTransaction({reference: res.reference});
+    const stat = await confirmTransaction({ reference: res.reference });
     if (stat.data.status) setShowModal("success");
-  }
+  };
   const payWithTransaction = async (values: FormikValues) => {
     const res = await otherMethod({
       email: user?.email,
@@ -108,14 +113,14 @@ export const CreatePersonalSavingsModal = () => {
         name: values.savingName,
         reason: values.category.value,
         savingsInterval: values.frequency.value,
-      }
+      },
     });
     if (res) {
       window.open(res.data.authorization_url, "_blank");
     }
-    const stat = await confirmTransaction({reference: res.data.reference});
+    const stat = await confirmTransaction({ reference: res.data.reference });
     if (stat.data.status) setShowModal("success");
-  }
+  };
   const closeModal = () => {
     setShowModal(null);
   };
@@ -144,7 +149,7 @@ export const CreatePersonalSavingsModal = () => {
                         Create Personal Saving Plan
                       </h2>
                       <p className="text-sm">
-                        Set up a Convinieient Savings Plan for yourself
+                        Set up a Convenient Savings Plan for yourself
                       </p>
                     </div>
                     <label className="text-xs text-grey-300 mt-4 mb-2">
@@ -198,13 +203,15 @@ export const CreatePersonalSavingsModal = () => {
                     />
 
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Initial Amount
+                      Initial Amount (₦)
                     </label>
                     <Field
                       component={TextInput}
                       className="form-control"
-                      placeholder="N 1000"
-                      type="text"
+                      placeholder="1000"
+                      min={0}
+                      step="0.01"
+                      type="number"
                       name="amount"
                       id="amount"
                     />
@@ -227,7 +234,11 @@ export const CreatePersonalSavingsModal = () => {
                         setFieldValue("payment", selectedOption.value);
                       }}
                     />
-
+                    {!isValid && (
+                      <p className="text-xs text-red mt-4">
+                        *Note: Please fill in all the inputs to proceed.
+                      </p>
+                    )}
                     <div className="d-flex justify-content-center align-items-center mt-4">
                       <Button
                         title="Create savings"
