@@ -15,6 +15,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { FormEvent, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
   const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
   const saveImage = useMutation(api.user.saveUserProfileImage);
   const [image, setImage] = useState<File | null>(null);
+  const router = useRouter()
 
   const createGroup = async () => {
     await addGroup({
@@ -73,7 +75,7 @@ export default function Home() {
       </Unauthenticated>
       <Authenticated>
         <div className="card w-72 h-20">
-          <div>{user?.first_name ?? user?.email ?? user?.phone ?? "Anonymous"}</div>
+          <Button type="button" onClick={() => router.push("/dashboard")}>{user?.first_name ?? user?.email ?? user?.phone ?? "Anonymous"}</Button>
         </div>
         <div>
           <h2>Pay money</h2>

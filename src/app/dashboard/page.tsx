@@ -126,6 +126,7 @@ export default function Page() {
         <div className="col-lg-5 col-md-6 col-12">
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-center">My Savings Plans</p>
+            <button className="btn btn-sm rounded-01 btn-primary text-center" onClick={() => setShowModal("createPersonalSavings")}>Add new plan</button>
             <div className="row">
               {
                 savings?.map((saving, index) => (
