@@ -1,5 +1,6 @@
 import { CreateGroupModal } from "./modals/createGroupModal";
 import { CreatePersonalSavingsModal } from "./modals/createPersonalSavingModal";
+import { CreateRecipientModal } from "./modals/createRecipientModal";
 import { EnterGroupCodeModal } from "./modals/enterGroupCode";
 import { LoginModal } from "./modals/loginModal";
 import { RegisterModal } from "./modals/registerModal";
@@ -17,6 +18,7 @@ export const AuthContainer = () => {
       <SuccessModal />
       <EnterGroupCodeModal />
       <CreatePersonalSavingsModal />
+      <CreateRecipientModal />
       <WithdrawFundsModal />
     </>
   );
