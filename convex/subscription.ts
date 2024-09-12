@@ -16,17 +16,19 @@ export const subscribeUsersToPlan = internalAction({
         // create a new date and add two days to it
         const start_date = new Date();
         const schedule_date = new Date();
+        const report_date = new Date();
         start_date.setDate(start_date.getMinutes() + 3);
-        schedule_date.setDate(schedule_date.getMinutes() + 5);
+        schedule_date.setDate(schedule_date.getMinutes() + 1);
+        report_date.setDate(schedule_date.getMinutes() + 5);
         const start = start_date.toISOString();
         for (const user of users) {
-          const userz = await ctx.runQuery(api.user.getUserById, {userId: user.userId})
-          if (userz) {
-            const res = await ctx.runAction(internal.payments.createSubscription, {email: userz?.email as string, plan: group.subscription_plan_id as string, start_date: start })
+          // const userz = await ctx.runQuery(api.user.getUserById, {userId: user.userId})
+          // if (userz) {
+            const res = await ctx.runAction(internal.payments.createSubscription, {email: user?.email as string, plan: group.subscription_plan_id as string, start_date: start })
             statuses[user._id] = res.status;
-          }
+          // }
         }
-        if (Object.values(statuses).every(val => val === true)) return {message:"success", start, schedule_date};
+        if (Object.values(statuses).every(val => val === true)) return {message:"success", start, schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
         else throw new ConvexError("Could not create all the subscriptions");
       }
     }

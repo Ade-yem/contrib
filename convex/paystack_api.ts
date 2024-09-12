@@ -201,6 +201,25 @@ class PaystackAPI {
     };
     return await makeHttpsRequest(options, params);
   }
+  async createTransferRecipientWithCode(data: { name: string, authorization_code: string, email: string }) {
+    const params = JSON.stringify({
+      "type": "authorization",
+      "name": data.name,
+      "email": data.email,
+      "authorization_code": data.authorization_code,
+    });
+    const options = {
+      hostname: this.paystack.hostname,
+      port: 443,
+      path: '/transferrecipient',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + this.paystack.secret_key,
+        'Content-Type': 'application/json'
+      }
+    };
+    return await makeHttpsRequest(options, params);
+  }
 
   async initiateTransfer(data: { reference: string, amount: number, recipient: string, reason: string }) {
     const params = JSON.stringify({

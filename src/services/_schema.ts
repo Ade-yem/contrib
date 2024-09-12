@@ -8,6 +8,7 @@ export type ModalTypes =
   | "groupCode"
   | "createPersonalSavings"
   | "withdrawFunds"
+  | "createRecipient"
   | null;
 
 export enum Gender {
@@ -19,4 +20,9 @@ export enum PaymentFrequency {
   "daily" = "Daily",
   "weekly" = "Weekly",
   "monthly" = "Monthly",
+}
+
+export enum PaymentMethod {
+  "card" = "Saved Card",
+  "bank" = "Bank Transfer",
 }

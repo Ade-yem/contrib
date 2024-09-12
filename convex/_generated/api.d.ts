@@ -21,6 +21,7 @@ import type * as chat from "../chat.js";
 import type * as common from "../common.js";
 import type * as cron from "../cron.js";
 import type * as cronlib from "../cronlib.js";
+import type * as customPassword from "../customPassword.js";
 import type * as group from "../group.js";
 import type * as hookActions from "../hookActions.js";
 import type * as http from "../http.js";
@@ -62,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   common: typeof common;
   cron: typeof cron;
   cronlib: typeof cronlib;
+  customPassword: typeof customPassword;
   group: typeof group;
   hookActions: typeof hookActions;
   http: typeof http;

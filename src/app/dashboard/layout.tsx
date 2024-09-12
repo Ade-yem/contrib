@@ -29,7 +29,6 @@ export default function DashboardLayout({
         className="position-fixed d-md-none"
         isActive={isSideBarOpen}
       />
-
       <div
         className={`position-fixed d-md-inline slide-in-left transition-all sidebar-container ${
           isSideBarOpen ? "mobile-active" : "mobile-hidden"

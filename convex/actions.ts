@@ -14,7 +14,9 @@ export const addGroupAction = action({
     },
     async handler(ctx, args) {
       if (await ctx.auth.getUserIdentity()) {
-        const group = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval, private: args.private, description: args.description});
+        if (await ctx.runQuery(api.group.getGroupByName, {name: args.name})) throw new ConvexError(`Group with name ${args.name} already exists`);
+        const groupId = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval * 100, private: args.private, description: args.description});
+        const group = await ctx.runQuery(api.group.getGroup, {groupId});
         if (group) {
           await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, groupId: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});
           await ctx.runMutation(internal.group.createInvite, {status: "pending", groupId: group._id});
@@ -38,8 +40,9 @@ export const addMember = action({
       if (res?.message === "success") {
         await ctx.runMutation(api.group.assignSlot, {groupId: args_0.groupId});
         await ctx.runMutation(internal.group.startGroup, {groupId: args_0.groupId, start_date: res.start })
-        await ctx.scheduler.runAt(res.schedule_date, internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
-        await ctx.scheduler.runAt(res.schedule_date, internal.cron.scheduleIntervalReport, {name: group.name, groupId: group._id});
+        await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
+        await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleMidTransactionReport, {name: group.name, groupId: group._id});
+        await ctx.scheduler.runAt(new Date(res.schedule_date), internal.cron.scheduleIntervalReport, {name: group.name, groupId: group._id});
       }   
     }
   },

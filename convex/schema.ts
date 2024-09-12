@@ -66,7 +66,7 @@ const schema = defineSchema({
   }),
   payment_methods: defineTable({
     userId: v.id('users'),
-    type: v.union(v.literal("ghpss"), v.literal("nuban")),
+    type: v.union(v.literal("ghpss"), v.literal("nuban"), v.literal("authorization")),
     account_name: v.string(),
     recipient_code: v.string(),
     authorization_code: v.string(),

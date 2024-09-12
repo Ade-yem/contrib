@@ -19,10 +19,7 @@ export const createGroup = mutation({
     private: v.boolean()
   },
   handler: async (ctx, args) => {
-    const groupId = await ctx.db.insert("groups", {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, number_of_people_present: 0, interval: args.interval, savings_per_interval: args.savings_per_interval, status: "pending", private: args.private, description: args?.description, elapsedTime: 0});
-    if (groupId) {
-      return await ctx.db.get(groupId);
-    }
+    return await ctx.db.insert("groups", {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, number_of_people_present: 0, interval: args.interval, savings_per_interval: args.savings_per_interval, status: "pending", private: args.private, description: args?.description, elapsedTime: 0});
   }
 });
 
@@ -156,3 +153,12 @@ export const updateInviteStatus = internalMutation({
     if (exists) await ctx.db.patch(exists._id, {status});
   }
 });
+
+export const getGroupByName = query({
+  args: {
+    name: v.string()
+  },
+  async handler(ctx, args_0) {
+    return await ctx.db.query("groups").filter(g => g.eq(g.field("name"), args_0.name)).first();
+  },
+})

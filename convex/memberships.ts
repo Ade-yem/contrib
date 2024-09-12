@@ -20,7 +20,8 @@ export const createMembership = internalMutation({
   handler: async (ctx, args) => {
     const group = await ctx.db.get(args.groupId);
     const exists = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), args.groupId) && m.eq(m.field("userId"), args.userId)).first();
-    if (exists) throw new ConvexError("User is already a member");
+    console.info("exists => ", exists);
+    if (exists) return;
     if (group && group.number_of_people_present <= group.number_of_people) {
       await ctx.db.insert("membership", {groupId: args.groupId, userId: args.userId, paid_deposit: args.paid_deposit});
       await ctx.db.patch(group._id, {number_of_people_present: group.number_of_people_present + 1})

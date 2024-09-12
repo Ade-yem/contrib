@@ -56,9 +56,18 @@ export const generateUserProfileUploadUrl = mutation(async (ctx) => {
   if (!userId) throw new ConvexError("User is not verified");
   const user = await ctx.db.get(userId);
   if (!user) throw new ConvexError("User is not found");
-  await ctx.storage.delete(user.imageId as Id<"_storage">);
+  if (user.imageId) await ctx.storage.delete(user.imageId as Id<"_storage">);
   return await ctx.storage.generateUploadUrl();
 });
+
+export const removeUserImage = mutation (async (ctx) => {
+  const userId = await auth.getUserId(ctx);
+  if (!userId) throw new ConvexError("User is not verified");
+  const user = await ctx.db.get(userId);
+  if (!user) throw new ConvexError("User is not found");
+  if (user.imageId) await ctx.storage.delete(user.imageId as Id<"_storage">);
+  if (user.image) await ctx.db.patch(userId, {image: undefined, imageId: undefined})
+})
 
 export const saveUserProfileImage = mutation({
   args: {
@@ -126,7 +135,7 @@ export const getMyGroups = query({
     for (const member of groups.page) {
       const group = await ctx.db.get(member.groupId);
       const invite = await ctx.db.query("invites").filter((m) => m.eq(m.field("groupId"), member.groupId)).first();
-      if (!group) throw new ConvexError("Could not get group");
+      if (!group) continue;
       const groupItem: myGroup = {
         name: group.name,
         groupId: group._id,
@@ -167,12 +176,20 @@ export const getMySavings = query({
   }
 });
 
-export const getDefaultPAymentMethod = query({
+export const getDefaultPaymentMethod = query({
   async handler(ctx) {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new ConvexError("User is not authenticated!");
     const payment = await ctx.db.query("default_payment_method").filter((m) => m.eq(m.field("userId"), userId)).first();
     if (payment) return ctx.db.get(payment.paymentMethodId)
-    else throw new ConvexError("There is no default payment method");
+    else null;
+  }
+})
+
+export const getCard = query({
+  async handler(ctx) {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new ConvexError("User is not authenticated!");
+    return await ctx.db.query("authorizations").filter((m) => m.eq(m.field("userId"), userId)).first();
   }
 })
