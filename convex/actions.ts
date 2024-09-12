@@ -15,7 +15,7 @@ export const addGroupAction = action({
     async handler(ctx, args) {
       if (await ctx.auth.getUserIdentity()) {
         if (await ctx.runQuery(api.group.getGroupByName, {name: args.name})) throw new ConvexError(`Group with name ${args.name} already exists`);
-        const groupId = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval, private: args.private, description: args.description});
+        const groupId = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval * 100, private: args.private, description: args.description});
         const group = await ctx.runQuery(api.group.getGroup, {groupId});
         if (group) {
           await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, groupId: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});

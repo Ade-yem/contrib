@@ -19,9 +19,12 @@ const invoiceCreated = async (ctx: ActionCtx, data: any) => {
   const subscription_code = data.subscription.subscription_code;
   const amount = data.subscription.amount;
   const reference = data.transaction.reference;
+  const timestamp = data.paid_at;
   const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
   const userId = member?.userId as Id<"users">
-  await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId})
+  await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId});
+  await ctx.runMutation(internal.intervalReport.addPaidCustomersToInterval, {userId, groupId: member!?.groupId, amount, timestamp})
+
 };
 
 /**

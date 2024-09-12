@@ -105,6 +105,15 @@ export const refundCustomer = internalMutation({
   },
 })
 
+/**
+ * @function addPaidCustomersToInterval add paid customers to an interval
+ * @param timestamp the timestamp of the interval
+ * @param groupId the group id
+ * @param userId the user id
+ * @param amount the amount paid by the user
+ * @returns void
+ * @throws ConvexError if the interval could not be found or updated in the database
+ */
 export const addPaidCustomersToInterval = internalMutation({
   args: {
     timestamp: v.string(),
@@ -121,6 +130,37 @@ export const addPaidCustomersToInterval = internalMutation({
     const members_payment_status = [...(interval.members_payment_status || []), {
       userId, status: "pending" as "pending" | "paid", amount
     }]
+    await ctx.db.patch(interval._id, {members_payment_status});
+  },
+})
+
+
+
+/**
+ * @function updatePaymentStatus update the payment status of a user in an interval
+ * @param groupId the group id
+ * @param userId the user id
+ * @returns void
+ * @throws ConvexError if the interval could not be found or updated in the database
+ */
+export const updatePaymentStatus = internalMutation({
+  args: {
+    groupId: v.id("groups"),
+    userId: v.id("users"),
+    timestamp: v.string(),
+  },
+  async handler(ctx, args_0) {
+    const { groupId, userId, timestamp } = args_0;
+    const time = new Date(timestamp);
+    const timeInMilliSeconds = time.getTime();
+    const interval = await ctx.db.query("interval").filter(i => i.eq(i.field("groupId"), groupId) && i.gte(timeInMilliSeconds, i.field("start")) && i.lte(timeInMilliSeconds, i.field("end")) ).first();
+    if (!interval) throw new ConvexError("Could not get interval");
+    const members_payment_status = (interval.members_payment_status ?? []).map((member: any) => {
+      if (member.userId === userId) {
+        member.status = "paid";
+      }
+      return member;
+    });
     await ctx.db.patch(interval._id, {members_payment_status});
   },
 })

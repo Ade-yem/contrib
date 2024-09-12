@@ -5,10 +5,10 @@
 // Listen for transfer status
 
 import { action, internalAction } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import paystack from "./paystack_api";
 import { TransferRecipientResponse, TransferResponse } from "./types/transfers";
-import { internal } from "./_generated/api";
+import { internal, api } from "./_generated/api";
 import { generateReference } from "./utils";
 
 export const createRecipient = action({
@@ -25,7 +25,7 @@ export const createRecipient = action({
     const result: TransferRecipientResponse = await paystack.createTransferRecipient({
       type: type, name: name, account_number: account_number, bank_code: bank_code, currency: currency
     })
-    if (result) {
+    if (result.status) {
       const res = await ctx.runMutation(internal.paystack.createPaymentMethod, {
         userId: args.userId, type: type, account_name: result.data.details.account_name as string,
         recipient_code: result.data.recipient_code, authorization_code: result.data.details.authorization_code as string,
@@ -34,9 +34,34 @@ export const createRecipient = action({
       if (res && res.length > 1) {
         return true;
       } else return false;
-    }
+    } else throw new ConvexError(result.message);
   }
 })
+
+export const createRecipientFromAuthorization = action({
+  args: {
+    name: v.string(),
+    email: v.string(),
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const {name, email, userId} = args;
+    const authorization_code = await ctx.runQuery(api.authorization.getAuthorization, {userId});
+    const result: TransferRecipientResponse = await paystack.createTransferRecipientWithCode({
+      name, email, authorization_code
+    });
+    if (result.status) {
+      const res = await ctx.runMutation(internal.paystack.createPaymentMethod, {
+        userId: args.userId, type: "authorization", account_name: result.data.details.account_name as string,
+        recipient_code: result.data.recipient_code, authorization_code: result.data.details.authorization_code as string,
+        currency: result.data.currency as "NGN" | "GHS", bank_name: result.data.details.bank_name, account_number: result.data.details.account_number
+      })
+      if (res && res.length > 1) {
+        return true;
+      } else return false;
+    } else throw new ConvexError(result.message)
+  }
+});
 
 export const initiateTransfer = internalAction({
 	args: {

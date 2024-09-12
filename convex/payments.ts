@@ -50,6 +50,7 @@ export const initializePaystackTransaction = action ({
     },
     handler: async (ctx, args_0) => {
         const { email, amount } = args_0
+        const amt =amount * 100;
         const metadata = {
             details: args_0.metadata.details,
             groupId: args_0.metadata.groupId ? args_0.metadata.groupId : "",
@@ -60,11 +61,11 @@ export const initializePaystackTransaction = action ({
         }
         const result: InitializeResponse = await paystack.initializeTransaction({
             email,
-            amount,
+            amount: amt,
             metadata
         })
         if (result) {
-            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
+            await ctx.runMutation(internal.paystack.createTransaction, {amount: amt, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
         }
         return result;
     },
@@ -85,7 +86,8 @@ export const ChargeTransaction = action ({
         })
     },
     handler: async (ctx, args_0) => {
-        const { email, amount } = args_0
+        const { email, amount } = args_0;
+        const amt = amount * 100;
         const metadata = {
             details: args_0.metadata.details,
             groupId: args_0.metadata.groupId ? args_0.metadata.groupId : "",
@@ -98,11 +100,11 @@ export const ChargeTransaction = action ({
         const result: InitializeResponse = await paystack.chargeMoney({
           authorization_code,
           email,
-          amount,
+          amount: amt,
           metadata
         })
         if (result) {
-            await ctx.runMutation(internal.paystack.createTransaction, {amount: amount, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
+            await ctx.runMutation(internal.paystack.createTransaction, {amount: amt, savingsId: args_0.metadata.savingsId, groupId: args_0.metadata.groupId, userId: metadata.userId, type: "deposit", access_code: result.data.access_code, status: "pending", reference: result.data.reference, details: metadata.details})
         }
         return result;
     },

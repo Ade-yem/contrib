@@ -13,15 +13,15 @@ export default function GroupPage() {
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
 
-  const groupList = useQuery(api.group.getAllGroups);
+  // const groupList = useQuery(api.group.getAllGroups);
+  const user = useQuery(api.user.getUser);
+  
 
-  console.log(groupList);
-
-  // const { results, status, loadMore } = usePaginatedQuery(
-  //   api.user.getMyGroups,
-  //   {},
-  //   { initialNumItems: 5 }
-  // );
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.user.getMyGroups,
+    {userId: user!?._id},
+    { initialNumItems: 5 }
+  );
 
   return (
     <>
@@ -54,14 +54,14 @@ export default function GroupPage() {
             </tr>
           </thead>
           <tbody>
-            {groupList?.map((group, index) => (
+            {results?.map((group, index) => (
               <tr key={index}>
                 <td className="py-4_5 ps-4">{group.name}</td>
                 <td className="py-4_5 ps-4 desc">{group.description}</td>
-                <td className="py-4_5 ps-4">{group.savings_per_interval}</td>
-                <td className="py-4_5 ps-4">{group.number_of_people}</td>
+                <td className="py-4_5 ps-4">&#8358; {group.paymentPerInterval / 100}</td>
+                <td className="py-4_5 ps-4">{group.numOfMembers}</td>
                 <td className="py-4_5 ps-4">
-                  {group.number_of_people_present}
+                  {group.collectionNumber}
                 </td>
                 <td className="py-4_5 ps-4">
                   <div className="dropdown">
