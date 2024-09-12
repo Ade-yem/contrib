@@ -7,15 +7,25 @@ import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
-import { ModalTypes, PaymentFrequency } from "@/services/_schema";
+import { ModalTypes, PaymentFrequency, Categories, PaymentMethod } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
-import { useAction } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 
 const paymentFrequencySelect = Object.entries(PaymentFrequency).map((item) => ({
+  label: item[1],
+  value: item[0],
+}));
+
+const paymentMethodSelect = Object.entries(PaymentMethod).map((item) => ({
+  label: item[1],
+  value: item[0],
+}));
+
+const CategoriesSelect = Object.entries(Categories).map((item) => ({
   label: item[1],
   value: item[0],
 }));
@@ -30,35 +40,42 @@ export const CreatePersonalSavingsModal = () => {
     showModal: ModalTypes;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
-  const addGroup = useAction(api.actions.addGroupAction);
+  const addSavings = useMutation(api.savings.createSavings);
+  const payWithCard = useAction(api.payments.ChargeTransaction);
+  const otherMethod = useAction(api.payments.initializePaystackTransaction);
+  const confirmTransaction = useAction(api.payments.verifyTransaction);
+  const card = useQuery(api.user.getCard);
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
     savingName: "",
-    amount: "",
     category: "",
-    frequency: "",
-    sourceFund: false,
+    frequency: undefined,
+    payment: undefined,
   };
   const validationSchema = yup.object().shape({
-    savingName: yup.string().label("Group Name").required(),
-    amount: yup.string().label("Amount").required(),
+    savingName: yup.string().label("Savings Name").required(),
+    amount: yup.string().label("Initial Amount").optional(),
     category: yup.object().label("Category").required(),
-    frequency: yup.object().label("Frequency of Savings").required(),
-    sourceFund: yup.object().label("Source of Fund").required(),
+    frequency: yup.object().label("Frequency of Savings").optional(),
+    payment: yup.object().label("Payment Method").optional(),
   });
-  const handleCreateGroup = async (values: FormikValues) => {
+  const createSavings = async (values: FormikValues) => {
     setSubmitting(true);
     try {
-      await addGroup({
-        creator_id: user?._id as Id<"users">,
-        name: values.groupName,
-        number_of_people: values.memberNo,
-        interval: values.frequency.value,
-        savings_per_interval: values.amountGoal,
-        private: values.keepGroupPrivate,
-        description: values.desc,
-      });
-      setShowModal("success");
+      if (values.amount && values.payment.value === "bank") {
+        await payCard(values);
+      } else if (values.amount && values.payment.value === "card") {
+        await payWithTransaction(values);
+      } else {
+        await addSavings({
+          userId: user?._id as Id<"users">,
+          amount: values.amount, 
+          name: values.savingName,
+          reason: values.category.value,
+          interval: values.frequency.value,
+        });
+        setShowModal("success");
+      }
       console.log(`${values.amount} saved successfully`);
     } catch (error: any) {
       toast.error("Failed to save:", error);
@@ -66,6 +83,39 @@ export const CreatePersonalSavingsModal = () => {
     setSubmitting(false);
   };
 
+  const payCard = async (values: FormikValues) => {
+    const res = await payWithCard({
+      email: user?.email,
+      amount: values.amount,
+      metadata: {
+        details: "create savings",
+        userId: user?._id,
+        name: values.savingName,
+        reason: values.category.value,
+        savingsInterval: values.frequency.value,
+      }
+    });
+    const stat = await confirmTransaction({reference: res.reference});
+    if (stat.data.status) setShowModal("success");
+  }
+  const payWithTransaction = async (values: FormikValues) => {
+    const res = await otherMethod({
+      email: user?.email,
+      amount: values.amount,
+      metadata: {
+        details: "create savings",
+        userId: user?._id,
+        name: values.savingName,
+        reason: values.category.value,
+        savingsInterval: values.frequency.value,
+      }
+    });
+    if (res) {
+      window.open(res.data.authorization_url, "_blank");
+    }
+    const stat = await confirmTransaction({reference: res.data.reference});
+    if (stat.data.status) setShowModal("success");
+  }
   const closeModal = () => {
     setShowModal(null);
   };
@@ -82,7 +132,7 @@ export const CreatePersonalSavingsModal = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleCreateGroup}
+            onSubmit={createSavings}
             validateOnBlur={false}
           >
             {({ handleSubmit, isValid, setFieldValue }) => {
@@ -109,18 +159,6 @@ export const CreatePersonalSavingsModal = () => {
                       id="savingName"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Enter Amount (₦)
-                    </label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="e.g 200"
-                      type="number"
-                      min={0}
-                      name="amount"
-                      id="amount"
-                    />
-                    <label className="text-xs text-grey-300 mt-4 mb-2">
                       Select Category
                     </label>
                     <Field
@@ -129,7 +167,7 @@ export const CreatePersonalSavingsModal = () => {
                       id="category"
                       size="base"
                       options={convertModelArrayToSelectOptions(
-                        paymentFrequencySelect,
+                        CategoriesSelect,
                         "value",
                         "label",
                         true
@@ -158,29 +196,41 @@ export const CreatePersonalSavingsModal = () => {
                         setFieldValue("frequency", selectedOption.value);
                       }}
                     />
+
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Source of Fund
+                      Initial Amount
+                    </label>
+                    <Field
+                      component={TextInput}
+                      className="form-control"
+                      placeholder="N 1000"
+                      type="text"
+                      name="amount"
+                      id="amount"
+                    />
+                    <label className="text-xs text-grey-300 mt-4 mb-2">
+                      Select Payment Method
                     </label>
                     <Field
                       component={ThemedSelect}
-                      name="sourceFund"
-                      id="sourceFund"
+                      name="payment"
+                      id="payment"
                       size="base"
                       options={convertModelArrayToSelectOptions(
-                        paymentFrequencySelect,
+                        paymentMethodSelect,
                         "value",
                         "label",
                         true
                       )}
                       onChange={(selectedOption: any) => {
                         // Ensure you extract the value from the selected option
-                        setFieldValue("sourceFund", selectedOption.value);
+                        setFieldValue("payment", selectedOption.value);
                       }}
                     />
 
                     <div className="d-flex justify-content-center align-items-center mt-4">
                       <Button
-                        title="Create Plan"
+                        title="Create savings"
                         type="submit"
                         disabled={submitting || !isValid}
                         loading={submitting}

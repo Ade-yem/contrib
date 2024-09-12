@@ -17,9 +17,20 @@ export enum Gender {
   "other" = "Other",
 }
 export enum PaymentFrequency {
+  "hourly" = "Hourly",
   "daily" = "Daily",
   "weekly" = "Weekly",
   "monthly" = "Monthly",
+}
+
+export enum Categories {
+  "Appliances" = "Appliances",
+  "Car/Vehicle" = "Car/Vehicle",
+  "Education" = "Education",
+  "Accomodation" = "Accomodation",
+  "Fees/Debt" = "Fees/Debt",
+  "Vacation & Travel" = "Vacation & Travel",
+  "Custom" = "Custom",
 }
 
 export enum PaymentMethod {

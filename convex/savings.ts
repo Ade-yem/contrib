@@ -50,6 +50,7 @@ export const removeMoneyFromSavings = mutation({
     })    
   },
 })
+
 export const updateSavings = internalMutation({
   args: {
     reference: v.string(),
