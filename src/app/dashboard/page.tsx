@@ -7,6 +7,9 @@ import { Id } from "../../../convex/_generated/dataModel";
 import { useAction, usePaginatedQuery, useQuery } from "convex/react";
 import { LayoutContext } from "@/context/layoutContext";
 import { ModalTypes } from "@/services/_schema";
+import EmptyData from "@/components/shared/EmptyData";
+import Loader from "@/components/shared/Loader";
+import { thousandFormatter } from "@/components/utilities";
 
 export default function Page() {
   const user = useQuery(api.user.getUser);
@@ -113,70 +116,101 @@ export default function Page() {
             </div>
           </div>
           <p className="text-xl fw-bold">Transactions</p>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Group Name
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Amount
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Details
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Status
-                </th>
-                <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                  Reference code
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {results?.map((transaction, index) => (
-                <tr key={index}>
-                  <td className="py-3 text-nowrap ps-4">{transaction.name}</td>
-                  <td className="py-3  ps-4 desc">
-                    &#8358; {transaction.amount}
-                  </td>
-                  <td className="py-3 text-nowrap ps-4">
-                    {transaction.details}
-                  </td>
-                  <td className="py-3 text-nowrap ps-4">
-                    {transaction.status}
-                  </td>
-                  <td className="py-3 text-nowrap ps-4">
-                    {transaction.reference}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {status === "LoadingFirstPage" ? (
+            <Loader height="30vh" />
+          ) : results?.length === 0 ? (
+            <div className="rounded-4 bg-white">
+              <EmptyData height="30vh" text="No transaction yet." />
+            </div>
+          ) : (
+            <div className="table-responsive bg-white">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                      Group Name
+                    </th>
+                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                      Amount
+                    </th>
+                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                      Details
+                    </th>
+                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                      Status
+                    </th>
+                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                      Reference code
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {results?.map((transaction, index) => (
+                    <tr key={index}>
+                      <td className="py-3 text-nowrap ps-4">
+                        {transaction.name}
+                      </td>
+                      <td className="py-3  ps-4 text-nowrap">
+                        &#8358; {thousandFormatter(transaction.amount)}
+                      </td>
+                      <td className="py-3 ps-4 desc">{transaction.details}</td>
+                      <td className="py-3 text-nowrap ps-4">
+                        {transaction.status}
+                      </td>
+                      <td className="py-3 text-nowrap ps-4">
+                        {transaction.reference}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
         <div className="col-lg-5 col-md-6 col-12">
           <div className="bg-white-000 rounded-10 p-4 ">
-            <p className="text-xl fw-bold text-center">My Savings Plans</p>
-            <button
-              className="btn btn-sm rounded-01 btn-primary text-center"
-              onClick={() => setShowModal("createPersonalSavings")}
-            >
-              Add new plan
-            </button>
-            <div className="row">
-              {savings?.map((saving, index) => (
-                <div className="col-6 my-2" key={index}>
-                  <div className="bg-purple rounded-10 p-4 d-flex flex-column justify-content-between">
-                    <p className="text-white-000 text-xs fw-bold">
-                      {saving.name}
-                    </p>
-                    <p className="text-white-000 text-xs">
-                      &#8358; {saving.amount / 100}
-                    </p>
-                    <p className="text-white-000 text-xs">{saving.reason}</p>
-                  </div>
+            <p className="text-xl fw-bold text-cente mb-">My Savings Plans</p>
+
+            <div className="webkit-scrollbar-none overflow-auto savings-plan">
+              {!savings ? (
+                <Loader height="30vh" />
+              ) : savings?.length === 0 ? (
+                <EmptyData height="30vh" text="No savings plan." />
+              ) : (
+                <div className="row">
+                  {savings?.map((saving, index) => (
+                    <div className="col-6 my-2" key={index}>
+                      <div className="bg-purple rounded-10 p-4 d-flex flex-column justify-content-between">
+                        <p className="text-white-000 text-xs fw-bold">
+                          {saving.name}
+                        </p>
+                        <p className="text-white-000 text-xs">
+                          &#8358; {saving.amount / 100}
+                        </p>
+                        <p className="text-white-000 text-xs">
+                          {saving.reason}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+            </div>
+
+            <div className="d-flex justify-content-center align-items-center pt-4 bg-gray-30">
+              <button
+                className="btn btn-sm btn-gray-400 text-center text-white-000"
+                onClick={() => setShowModal("createPersonalSavings")}
+              >
+                <Icon
+                  icon="humbleicons:plus"
+                  width="2rem"
+                  height="2rem"
+                  style={{ color: "white" }}
+                />
+                Add new plan
+              </button>
             </div>
           </div>
         </div>
