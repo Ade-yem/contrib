@@ -12,14 +12,6 @@ import Loader from "@/components/shared/Loader";
 export default function GroupsPage() {
   const [sort, setSort] = useState("all");
   const groupList = useQuery(api.group.getAllGroups);
-  // const { groupList, status, loadMore } = usePaginatedQuery(
-  //   api.group.getAllGroups,
-  //   {},
-  //   { initialNumItems: 5 }
-  // );
-  // if (!groupList) {
-  //   return <Loader description="Fetching" height="70vh" />;
-  // }
 
   return (
     <div className="text-center">
@@ -66,11 +58,11 @@ export default function GroupsPage() {
                         key={index}
                         color={index}
                         // img={item.img}
-                        // alt={item.alt}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
                         desc={item.description}
                         privateGroup={item.private}
+                        groupId={item._id}
                       />
                     ))}
                 </>
@@ -83,11 +75,11 @@ export default function GroupsPage() {
                         key={index}
                         color={index}
                         // img={item.img}
-                        // alt={item.alt}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
                         desc={item.description}
                         privateGroup={item.private}
+                        groupId={item._id}
                       />
                     ))}
                 </>
@@ -98,11 +90,11 @@ export default function GroupsPage() {
                       key={index}
                       color={index}
                       // img={item.img}
-                      // alt={item.alt}
                       savings_per_interval={item.savings_per_interval}
                       title={item.name}
                       desc={item.description}
                       privateGroup={item.private}
+                      groupId={item._id}
                     />
                   ))}
                 </>

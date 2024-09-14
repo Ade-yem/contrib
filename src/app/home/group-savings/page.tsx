@@ -104,11 +104,11 @@ export default function GroupSavingsPage() {
                   key={index}
                   color={index}
                   // img={item.img}
-                  // alt={item.alt}
                   savings_per_interval={item.savings_per_interval}
                   title={item.name}
                   desc={item.description}
                   privateGroup={item.private}
+                  groupId={item._id}
                 />
               ))}
             </>
