@@ -28,12 +28,14 @@ interface Log {
   }
 
   interface Metadata {
-    details: 'join group' | "add savings";
+    details: 'join group' | "add savings" | "pay group" | "create savings" | "add card";
     groupId: string;
     savingsId: string;
     userId: string;
     name: string;
     reason: string;
+    interval: string;
+    amountTarget: number;
   }
   
 export interface Authorization {

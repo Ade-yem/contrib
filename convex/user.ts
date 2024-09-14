@@ -20,6 +20,20 @@ export const getUserById = query({
   },
 });
 
+export const getUserzById = query({
+  args: {
+    userId: v.id("users")
+  },
+  handler: async (ctx, args_0) => {
+    const res = await ctx.db.get(args_0.userId);
+    return {
+      first_name: res?.first_name,
+      last_name: res?.last_name,
+
+    }
+  },
+});
+
 export const getInviteLink = query({
   args: {
     groupId: v.id("groups")
@@ -28,7 +42,7 @@ export const getInviteLink = query({
     const res = await ctx.db.query("invites").filter((inv) => inv.eq(inv.field("groupId"), args_0.groupId)).collect();
     const inv_code = res[0].code
     const link = process.env.SITE_URL;
-    return `${link}/${inv_code}`
+    return `${link}/share/${inv_code}`
   },
 })
 

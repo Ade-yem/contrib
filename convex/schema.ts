@@ -18,7 +18,8 @@ const schema = defineSchema({
     elapsedTime: v.float64(),
     private: v.boolean(),
     imageId: v.optional(v.id("_storage")),
-    image: v.optional(v.string())
+    image: v.optional(v.string()),
+    amount: v.optional(v.float64())
   }),
   membership: defineTable({
     groupId: v.id("groups"),
@@ -30,6 +31,7 @@ const schema = defineSchema({
   savings: defineTable({
     userId: v.id("users"),
     amount: v.float64(),
+    amountTarget: v.optional(v.float64()),
     reason: v.string(),
     name: v.string(),
     interval: v.optional(v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly"))),
@@ -56,6 +58,8 @@ const schema = defineSchema({
     groupId: v.id("groups"),
     receiver_id: v.id("users"),
     month: v.float64(),
+    amount: v.optional(v.float64()),
+    details: v.optional(v.union(v.literal("intervalStart"), v.literal("midInterval"))),
     members_payment_status: v.optional(v.array(v.object({
       userId: v.id("users"),
       status: v.union(v.literal("pending"), v.literal("paid")),
@@ -134,6 +138,7 @@ const schema = defineSchema({
   jobs: defineTable({
     groupId: v.id("groups"),
     name: v.optional(v.string()),
+    details: v.optional(v.union(v.literal("intervalStart"), v.literal("midInterval"))),
     cronId: v.optional(v.id("crons")),
     
   }).index("groupId", ["groupId"]),

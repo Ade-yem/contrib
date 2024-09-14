@@ -1,4 +1,4 @@
-import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { nanoid } from "nanoid";
 import { generateAndShuffleNumbers } from "./utils";
@@ -19,7 +19,7 @@ export const createGroup = mutation({
     private: v.boolean()
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("groups", {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, number_of_people_present: 0, interval: args.interval, savings_per_interval: args.savings_per_interval, status: "pending", private: args.private, description: args?.description, elapsedTime: 0});
+    return await ctx.db.insert("groups", {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, number_of_people_present: 0, interval: args.interval, savings_per_interval: args.savings_per_interval, status: "pending", private: args.private, description: args?.description, elapsedTime: 0, amount: 0});
   }
 });
 
@@ -62,9 +62,22 @@ export const joinGroupWithInviteCode = mutation({
   async handler(ctx, args) {
     const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("code"), args.code)).first();
     if (!invite) throw new ConvexError("There is no invite code of " + args.code);
+    if (invite.status === "closed") throw new ConvexError("The group is closed");
     const group = await ctx.db.get(invite.groupId);
     if (!group) throw new ConvexError("There is no group attached to invite code of " + args.code);
     await ctx.scheduler.runAfter(0, api.actions.addMember, {groupId: group._id, userId: args.userId});
+    return group._id;
+  }
+})
+
+export const getGroupWithInviteCode = query({
+  args: {
+    code: v.string(),
+  },
+  async handler(ctx, args) {
+    const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("code"), args.code)).first();
+    if (!invite) throw new ConvexError("There is no invite code of " + args.code);
+    return await ctx.db.get(invite.groupId);
   }
 })
 
@@ -95,6 +108,9 @@ export const endGroup = internalMutation({
     groupId: v.id("groups"),
   },
   async handler(ctx, args_0) {
+    // get invite of the group and close it too
+    const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), args_0.groupId)).first();
+    if (invite) await ctx.db.patch(invite._id, {status: "closed"});
     return await ctx.db.patch(args_0.groupId, {status: "closed"})
   },
 })

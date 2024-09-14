@@ -1,6 +1,6 @@
 import { Email } from "@convex-dev/auth/providers/Email";
 import { alphabet, generateRandomString } from "oslo/crypto";
-import { Resend as ResendAPI } from "resend";
+import { Resend, Resend as ResendAPI } from "resend";
 import { PasswordResetEmail } from "./ResetPasswordMail";
 import { VerificationCodeEmail } from "./VerifyPasswordMail";
 
@@ -58,3 +58,20 @@ export const ResendOTP = Email({
     }
   },
 });
+
+// write code to a user saying their weekly payment failed and it will be retried in a few hours
+// export const PaymentFailed = new Resend({
+
+//     const resend = new ResendAPI(provider.apiKey);
+//     const { error } = await resend.emails.send({
+//       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Adeyemi  at Jekajodawo",
+//       to: [email],
+//       subject: `Payment Failed`,
+//       react: PaymentFailedEmail(),
+//     });
+
+//     if (error) {
+//       throw new Error(JSON.stringify(error));
+//     }
+//   },
+// });

@@ -2,7 +2,7 @@
 
 import paystack from "./paystack_api";
 import { internal, api } from "./_generated/api";
-import { action, internalAction, query } from "./_generated/server";
+import { action, internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import crypto from "crypto"
 import { createPlanResponse, InitializeResponse, ChargeAttemptResponse } from "./types/subscriptions";
@@ -47,6 +47,8 @@ export const initializePaystackTransaction = action ({
             name: v.optional(v.string()),
             reason: v.optional(v.string()),
             savingsInterval: v.optional(v.string()),
+            interval: v.optional(v.string()),
+            amountTarget: v.optional(v.number())
         })
     },
     handler: async (ctx, args_0) => {
@@ -60,6 +62,8 @@ export const initializePaystackTransaction = action ({
             reason: args_0.metadata.reason ? args_0.metadata.reason : "",
             userId: args_0.metadata.userId,
             savingsInterval: args_0.metadata.savingsInterval ? args_0.metadata.savingsInterval : "",
+            interval: args_0.metadata.interval ? args_0.metadata.interval : "",
+            amountTarget: args_0.metadata.amountTarget ? args_0.metadata.amountTarget : 0
         }
         const result: InitializeResponse = await paystack.initializeTransaction({
             email,
@@ -86,6 +90,8 @@ export const ChargeTransaction = action ({
         name: v.optional(v.string()),
         reason: v.optional(v.string()),
         savingsInterval: v.optional(v.string()),
+        interval: v.optional(v.string()),
+        amountTarget: v.optional(v.number())
     })
   },
   handler: async (ctx, args_0) => {
@@ -99,6 +105,8 @@ export const ChargeTransaction = action ({
         name: args_0.metadata.name ? args_0.metadata.name : "",
         reason: args_0.metadata.reason ? args_0.metadata.reason : "",
         savingsInterval: args_0.metadata.savingsInterval ? args_0.metadata.savingsInterval : "",
+        interval: args_0.metadata.interval ? args_0.metadata.interval : "",
+        amountTarget: args_0.metadata.amountTarget ? args_0.metadata.amountTarget : 0
     }
     const authorization_code = await ctx.runQuery(api.authorization.getAuthorization, {userId: metadata.userId})
     const result: ChargeAttemptResponse = await paystack.chargeMoney({

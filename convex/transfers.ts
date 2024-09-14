@@ -26,10 +26,14 @@ export const createRecipient = action({
       type: type, name: name, account_number: account_number, bank_code: bank_code, currency: currency
     })
     if (result.status) {
+      const account_name = result.data.details.account_name || "";
+      const account_number = result.data.details.account_number || "";
+      const authorization_code = result.data.details.authorization_code || "";
+      const bank_name = result.data.details.bank_name || "";
       const res = await ctx.runMutation(internal.paystack.createPaymentMethod, {
-        userId: args.userId, type: type, account_name: result.data.details.account_name as string,
-        recipient_code: result.data.recipient_code, authorization_code: result.data.details.authorization_code as string,
-        currency: result.data.currency as "NGN" | "GHS", bank_name: result.data.details.bank_name, account_number: result.data.details.account_number
+        userId: args.userId, type: type, account_name,
+        recipient_code: result.data.recipient_code, authorization_code,
+        currency: result.data.currency as "NGN" | "GHS", bank_name, account_number
       })
       if (res && res.length > 1) {
         return true;
@@ -50,11 +54,17 @@ export const createRecipientFromAuthorization = action({
     const result: TransferRecipientResponse = await paystack.createTransferRecipientWithCode({
       name, email, authorization_code
     });
+    console.log(result);
     if (result.status) {
+      const account_name = result.data.details.account_name || "";
+      const account_number = result.data.details.account_number || "";
+      const authorization_code = result.data.details.authorization_code || "";
+      const bank_name = result.data.details.bank_name || "";
+
       const res = await ctx.runMutation(internal.paystack.createPaymentMethod, {
-        userId: args.userId, type: "authorization", account_name: result.data.details.account_name as string,
-        recipient_code: result.data.recipient_code, authorization_code: result.data.details.authorization_code as string,
-        currency: result.data.currency as "NGN" | "GHS", bank_name: result.data.details.bank_name, account_number: result.data.details.account_number
+        userId: args.userId, type: "authorization", account_name,
+        recipient_code: result.data.recipient_code, authorization_code,
+        currency: result.data.currency as "NGN" | "GHS", bank_name, account_number
       })
       if (res && res.length > 1) {
         return true;
@@ -80,10 +90,11 @@ export const initiateTransfer = internalAction({
 		const result: TransferResponse = await paystack.initiateTransfer({
 			amount: args_0.amount, recipient: args_0.recipient, reason: args_0.reason, reference: reference
 		})
-		if (result) {
+    console.log(result);
+		if (result.status) {
 			await ctx.runMutation(internal.paystack.createTransaction, {
 				groupId: args_0.groupId, userId: args_0.userId, amount: result.data.amount, type: "transfer", status: result.data.status, reference: result.data.reference, details: args_0.details, transfer_code: result.data.transfer_code, savingsId: args_0.savingsId
 			})
-		}
+		} else throw new ConvexError(result.message);
 	},
 });

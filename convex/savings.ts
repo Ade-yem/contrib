@@ -11,12 +11,13 @@ export const createSavings = mutation({
     userId: v.id("users"),
     name: v.string(),
     amount: v.float64(),
+    amountTarget: v.float64(),
     reason: v.string(),
     interval: v.optional(v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly"))),
   },
   async handler(ctx, args_0) {
-    const { userId, name, amount, reason, interval } = args_0;
-    await ctx.db.insert("savings", {userId, name, amount, reason, interval});
+    const { userId, name, amount, reason, interval, amountTarget } = args_0;
+    await ctx.db.insert("savings", {userId, name, amount, reason, interval, amountTarget});
   },
 })
 

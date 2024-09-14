@@ -128,7 +128,7 @@ export default function Page() {
                 <thead>
                   <tr>
                     <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                      Group Name
+                      Name
                     </th>
                     <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
                       Amount
@@ -152,7 +152,7 @@ export default function Page() {
                         {transaction.name}
                       </td>
                       <td className="py-3  ps-4 text-nowrap">
-                        &#8358; {thousandFormatter(transaction.amount)}
+                        &#8358; {thousandFormatter(transaction.amount / 100)}
                       </td>
                       <td className="py-3 ps-4 desc">{transaction.details}</td>
                       <td className="py-3 text-nowrap ps-4">

@@ -35,7 +35,13 @@ const invoiceCreated = async (ctx: ActionCtx, data: any) => {
 const invoiceUpdate = async (ctx: ActionCtx, data: any) => {
   const reference = data.transaction.reference;
   const status = data.transaction.status;
-  await ctx.runMutation(internal.paystack.updateTransaction, {status, reference})
+  const amount = data.transaction.amount;
+  await ctx.runMutation(internal.paystack.updateTransaction, {status, reference});
+  const transaction = await ctx.runQuery(internal.paystack.getTransaction, {reference});
+  if (transaction) {
+    await ctx.runMutation(internal.intervalReport.updatePaymentStatus, {userId: transaction.userId, groupId: transaction.groupId as Id<"groups">, timestamp: data.paid_at, amount})
+    
+  }
 };
 
 /**
@@ -112,6 +118,8 @@ const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
       userId: string;
       name: string;
       reason: string;
+      interval: string;
+      amountTarget: number;
     } = data.metadata;
     const auth: Authorization = data.authorization;
     if (metadata.details === "join group") {
@@ -120,7 +128,8 @@ const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
     } else if (metadata.details === "add savings") {
       await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, amount: data.amount})
     } else if (metadata.details === "create savings") {
-      await ctx.runMutation(api.savings.createSavings, {name: metadata.name, userId: metadata.userId as Id<"users">, amount: data.amount, reason: metadata.reason })
+      const interval = metadata.interval.length > 0 ? metadata.interval as "hourly" | "daily" | "weekly" | "monthly" : undefined;
+      await ctx.runMutation(api.savings.createSavings, {name: metadata.name, userId: metadata.userId as Id<"users">, amount: data.amount, reason: metadata.reason, amountTarget: metadata.amountTarget, interval })
     } else if (metadata.details === "add card") {
       await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code});
       await ctx.runMutation(internal.savings.addToFirstSavings, {userId: metadata.userId as Id<"users">, amount: data.amount});

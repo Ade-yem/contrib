@@ -60,7 +60,7 @@ export const CreateRecipientModal = () => {
         type: "nuban",
         name: values.name,
         account_number: values.account_number,
-        bank_code: values.banks_code,
+        bank_code: values.bank_code,
         currency: "NGN",
       });
       setShowModal("success");
@@ -80,9 +80,26 @@ export const CreateRecipientModal = () => {
       });
       if (res) {
         setShowModal("success");
+        setSubmitting(false);
       }
     } catch (error) {
       console.log(error);
+      setSubmitting(false);
+    }
+  }
+
+  const handleResolveAccountNumber = async (value: string, val: FormikValues) => {
+    if (value.length === 10) {
+      try{
+        const res = await resolveAccountNumber({
+          account_number: value,
+          bank_code: val.bank_code,
+        });
+        return res.account_name;
+      } catch (error) {
+        toast.error("Failed to resolve account number");
+        console.log(error);
+      }
     }
   }
 
@@ -99,14 +116,6 @@ export const CreateRecipientModal = () => {
         className="modal-mobile"
       >
         <Modal.Body>
-          <div className="m-2">
-            <button type="button" 
-              className="btn btn-lg text-sm btn-primary letter-spacing-1"
-              onClick={createFromAuthorization}
-            >
-              Create from Card
-            </button>
-          </div>
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -152,6 +161,10 @@ export const CreateRecipientModal = () => {
                       maxLength={10}
                       name="account_number"
                       id="account_number"
+                      onChange={(e: any) => {
+                        const res = handleResolveAccountNumber(e.value, e.target.formik.values)
+                        setFieldValue("name", res);
+                      }}
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
                       Name
@@ -181,6 +194,12 @@ export const CreateRecipientModal = () => {
                         onClick={closeModal}
                       >
                         Cancel
+                      </button>
+                      <button type="button" 
+                        className="btn btn-lg text-sm btn-primary letter-spacing-1"
+                        onClick={createFromAuthorization}
+                      >
+                        Create from Card
                       </button>
                     </div>
                   </>
