@@ -51,7 +51,6 @@ class PaystackAPI {
     details: string;
     name: string;
     reason: string;
-    savingsInterval: string;
     interval: string;
     amountTarget: number;
 } | undefined }) {
@@ -83,7 +82,6 @@ class PaystackAPI {
     details: string;
     name: string;
     reason: string;
-    savingsInterval: string;
     interval: string;
     amountTarget: number;
     } | undefined 

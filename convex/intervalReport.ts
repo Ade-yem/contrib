@@ -1,9 +1,9 @@
 import { query, internalMutation, internalAction, QueryCtx } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-import { convertToMilliSeconds } from "./utils";
+import { convertToMilliSeconds, parseToMilliSeconds } from "./utils";
 import { Id } from "./_generated/dataModel";
 import { api, internal } from "./_generated/api";
-
+import {SendEmails} from "./resend/resend";
 
 export const generateReport = internalMutation({
   args: {
@@ -14,7 +14,7 @@ export const generateReport = internalMutation({
     const job = await ctx.db.get(jobId);
     const groupId = job?.groupId as Id<"groups">
     const group = await ctx.db.get(groupId);
-    if (!group) throw new ConvexError("Could not get group of id " + groupId);
+    if (!group) throw new Error("Could not get group of id " + groupId);
     const groupTransactions = await ctx.db.query("transactions").filter(t => t.eq(t.field("groupId"), groupId) && t.eq(t.field("details"), "pay group")).order("desc").collect();
     const start_date = new Date(group?.start_date as string);
     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
@@ -48,7 +48,7 @@ export const intervalRecord = internalMutation({
     const job = await ctx.db.get(jobId);
     const groupId = job?.groupId as Id<"groups">
     const group = await ctx.db.get(groupId);
-    if (!group) throw new ConvexError("Could not get group of id " + groupId);
+    if (!group) throw new Error("Could not get group of id " + groupId);
     const elapsed = group?.elapsedTime ? group?.elapsedTime : 0;
     const receiver = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId) && m.eq(m.field("collection_number"), elapsed)).first();
     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
@@ -73,7 +73,7 @@ export const intervalChange = internalMutation({
     const job = await ctx.db.get(jobId);
     const groupId = job?.groupId as Id<"groups">
     const group = await ctx.db.get(groupId);
-    if (!group) throw new ConvexError("Could not get group of id " + groupId);
+    if (!group) throw new Error("Could not get group of id " + groupId);
     if (group.elapsedTime < group.number_of_people) {
       await ctx.db.patch(groupId, {elapsedTime: group.elapsedTime + 1});
     } else {
@@ -91,18 +91,15 @@ export const payNextCustomer = internalMutation({
     const job = await ctx.db.get(jobId);
     const groupId = job?.groupId as Id<"groups">
     const group = await ctx.db.get(groupId);
-    if (!group) throw new ConvexError("Could not get group of id " + groupId);
+    if (!group) throw new Error("Could not get group of id " + groupId);
     const receiver = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId) && m.eq(m.field("collection_number"), group.elapsedTime)).first();
     const amount = group.number_of_people * group.savings_per_interval;
-    console.info("amount", amount);
-    console.info("number of people", group.number_of_people);
-    console.info("savings per interval", group.savings_per_interval);
     const payment_method = await ctx.db.query("payment_methods").filter(d => d.eq(d.field("userId"), receiver?.userId)).first();
     // const payment_method = await ctx.db.get(default_payment_method?.paymentMethodId as Id<"payment_methods">)
     await ctx.scheduler.runAt(new Date(), internal.transfers.initiateTransfer, {groupId, userId: receiver?.userId as Id<"users">,
       amount: amount, details: group.name +  "interval payment",
       recipient: payment_method?.recipient_code as string, retry: false,
-      reason: "interval payment"
+      reason: "interval payment", accountNumber: payment_method?.account_number as string
     })
     await ctx.db.patch(groupId, {amount: group.amount as number - amount});
   }
@@ -142,7 +139,7 @@ export const addPaidCustomersToInterval = internalMutation({
     const time = new Date(timestamp);
     const timeInMilliSeconds = time.getTime();
     const interval = await ctx.db.query("interval").filter(i => i.eq(i.field("groupId"), groupId) && i.gte(timeInMilliSeconds, i.field("start")) && i.lte(timeInMilliSeconds, i.field("end")) ).first();
-    if (!interval) throw new ConvexError("Could not get interval");
+    if (!interval) throw new Error("Could not get interval");
     const intAmount = interval.amount ? interval.amount : 0;
     const members_payment_status = [...(interval.members_payment_status || []), {
       userId, status: "pending" as "pending" | "paid", amount
@@ -172,7 +169,7 @@ export const updatePaymentStatus = internalMutation({
     const time = new Date(timestamp);
     const timeInMilliSeconds = time.getTime();
     const interval = await ctx.db.query("interval").filter(i => i.eq(i.field("groupId"), groupId) && i.gte(timeInMilliSeconds, i.field("start")) && i.lte(timeInMilliSeconds, i.field("end")) ).first();
-    if (!interval) throw new ConvexError("Could not get interval");
+    if (!interval) throw new Error("Could not get interval");
     const members_payment_status = (interval.members_payment_status ?? []).map((member: any) => {
       if (member.userId === userId) {
         member.status = "paid";
@@ -198,12 +195,53 @@ export const getDefaulters = query({
   }
 })
 
+export const warnAndCharge = internalAction({
+  args:{
+    groupId: v.id("groups"),
+    userId: v.id("users"),
+    amount: v.float64(),
+    email: v.string(),
+  },
+  async handler(ctx, args) {
+    const {groupId, email, userId, amount} = args;
+    const group = await ctx.runQuery(api.group.getGroup, {groupId});
+    if (!group) throw new Error("Could not get group");
+    const interval = parseToMilliSeconds(group.interval) / 2;
+    await ctx.runAction(internal.intervalReport.sendMessage, {email: email as string, groupName: group.name})
+    await ctx.scheduler.runAfter(interval, internal.intervalReport.reChargeDefaultingMembers, {
+      groupId, amount, userId, email
+    })
+  }
+})
+
+export const sendMessage = internalAction({
+  args: {
+    email: v.string(),
+    groupName: v.string()
+  },
+  async handler(ctx, args_0) {
+    const { email, groupName } = args_0;
+    await SendEmails.PaymentFailed({email, groupName});    
+  },
+});
+
 export const reChargeDefaultingMembers = internalAction({
   args:{
     groupId: v.id("groups"),
     userId: v.id("users"),
+    amount: v.float64(),
+    email: v.string()
   },
   async handler(ctx, args) {
-
+    const {groupId, email, userId, amount} = args;
+    const res = await ctx.runAction(api.payments.ChargeTransaction, {
+      amount, email, metadata: {
+        details: "pay group",
+        groupId, userId,
+      }
+    })
+    if (!res.status) {
+      await ctx.runAction(internal.intervalReport.warnAndCharge, {groupId, email, userId, amount});
+    }
   }
 })

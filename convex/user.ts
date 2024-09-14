@@ -29,7 +29,6 @@ export const getUserzById = query({
     return {
       first_name: res?.first_name,
       last_name: res?.last_name,
-
     }
   },
 });
@@ -118,7 +117,7 @@ export const addNin = internalMutation({
   async handler(ctx, args) {
     const {nin} = args;
     const userId = await auth.getUserId(ctx);
-    if (!userId) throw new ConvexError("User is not authenticated!");
+    if (!userId) throw new Error("User is not authenticated!");
     await ctx.db.patch(userId, {nin});
   }
 })

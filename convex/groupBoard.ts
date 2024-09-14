@@ -54,3 +54,4 @@ export const getCollectionPercentage = query({
   }
 })
 
+// You can get the activities from getGroupTransactions from the transactions.ts

@@ -39,7 +39,7 @@ export const subscribeUsersToPlan = internalAction({
           statuses[user._id] = res.status;
         }
         if (Object.values(statuses).every(val => val === true)) return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
-        else throw new ConvexError("Could not create all the subscriptions");
+        else throw new Error("Could not create all the subscriptions");
       }
     }
   })

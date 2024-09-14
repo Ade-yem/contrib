@@ -102,7 +102,7 @@ export const CreatePersonalSavingsModal = () => {
         userId: user?._id,
         name: values.savingName,
         reason: values.category.value,
-        savingsInterval: values.frequency ? values.frequency.value : values.frequency,
+        interval: values.frequency ? values.frequency.value : values.frequency,
       },
     });
     const stat = await confirmTransaction({ reference: res.reference });
@@ -119,7 +119,7 @@ export const CreatePersonalSavingsModal = () => {
         userId: user?._id,
         name: values.savingName,
         reason: values.category.value,
-        savingsInterval: values.frequency ? values.frequency.value : values.frequency,
+        interval: values.frequency ? values.frequency.value : values.frequency,
       },
     });
     if (res) {

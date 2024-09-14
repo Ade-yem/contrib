@@ -33,7 +33,11 @@ export const addMember = action({
     amount: v.optional(v.float64()),
   },
   async handler(ctx, args_0) {
-    await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
+    try {
+      await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
+    } catch(error: any) {  
+      throw new ConvexError(error.message);
+    }
     const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId})
     if (!group) throw new ConvexError("Unable to find group");
     if (group.number_of_people === group.number_of_people_present) {

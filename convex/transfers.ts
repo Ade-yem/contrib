@@ -10,6 +10,7 @@ import paystack from "./paystack_api";
 import { TransferRecipientResponse, TransferResponse } from "./types/transfers";
 import { internal, api } from "./_generated/api";
 import { generateReference } from "./utils";
+import { SendEmails } from "./resend/resend";
 
 export const createRecipient = action({
   args: {
@@ -84,17 +85,33 @@ export const initiateTransfer = internalAction({
 		userId: v.id("users"),
 		details: v.string(),
 		retry: v.boolean(),
+    accountNumber: v.string(),
 	},
 	async handler(ctx, args_0) {
 		const reference = args_0.retry ? args_0.reference as string : generateReference();
 		const result: TransferResponse = await paystack.initiateTransfer({
 			amount: args_0.amount, recipient: args_0.recipient, reason: args_0.reason, reference: reference
 		})
-    console.log(result);
-		if (result.status) {
-			await ctx.runMutation(internal.paystack.createTransaction, {
-				groupId: args_0.groupId, userId: args_0.userId, amount: result.data.amount, type: "transfer", status: result.data.status, reference: result.data.reference, details: args_0.details, transfer_code: result.data.transfer_code, savingsId: args_0.savingsId
-			})
-		} else throw new ConvexError(result.message);
+    let name: string = "";
+    if (args_0.groupId) {
+      const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId});
+      name = group?.name;
+    } else if (args_0.savingsId) {
+      const savings = await ctx.runQuery(api.savings.getSavings, {savingsId: args_0.savingsId});
+      name = savings?.name as string;
+    }
+    const user = await ctx.runQuery(api.user.getUserById, {userId: args_0.userId});
+    await SendEmails.TransferMade({
+      email: user?.email as string, groupName: name, accountNumber: args_0.accountNumber, type: args_0.groupId ? "group" : "savings"
+    })
+
+    await ctx.runMutation(internal.paystack.createTransaction, {
+      groupId: args_0.groupId, userId: args_0.userId, amount: args_0.amount, type: "transfer", status: "success", reference: reference, details: args_0.details, savingsId: args_0.savingsId
+    })
+		// if (result.status) {
+		// 	await ctx.runMutation(internal.paystack.createTransaction, {
+		// 		groupId: args_0.groupId, userId: args_0.userId, amount: args_0.amount, type: "transfer", status: result.data.status, reference: result.data.reference, details: args_0.details, transfer_code: result.data.transfer_code, savingsId: args_0.savingsId
+		// 	})
+		// } else throw new ConvexError(result.message);
 	},
 });
