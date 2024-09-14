@@ -7,7 +7,8 @@ import Button from "@/components/forms/Button";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import "./styles.scss";
-import { useQuery } from "convex/react";
+import {useRouter} from "next/navigation";
+import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
 export const EnterGroupCodeModal = () => {
@@ -24,25 +25,27 @@ export const EnterGroupCodeModal = () => {
   const [discountCode, setDiscountCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [inputValues, setInputValues] = useState(Array(6).fill(""));
-  // const navigate = useNavigate();
-  // const accessGroupWithInviteCode = useQuery(api.group.accessGroupWithInviteCode);
+  const router = useRouter();
+  const accessGroupWithInviteCode = useMutation(api.group.joinGroupWithInviteCode);
 
-  // const verifygroup = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     await accessGroupWithInviteCode({
-  //       code: discountCode,
-  //     });
-  //     setShowModal("success");
-  //   } catch (error: any) {
-  //     toast.error("Unable to join group", error);
-  //   }
-  //   setIsLoading(false);
-  // };
+  const verifygroup = async () => {
+    setIsLoading(true);
+
+    try {
+      const group = await accessGroupWithInviteCode({
+        userId: user!?._id,
+        code: discountCode,
+      });
+      setShowModal("success");
+      router.push(`/dashboard/groups/${group}`);
+    } catch (error: any) {
+      toast.error("Unable to join group", error);
+    }
+    setIsLoading(false);
+  };
 
   const onChangeInput = (value: string, inputNumber: number) => {
     setErrorMessage("");
-    console.log({ value });
     const currentInput: HTMLInputElement | null = document.querySelector(
       `#group-code-input-${inputNumber}`
     );
@@ -65,8 +68,8 @@ export const EnterGroupCodeModal = () => {
       _inputValues[inputNumber] = "";
     }
 
-    for (let i = 0; i < splittedValues.length && i < 6; i++) {
-      const index = (inputNumber + i) % 6;
+    for (let i = 0; i < splittedValues.length && i < 5; i++) {
+      const index = (inputNumber + i) % 5;
       _inputValues[index] = splittedValues[i];
       const _nextInput = document.querySelector(
         `#group-code-input-${index + 1}`
@@ -77,7 +80,7 @@ export const EnterGroupCodeModal = () => {
     }
     setInputValues(_inputValues);
     console.log({ _inputValues });
-    if (_inputValues.length === 6) {
+    if (_inputValues.length === 5) {
       setDiscountCode(_inputValues.join(""));
     } else {
       setDiscountCode("");
@@ -104,10 +107,10 @@ export const EnterGroupCodeModal = () => {
                   ENTER GROUP CODE
                 </p>
                 <div className="d-flex justify-content-center gap-md-4 gap-2">
-                  {[...Array(6)].map((_, index) => (
+                  {[...Array(5)].map((_, index) => (
                     <input
                       // maxLength={1}
-                      className="group-code-input border"
+                      className="group-code-input border text-black-000"
                       key={index}
                       id={`group-code-input-${index}`}
                       type="text"
@@ -128,11 +131,11 @@ export const EnterGroupCodeModal = () => {
                 <Button
                   title="Proceed"
                   loading={isLoading}
-                  disabled={!isLoading}
+                  // disabled={!isLoading}
                   loadingTitle={"Please wait..."}
                   className="btn-lg btn btn-primary"
                   style={{ borderRadius: "1rem" }}
-                  // onClick={verifygroup}
+                  onClick={verifygroup}
                 />
               </div>
             </div>

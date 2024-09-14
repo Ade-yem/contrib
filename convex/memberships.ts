@@ -21,12 +21,12 @@ export const createMembership = internalMutation({
     const group = await ctx.db.get(args.groupId);
     const exists = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), args.groupId) && m.eq(m.field("userId"), args.userId)).first();
     console.info("exists => ", exists);
-    if (exists) return;
+    if (exists) throw new Error("User is already in the group");
     if (group && group.number_of_people_present <= group.number_of_people) {
       await ctx.db.insert("membership", {groupId: args.groupId, userId: args.userId, paid_deposit: args.paid_deposit});
       await ctx.db.patch(group._id, {number_of_people_present: group.number_of_people_present + 1})
     } else {
-      throw new ConvexError("The group does not exist or the group is full")
+      throw new Error("The group does not exist or the group is full")
     }
   }
 });

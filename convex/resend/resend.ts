@@ -3,6 +3,9 @@ import { alphabet, generateRandomString } from "oslo/crypto";
 import { Resend as ResendAPI } from "resend";
 import { PasswordResetEmail } from "./ResetPasswordMail";
 import { VerificationCodeEmail } from "./VerifyPasswordMail";
+import { PaymentFailedEmail } from "./PaymentFailed";
+import { TransferMadeEmail } from "./TransferMade";
+
 
 export const ResendOTPPasswordReset = Email({
   id: "resend-otp-password-reset",
@@ -58,3 +61,33 @@ export const ResendOTP = Email({
     }
   },
 });
+
+export class SendEmails {
+  private static resend = new ResendAPI(process.env.AUTH_RESEND_KEY);
+
+  public static async PaymentFailed({ email, groupName }: { email: string; groupName: string }) {
+    const { error } = await this.resend.emails.send({
+      from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
+      to: [email],
+      subject: `Payment Failed`,
+      react: PaymentFailedEmail({groupName}),
+    });
+
+    if (error) {
+      throw new Error(JSON.stringify(error));
+    }
+  }
+
+  public static async TransferMade({ email, groupName, accountNumber, type }: { email: string; groupName: string; accountNumber: string; type: "group" | "savings"; }) {
+    const { error } = await this.resend.emails.send({
+      from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
+      to: [email],
+      subject: `Payment Failed`,
+      react: TransferMadeEmail({groupName, accountNumber, type}),
+    });
+
+    if (error) {
+      throw new Error(JSON.stringify(error));
+    }
+  }
+}

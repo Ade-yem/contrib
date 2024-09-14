@@ -14,6 +14,7 @@ export const scheduleIntervalReport = internalMutation({
     const jobId = await ctx.db.insert("jobs", {
       name: args.name,
       groupId: args.groupId,
+      details: "intervalStart",
     })
     const limit = group?.number_of_people as number
     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
@@ -32,6 +33,7 @@ export const scheduleMidTransactionReport = internalMutation({
     const jobId = await ctx.db.insert("jobs", {
       name: args.name,
       groupId: args.groupId,
+      details: "midInterval",
     })
     const limit = group?.number_of_people as number
     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
@@ -57,22 +59,4 @@ export const scheduleIntervalPayment = internalMutation({
     await ctx.db.patch(jobId, { cronId });
   }
 })
-
-// export const scheduleTest = mutation({
-//   args: {
-//     groupId: v.id("groups"),
-//     name: v.optional(v.string()),
-//   },
-//   handler: async (ctx, args) => {
-//     const group = await ctx.db.get(args.groupId);
-//     const jobId = await ctx.db.insert("jobs", {
-//       name: args.name,
-//       groupId: args.groupId,
-//     })
-//     const limit = group?.number_of_people as number
-//     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
-//     const cronId = await cron(ctx, 60000, limit, internal.intervalReport.doSomething, {jobId})
-//     await ctx.db.patch(jobId, { cronId });
-//   }
-// })
 

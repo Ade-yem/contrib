@@ -51,7 +51,8 @@ class PaystackAPI {
     details: string;
     name: string;
     reason: string;
-    savingsInterval: string;
+    interval: string;
+    amountTarget: number;
 } | undefined }) {
     const params = JSON.stringify({
         "email": data.email,
@@ -81,7 +82,8 @@ class PaystackAPI {
     details: string;
     name: string;
     reason: string;
-    savingsInterval: string;
+    interval: string;
+    amountTarget: number;
     } | undefined 
   }) {
     const params = JSON.stringify({

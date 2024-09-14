@@ -9,6 +9,7 @@ export type ModalTypes =
   | "createPersonalSavings"
   | "withdrawFunds"
   | "createRecipient"
+  | "shareGroup"
   | null;
 
 export enum Gender {

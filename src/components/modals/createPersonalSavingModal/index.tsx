@@ -49,41 +49,46 @@ export const CreatePersonalSavingsModal = () => {
   const payWithCard = useAction(api.payments.ChargeTransaction);
   const otherMethod = useAction(api.payments.initializePaystackTransaction);
   const confirmTransaction = useAction(api.payments.verifyTransaction);
-  const card = useQuery(api.user.getCard);
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
     savingName: "",
     category: "",
     frequency: undefined,
     payment: undefined,
+    amount: 0,
+    amountTarget: 0,
   };
   const validationSchema = yup.object().shape({
     savingName: yup.string().label("Savings Name").required(),
     amount: yup.number().label("Initial Amount").optional(),
+    amountTarget: yup.number().label("Target Amount").required(),
     category: yup.object().label("Category").required(),
     frequency: yup.object().label("Frequency of Savings").optional(),
     payment: yup.object().label("Payment Method").optional(),
   });
   const createSavings = async (values: FormikValues) => {
     setSubmitting(true);
+    console.log(values);
     try {
-      if (values.amount && values.payment.value === "bank") {
+      if (values.amount && values.payment.value === "card") {
         await payCard(values);
-      } else if (values.amount && values.payment.value === "card") {
+      } else if (values.amount && values.payment.value === "bank") {
         await payWithTransaction(values);
       } else {
         await addSavings({
           userId: user?._id as Id<"users">,
-          amount: values.amount,
           name: values.savingName,
+          amount: 0,
           reason: values.category.value,
-          interval: values.frequency.value,
+          interval: values.frequency ? values.frequency.value : values.frequency,
+          amountTarget: values.amountTarget,
         });
         setShowModal("success");
       }
       console.log(`${values.amount} saved successfully`);
     } catch (error: any) {
-      toast.error("Failed to save:", error);
+      console.error(error)
+      toast.error("Failed create to save");
     }
     setSubmitting(false);
   };
@@ -97,11 +102,13 @@ export const CreatePersonalSavingsModal = () => {
         userId: user?._id,
         name: values.savingName,
         reason: values.category.value,
-        savingsInterval: values.frequency.value,
+        interval: values.frequency ? values.frequency.value : values.frequency,
       },
     });
     const stat = await confirmTransaction({ reference: res.reference });
     if (stat.data.status) setShowModal("success");
+    else toast.error("Transaction failed");
+
   };
   const payWithTransaction = async (values: FormikValues) => {
     const res = await otherMethod({
@@ -112,14 +119,15 @@ export const CreatePersonalSavingsModal = () => {
         userId: user?._id,
         name: values.savingName,
         reason: values.category.value,
-        savingsInterval: values.frequency.value,
+        interval: values.frequency ? values.frequency.value : values.frequency,
       },
     });
     if (res) {
       window.open(res.data.authorization_url, "_blank");
+      const stat = await confirmTransaction({ reference: res.data.reference });
+      if (stat.data.status) setShowModal("success");
+      else toast.error("Transaction failed");
     }
-    const stat = await confirmTransaction({ reference: res.data.reference });
-    if (stat.data.status) setShowModal("success");
   };
   const closeModal = () => {
     setShowModal(null);
@@ -214,6 +222,20 @@ export const CreatePersonalSavingsModal = () => {
                       type="number"
                       name="amount"
                       id="amount"
+                    />
+
+                    <label className="text-xs text-grey-300 mt-4 mb-2">
+                      Target Amount (₦)
+                    </label>
+                    <Field
+                      component={TextInput}
+                      className="form-control"
+                      placeholder="1000"
+                      min={0}
+                      step="0.01"
+                      type="number"
+                      name="amountTarget"
+                      id="amountTarget"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
                       Select Payment Method

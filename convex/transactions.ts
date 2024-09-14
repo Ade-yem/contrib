@@ -22,10 +22,9 @@ export const getMyTransactions = query({
     const result = await ctx.db.query("transactions").filter(t => t.eq(t.field("userId"), userId)).order("desc").paginate(args.paginationOpts);
     const myTransactions: Transaction[] = [];
     for (const transaction of result.page) {
-      const group = transaction.groupId ? await ctx.db.get(transaction?.groupId) : undefined;
-      const saving = transaction.savingsId ? await ctx.db.get(transaction?.savingsId) : undefined;
+      const user = await ctx.db.get(transaction.userId);
       const res: Transaction = {
-        name: group ? group?.name : saving ? saving?.name : "No name",
+        name: user?.first_name ?? "No name",
         id: transaction._id,
         amount: transaction.amount,
         status: transaction.status,
@@ -48,9 +47,9 @@ export const getGroupTransactions = query({
     const result = await ctx.db.query("transactions").filter(t => t.eq(t.field("groupId"), args.groupId)).order("desc").paginate(args.paginationOpts);
     const groupTransactions: Transaction[] = [];
     for (const transaction of result.page) {
-      const group = await ctx.db.get(transaction?.groupId as Id<"groups">);
+      const user = await ctx.db.get(transaction?.userId);
       const res: Transaction = {
-        name: group ? group?.name : "No name",
+        name: user?.first_name ? user?.first_name : "No name",
         id: transaction._id,
         amount: transaction.amount,
         status: transaction.status,

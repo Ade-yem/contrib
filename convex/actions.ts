@@ -20,6 +20,7 @@ export const addGroupAction = action({
         if (group) {
           await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, groupId: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});
           await ctx.runMutation(internal.group.createInvite, {status: "pending", groupId: group._id});
+          await ctx.runAction(api.actions.addMember, {groupId: group._id, userId: args.creator_id});
         } else throw new ConvexError("Could not create group");
       } else throw new ConvexError("The user is not authenticated");
     }
@@ -32,7 +33,11 @@ export const addMember = action({
     amount: v.optional(v.float64()),
   },
   async handler(ctx, args_0) {
-    await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
+    try {
+      await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
+    } catch(error: any) {  
+      throw new ConvexError(error.message);
+    }
     const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId})
     if (!group) throw new ConvexError("Unable to find group");
     if (group.number_of_people === group.number_of_people_present) {
@@ -47,3 +52,16 @@ export const addMember = action({
     }
   },
 })
+
+// export const testSchedule = action({
+//   args: {
+//     groupId: v.id("groups"),
+//   },
+//   async handler(ctx, args) {
+//     const {groupId} = args;
+//     const schedule_date = new Date();
+//     schedule_date.setMinutes(schedule_date.getMinutes() + 1);
+//     console.log("schedule_date", schedule_date.toISOString());
+//     await ctx.scheduler.runAt(new Date(schedule_date.toISOString()), internal.cron.scheduleIntervalPayment, {groupId, name: "test"});
+//   }
+// })

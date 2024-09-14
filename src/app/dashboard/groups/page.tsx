@@ -7,6 +7,7 @@ import React, { useContext } from "react";
 import { api } from "../../../../convex/_generated/api";
 import Loader from "@/components/shared/Loader";
 import EmptyData from "@/components/shared/EmptyData";
+import { useRouter } from "next/navigation";
 
 export default function GroupPage() {
   const {
@@ -17,6 +18,7 @@ export default function GroupPage() {
 
   // const groupList = useQuery(api.group.getAllGroups);
   const user = useQuery(api.user.getUser);
+  const router = useRouter();
 
   const { results, status, loadMore } = usePaginatedQuery(
     api.user.getMyGroups,
@@ -139,13 +141,13 @@ export default function GroupPage() {
                           />
                         </div>
                         <div className="dropdown-content right">
-                          <p className="hover-link" role="button">
+                          <p className="hover-link" role="button" onClick={() => router.push(`/${group.groupId}`)}>
                             View Group
                           </p>
-                          <p className="hover-link" role="button">
+                          <p className="hover-link" role="button" onClick={() => router.push(`/${group.groupId}#messages`)}>
                             Messages
                           </p>
-                          <p className="hover-link" role="button">
+                          <p className="hover-link" role="button" onClick={() => setShowModal("shareGroup")}>
                             Share Group
                           </p>
                           <p className="hover-link" role="button">
