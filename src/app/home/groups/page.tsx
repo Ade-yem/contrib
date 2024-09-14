@@ -53,27 +53,62 @@ export default function GroupsPage() {
                 <>
                   {groupList
                     ?.filter((group) => group.private === true)
-                    .map((item, index) => (
-                      <GroupCard
-                        key={index}
-                        color={index}
-                        img={item.image || "/groupAvatar.png"}
-                        savings_per_interval={item.savings_per_interval}
-                        title={item.name}
-                        desc={item.description}
-                        privateGroup={item.private}
-                        groupId={item._id}
-                      />
-                    ))}
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                        />
+                      );
+                    })}
                 </>
               ) : sort === "public" ? (
                 <>
                   {groupList
                     ?.filter((group) => group.private === false)
-                    .map((item, index) => (
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                        />
+                      );
+                    })}
+                </>
+              ) : (
+                <>
+                  {groupList?.map((item, index) => {
+                    const colors = [0, 1, 2, 3];
+                    const rowSize = 4;
+                    const rowIndex = Math.floor(index / rowSize);
+                    const shift = rowIndex % rowSize;
+                    const color = colors[(index + shift) % colors.length];
+                    return (
                       <GroupCard
                         key={index}
-                        color={index}
+                        color={color}
                         img={item.image || "/groupAvatar.png"}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
@@ -81,22 +116,8 @@ export default function GroupsPage() {
                         privateGroup={item.private}
                         groupId={item._id}
                       />
-                    ))}
-                </>
-              ) : (
-                <>
-                  {groupList?.map((item, index) => (
-                    <GroupCard
-                      key={index}
-                      color={index}
-                      img={item.image || "/groupAvatar.png"}
-                      savings_per_interval={item.savings_per_interval}
-                      title={item.name}
-                      desc={item.description}
-                      privateGroup={item.private}
-                      groupId={item._id}
-                    />
-                  ))}
+                    );
+                  })}
                 </>
               )}
             </>
