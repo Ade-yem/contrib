@@ -16,7 +16,7 @@ export const GroupCard = ({
   color,
   groupId,
 }: {
-  img?: string;
+  img: string;
   title: string;
   savings_per_interval: number;
   desc?: string;
@@ -41,9 +41,8 @@ export const GroupCard = ({
           className={`group-image-wrapper ${color === 1 ? "one" : color === 2 ? "two" : color === 3 ? "three" : "four"}`}
         >
           <Image
-            className="obj-cover"
-            // src={img}
-            src={"/friends.svg"}
+            className="obj-cover bg-white"
+            src={img}
             alt={"group image"}
             width={100}
             height={100}

@@ -9,6 +9,7 @@ import Image from "next/image";
 import React from "react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
+import { GroupChat } from "@/components/shared/groupChat";
 
 export default function GroupDetails({
   params,
@@ -160,10 +161,7 @@ export default function GroupDetails({
         <div className="col-lg-5 col-md-6 col-12">
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
-            <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
-            <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
-            <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
-            <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
+            <GroupChat />
           </div>
         </div>
       </div>

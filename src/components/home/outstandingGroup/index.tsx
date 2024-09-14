@@ -21,18 +21,19 @@ export const OustandingGroup = () => {
           <EmptyData height="40vh" text="No groups yet." />
         ) : (
           <>
-            {groupList?.slice(0, 4).map((item, index) => (
-              <GroupCard
-                key={index}
-                color={index}
-                // img={item.img}
-                // alt={item.alt}
-                savings_per_interval={item.savings_per_interval}
-                title={item.name}
-                desc={item.description}
-                privateGroup={item.private}
-              />
-            ))}
+            {groupList
+              ?.slice(0, 4)
+              .map((item, index) => (
+                <GroupCard
+                  key={index}
+                  color={index}
+                  img={item.image || "/groupAvatar.png"}
+                  savings_per_interval={item.savings_per_interval}
+                  title={item.name}
+                  desc={item.description}
+                  privateGroup={item.private}
+                />
+              ))}
           </>
         )}
       </div>

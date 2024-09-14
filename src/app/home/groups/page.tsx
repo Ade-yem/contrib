@@ -57,7 +57,7 @@ export default function GroupsPage() {
                       <GroupCard
                         key={index}
                         color={index}
-                        // img={item.img}
+                        img={item.image || "/groupAvatar.png"}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
                         desc={item.description}
@@ -74,7 +74,7 @@ export default function GroupsPage() {
                       <GroupCard
                         key={index}
                         color={index}
-                        // img={item.img}
+                        img={item.image || "/groupAvatar.png"}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
                         desc={item.description}
@@ -89,7 +89,7 @@ export default function GroupsPage() {
                     <GroupCard
                       key={index}
                       color={index}
-                      // img={item.img}
+                      img={item.image || "/groupAvatar.png"}
                       savings_per_interval={item.savings_per_interval}
                       title={item.name}
                       desc={item.description}
