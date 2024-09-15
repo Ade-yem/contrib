@@ -10,6 +10,7 @@ export type ModalTypes =
   | "withdrawFunds"
   | "createRecipient"
   | "shareGroup"
+  | "registerSuccess"
   | null;
 
 export enum Gender {
