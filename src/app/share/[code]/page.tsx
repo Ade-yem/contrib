@@ -35,7 +35,7 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
       const res = await joinGroupz({ userId: user!?._id, code: params.code });
       if (res) {
         setShowModal("success");
-        router.push(`/dasboard/groups/${res}`);
+        router.push(`/dashboard/groups/${res}`);
       } else toast.error("Could not add you to group");
     }
   };
