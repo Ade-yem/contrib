@@ -1,27 +1,40 @@
 import { LayoutContext } from "@/context/layoutContext";
 import { Icon } from "@iconify/react";
 import { Dispatch, SetStateAction, useContext } from "react";
-import "./styles.scss";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ModalTypes } from "@/services/_schema";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
+import "./styles.scss";
 
 interface NavBarProps {
   setIsSideBarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
-  const {
-    setShowModal,
-  }: {
-    setShowModal: (value: ModalTypes) => void;
-  } = useContext(LayoutContext);
-  const { currentDashboardPageTitle } = useContext(LayoutContext);
-  const { signOut } = useAuthActions();
+  const { setShowModal }: { setShowModal: (value: ModalTypes) => void } =
+    useContext(LayoutContext);
   const user = useQuery(api.user.getUser);
+  const { signOut } = useAuthActions();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const pageTitles: Record<string, string> = {
+    "/dashboard": "Dashboard",
+    "/dashboard/profile": "Profile",
+    "/dashboard/groups": "Groups",
+    "/dashboard/linked-accounts": "Linked Accounts",
+  };
+
+  const currentDashboardPageTitle = pageTitles[pathname] || "Dashboard";
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
 
   return (
     <div className="w-100 d-flex justify-content-between align-items-center dashboard-navbar">
@@ -33,14 +46,13 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
           onClick={() => setIsSideBarOpen(true)}
           className="d-md-none d-block"
         />
-        {currentDashboardPageTitle}
+        <p className="text-2xl fw-semibold mb-0">{currentDashboardPageTitle}</p>
       </div>
 
       <div className="">
         <div className="align-items-center gap-4 d-flex">
-          {/* <Notifications /> */}
           <div
-            className="btn btn-md d-md-inline d-none border border-black-000 py-3 fs-4"
+            className="btn btn-md d-sm-inline d-none border border-black-000 py-3 fs-4"
             onClick={() => setShowModal("createGroup")}
             role="button"
           >
@@ -63,7 +75,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
               </div>
               <div className="dropdown-content">
                 <Link
-                  href={"/home"}
+                  href={"/"}
                   className="text-sm text-decoration-none text-black-000 hover-link click"
                 >
                   <p>Home</p>
@@ -77,7 +89,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
                 <div
                   className=" click hover-link sign-out"
                   role="button"
-                  onClick={signOut}
+                  onClick={handleSignOut}
                 >
                   <p className="d-flex align-items-center gap-2">
                     <Icon

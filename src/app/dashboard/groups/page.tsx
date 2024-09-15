@@ -19,7 +19,6 @@ export default function GroupPage() {
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
 
-  // const groupList = useQuery(api.group.getAllGroups);
   const user = useQuery(api.user.getUser);
   const router = useRouter();
 
@@ -28,10 +27,7 @@ export default function GroupPage() {
     { userId: user!?._id },
     { initialNumItems: 5 }
   );
-  // if (status === "LoadingFirstPage") {
-  //   return <Loader height="30vh" />;
-  // }
-  // console.log(status);
+
   return (
     <>
       <button

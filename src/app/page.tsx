@@ -1,122 +1,29 @@
-"use client";
-
-import { SignInFormPasswordAndVerifyViaCode } from "@/components/forms/auth/signinWithCodeAndPassword";
-import {
-  Authenticated,
-  Unauthenticated,
-  useQuery,
-  useAction,
-  useMutation,
-  usePaginatedQuery,
-} from "convex/react";
-import { api } from "../../convex/_generated/api";
-import Button from "@/components/buttons/BaseButton";
-import { Id } from "../../convex/_generated/dataModel";
-import { useAuthActions } from "@convex-dev/auth/react";
-import { FormEvent, useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-
+import { DownloadApp } from "@/components/home/downloadApp";
+import Faqs from "@/components/home/faqs";
+import { GrowYourSavings } from "@/components/home/growYourSavings";
+import { Homebanner } from "@/components/home/homebanner";
+import { OustandingGroup } from "@/components/home/outstandingGroup";
+import { ChooseUs } from "@/components/home/whyChooseUs";
+import { Footer } from "@/components/shared/footer";
+import Navbar from "@/components/shared/navbar";
+import { OurTeam } from "@/components/shared/ourTeam";
 
 export default function Home() {
-  const user = useQuery(api.user.getUser);
-  const initializeTransaction = useAction(api.payments.initializePaystackTransaction);
-  const addGroup = useAction(api.actions.addGroupAction);
-  const {signOut} = useAuthActions();
-  const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
-  const saveImage = useMutation(api.user.saveUserProfileImage);
-  const [image, setImage] = useState<File | null>(null);
-  const router = useRouter()
-
-  const createGroup = async () => {
-    await addGroup({
-      creator_id: user?._id as Id<"users">,
-      name: "Adeyemi Adejumo",
-      number_of_people: 5,
-      interval: "monthly",
-      savings_per_interval: 10000,
-      private: false,
-      description: "test group"
-    })
-  };
-  
-  const payMoney = async () => {
-    const res = await initializeTransaction({
-      amount: 10000,
-      email: user?.email as string,
-      metadata: {
-        userId: user?._id as Id<"users">,
-        details: "pay group",
-      }
-    });
-    if (res) {
-      window.location.href = res.data.authorization_url;
-    }
-  };
-
-  const handleProfileUpload = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const url = await generateUploadUrl();
-    const result = await fetch(url, {
-      method: "POST",
-      headers: {"Content-Type": image!?.type,},
-      body: image
-    })
-    const {storageId} = await result.json();
-    await saveImage({imageId: storageId as Id<"_storage">});
-  }
-  const {results, status, loadMore} = usePaginatedQuery(api.user.getMyGroups, {userId: user!?._id}, {initialNumItems: 4});
-  
   return (
-    <main className="d-flex mh-100 mt-10 flex-column align-items-center justify-content-between p-24">
-      <Unauthenticated>
-        <SignInFormPasswordAndVerifyViaCode />
-        
-      </Unauthenticated>
-      <Authenticated>
-        <div className="card w-72 h-20">
-          <Button type="button" onClick={() => router.push("/dashboard")}>{user?.first_name ?? user?.email ?? user?.phone ?? "Anonymous"}</Button>
-        </div>
+    <section className="layout-wrapper">
+      <div>
+        <Navbar />
         <div>
-          <h2>Pay money</h2>
-          <Button onClick={payMoney}>Pay money</Button>
+          <Homebanner />
+          <GrowYourSavings />
+          <ChooseUs />
+          <OustandingGroup />
+          <DownloadApp />
+          <Faqs />
+          <OurTeam />
         </div>
-        <div>
-          <h2>Create group</h2>
-          <Button onClick={createGroup}>Create a group</Button>
-        </div>
-        <div>
-          <form action="" onSubmit={e => handleProfileUpload(e)}>
-            <label>Add Profile Image</label>
-            <input type="file" className="form-control" name="image" id="image" onChange={e => {
-              const files = e.target.files;
-              if (files && files.length > 0) {
-                setImage(files[0]);
-              }
-            }}/>
-            <Button type="submit">Upload file</Button>
-          </form>          
-
-        </div>
-        <div className="">
-          <h2>Profile image</h2>
-          <Image src={user?.image ?? "/avatar.svg"} alt="profile image" width={16} height={16} />
-        </div>
-        <div>
-          <h2>My groups</h2>
-            {
-              results.map((v, i) => (
-                <div key={i} className="d-flex flex-column gap-2">
-                  <p className="b-2">{v.name}</p>
-                  <p className="b-2">People Expected {"=>"} {v.numOfMembers}</p>
-                  <p className="b-2">People joined {"=>"} {v.numJoined}</p>
-                </div>
-              ))
-            }
-            <Button type="button" onClick={() => loadMore(5)} disabled={status === "LoadingMore" || status === "Exhausted"}>Load more</Button>
-        </div>
-        <span className="btn-danger" onClick={signOut}>Logout</span>
-      </Authenticated>
-    </main>
+      </div>
+      <Footer />
+    </section>
   );
 }

@@ -9,7 +9,6 @@ export default function MainLayout({
 }>) {
   return (
     <section className="layout-wrapper">
-      {/* <Sidebar /> */}
       <div>
         <Navbar />
         <div>{children}</div>
