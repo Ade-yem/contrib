@@ -60,7 +60,7 @@ const invoicePaymentFailed = async (ctx: ActionCtx, data: Invoice) => {
   const groupId = member?.groupId as Id<"groups">
   const email = data.customer.email;
   const amount = data.subscription.amount;
-  await ctx.runAction(internal.intervalReport.warnAndCharge, {amount, userId, groupId, email})
+  // await ctx.runAction(internal.intervalReport.warnAndCharge, {amount, userId, groupId, email})
 };
 
 /**

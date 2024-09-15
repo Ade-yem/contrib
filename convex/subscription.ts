@@ -1,7 +1,8 @@
 import { ConvexError, v } from "convex/values";
 import { internalAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
-import { Id } from "./_generated/dataModel";
+// import { Id } from "./_generated/dataModel";
+import { SendEmails } from "./resend/resend";
 
 export const subscribeUsersToPlan = internalAction({
     args: {
@@ -34,13 +35,29 @@ export const subscribeUsersToPlan = internalAction({
             report_date.setDate(schedule_date.getDate() + 5);
             break;
         }
-        // for (const user of users) {
-        //   const res = await ctx.runAction(internal.payments.createSubscription, {email: user?.email as string, plan: group.subscription_plan_id as string, start_date: start_date.toISOString() })
-        //   statuses[user._id] = res.status;
-        // }
+        for (const user of users) {
+          // const res = await ctx.runAction(internal.payments.createSubscription, {email: user?.email as string, plan: group.subscription_plan_id as string, start_date: start_date.toISOString() })
+          // statuses[user._id] = res.status;
+          await SendEmails.GroupComplete({email: user.email as string, groupName: group.name, date: start_date.toISOString()})
+        }
         return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
         // if (Object.values(statuses).every(val => val === true)) return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
         // else throw new Error("Could not create all the subscriptions");
       }
     }
   })
+
+export const groupClosed = internalAction({
+  args: {
+    groupId: v.id("groups")
+  },
+  async handler(ctx, args) {
+    const users = await ctx.runQuery(api.memberships.getGroupMembers, {groupId: args.groupId})
+    const group = await ctx.runQuery(api.group.getGroup, {groupId: args.groupId});
+    if (users.length > 0 && group) {
+      for (const user of users) {
+        await SendEmails.GroupClosed({email: user.email as string, groupName: group.name})
+      }
+    }
+  }
+})

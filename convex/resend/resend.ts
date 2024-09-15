@@ -5,6 +5,8 @@ import { PasswordResetEmail } from "./ResetPasswordMail";
 import { VerificationCodeEmail } from "./VerifyPasswordMail";
 import { PaymentFailedEmail } from "./PaymentFailed";
 import { TransferMadeEmail } from "./TransferMade";
+import { GroupCompleteEmail } from "./GroupCompleteEmail";
+import { GroupClosedEmail } from "./GroupClosedEmail";
 
 
 export const ResendOTPPasswordReset = Email({
@@ -84,6 +86,32 @@ export class SendEmails {
       to: [email],
       subject: `Payment Failed`,
       react: TransferMadeEmail({groupName, accountNumber, type}),
+    });
+
+    if (error) {
+      throw new Error(JSON.stringify(error));
+    }
+  }
+  
+  public static async GroupComplete({ email, groupName, date }: { email: string; groupName: string; date: string}) {
+    const { error } = await this.resend.emails.send({
+      from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
+      to: [email],
+      subject: `Payment Failed`,
+      react: GroupCompleteEmail({groupName, date}),
+    });
+
+    if (error) {
+      throw new Error(JSON.stringify(error));
+    }
+  }
+
+  public static async GroupClosed({ email, groupName }: { email: string; groupName: string;}) {
+    const { error } = await this.resend.emails.send({
+      from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
+      to: [email],
+      subject: `Payment Failed`,
+      react: GroupClosedEmail({groupName}),
     });
 
     if (error) {

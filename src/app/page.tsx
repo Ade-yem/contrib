@@ -16,6 +16,9 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { FormEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ModalTypes } from "@/services/_schema";
+import { LayoutContext } from "@/context/layoutContext";
+import React from "react";
 
 
 export default function Home() {
@@ -26,7 +29,11 @@ export default function Home() {
   const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
   const saveImage = useMutation(api.user.saveUserProfileImage);
   const [image, setImage] = useState<File | null>(null);
-  const router = useRouter()
+  const router = useRouter();
+
+  const {setShowModal}: {
+    setShowModal: (value: ModalTypes) => void;
+  } = React.useContext(LayoutContext);
 
   const createGroup = async () => {
     await addGroup({
@@ -97,6 +104,9 @@ export default function Home() {
             <Button type="submit">Upload file</Button>
           </form>          
 
+        </div>
+        <div>
+          <Button type="button" onClick={() => setShowModal("createRecipient")}>Create Recipient</Button>
         </div>
         <div className="">
           <h2>Profile image</h2>
