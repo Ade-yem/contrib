@@ -42,15 +42,16 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
   };
   return (
     <div className="container">
-      {/* <GroupCard
+      <GroupCard
+        key={1}
         color={1}
         img={group?.image || "/groupAvatar.png"}
-        savings_per_interval={group?.amount || ""}
+        savings_per_interval={77}
         title={group?.name || ""}
         desc={group?.description}
         privateGroup={group?.private}
         groupId={group?._id}
-      /> */}
+      />
       <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-5_6">
         <div className={`default-card outstanding-group-card`}>
           <div className={`group-image-wrapper`}>
@@ -74,7 +75,9 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
               />
             </span>
             <span className="price d-non">
-              <span></span>
+              <span>
+                ₦{thousandFormatter(group?.savings_per_interval ?? 0 / 100)}
+              </span>
             </span>
           </div>
           <div className="d-flex justify-content-center flex-column align-items-center gap-3 my-4">
