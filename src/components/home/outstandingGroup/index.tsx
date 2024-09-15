@@ -2,12 +2,16 @@
 import EmptyData from "@/components/shared/EmptyData";
 import { GroupCard } from "@/components/shared/groupCard";
 import Loader from "@/components/shared/Loader";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import React from "react";
 import { api } from "../../../../convex/_generated/api";
 
 export const OustandingGroup = () => {
-  const groupList = useQuery(api.group.getAllGroups);
+  const { results: groupList } = usePaginatedQuery(
+    api.group.getAllGroups,
+    {},
+    { initialNumItems: 4 }
+  );
 
   return (
     <div className="container text-center py-6">
