@@ -1,0 +1,12 @@
+.go-back-container {
+    .go-back {
+        &:hover {
+            transform: scale(1.05);
+            margin-left: 1rem;
+        }
+
+        &-arrow {
+            color: "#374957"
+        }
+    }
+}

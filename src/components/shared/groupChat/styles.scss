@@ -15,8 +15,7 @@
   .chat-support-body {
     position: relative;
     overflow: scroll;
-    height: 100vh;
-    height: calc(100vh - 13rem);
+    height: 37rem;
     padding: 1rem 2.5rem;
     &::-webkit-scrollbar {
       display: none;
