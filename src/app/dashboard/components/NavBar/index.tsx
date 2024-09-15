@@ -1,34 +1,41 @@
 import { LayoutContext } from "@/context/layoutContext";
 import { Icon } from "@iconify/react";
 import { Dispatch, SetStateAction, useContext } from "react";
-import "./styles.scss";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ModalTypes } from "@/services/_schema";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import { useRouter } from "next/navigation";
+import "./styles.scss";
 
 interface NavBarProps {
   setIsSideBarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
-  const {
-    setShowModal,
-  }: {
-    setShowModal: (value: ModalTypes) => void;
-  } = useContext(LayoutContext);
-  const { currentDashboardPageTitle } = useContext(LayoutContext);
+  const { setShowModal }: { setShowModal: (value: ModalTypes) => void } =
+    useContext(LayoutContext);
   const user = useQuery(api.user.getUser);
   const { signOut } = useAuthActions();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const pageTitles: Record<string, string> = {
+    "/dashboard": "Dashboard",
+    "/dashboard/profile": "Profile",
+    "/dashboard/groups": "Groups",
+    "/dashboard/linked-accounts": "Linked Accounts",
+  };
+
+  const currentDashboardPageTitle = pageTitles[pathname] || "Dashboard";
 
   const handleSignOut = async () => {
     await signOut();
     router.push("/");
   };
+
   return (
     <div className="w-100 d-flex justify-content-between align-items-center dashboard-navbar">
       <div className="fs-3 d-flex gap-2 align-items-center">
@@ -39,7 +46,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
           onClick={() => setIsSideBarOpen(true)}
           className="d-md-none d-block"
         />
-        {currentDashboardPageTitle}
+        <p className="text-2xl fw-semibold mb-0">{currentDashboardPageTitle}</p>
       </div>
 
       <div className="">
