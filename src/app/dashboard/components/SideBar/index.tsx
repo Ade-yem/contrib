@@ -97,18 +97,23 @@ const SideBar = () => {
         path="/subscriptions"
       /> */}
       <div className="py-3 px-5">
-        <div className="d-flex align-items-center gap-3">
-          <Icon
-            icon="material-symbols:reminder"
-            width="1.5rem"
-            height="1.5rem"
-            style={{ color: "black" }}
-          />
-          <span>Reminder</span>
-        </div>
+        <Link
+          href={"/dashboard/linked-accounts"}
+          className="text-decoration-none click text-black-000"
+        >
+          <div className="d-flex align-items-center gap-3">
+            <Icon
+              icon="material-symbols:reminder"
+              width="1.5rem"
+              height="1.5rem"
+              style={{ color: "black" }}
+            />
+            <span>Linked Accounts</span>
+          </div>
+        </Link>
       </div>
 
-      <hr className="divider" />
+      {/* <hr className="divider" />
       <div className="py-3 px-5">
         <div className="d-flex align-items-center gap-3">
           <Icon
@@ -119,7 +124,7 @@ const SideBar = () => {
           />
           <span>Calendar</span>
         </div>
-      </div>
+      </div> */}
 
       <hr className="divider" />
       <div className="py-3 px-5">

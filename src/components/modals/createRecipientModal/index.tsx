@@ -14,6 +14,7 @@ import { convertModelArrayToSelectOptions } from "@/components/utilities";
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { parseError } from "@/components/utilities/helper";
 
 export const CreateRecipientModal = () => {
   const {
@@ -83,6 +84,7 @@ export const CreateRecipientModal = () => {
         setSubmitting(false);
       }
     } catch (error) {
+      console.log(parseError(error));
       console.log(error);
       setSubmitting(false);
     }
@@ -97,6 +99,7 @@ export const CreateRecipientModal = () => {
         });
         return res.account_name;
       } catch (error) {
+        console.log(parseError(error));
         toast.error("Failed to resolve account number");
         console.log(error);
       }

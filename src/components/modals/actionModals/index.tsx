@@ -6,6 +6,9 @@ import { useAction } from "convex/react";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { LayoutContext } from "@/context/layoutContext";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { ModalTypes } from "@/services/_schema";
+import { parseError } from "@/components/utilities/helper";
 
 export const JoinGroupModal = ({
   openJoinGroupModal,
@@ -18,8 +21,10 @@ export const JoinGroupModal = ({
 }) => {
   const {
     user,
+    setShowModal
   }: {
     user: any;
+    setShowModal: (value: ModalTypes) => void
   } = useContext(LayoutContext);
   const [isPending, setIsPending] = useState(false);
   const addGroup = useAction(api.actions.addMember);
@@ -27,11 +32,20 @@ export const JoinGroupModal = ({
 
   const handleJoinGroup = async () => {
     setIsPending(true);
-    await addGroup({
+    try {
+      await addGroup({
       userId: user?._id as Id<"users">,
       groupId: groupId as Id<"groups">,
       // amount: 5,
-    });
+    }); 
+    } catch(error: any) {
+      console.error(error)
+      console.log(parseError(error))
+      toast.error("You have to be signed in to perform this action")
+      setIsPending(false);
+      setShowModal("login");
+    }
+    
     setIsPending(false);
     toggleJoinGroupModal;
     router.push(`/dashboard/groups/${groupId}`);

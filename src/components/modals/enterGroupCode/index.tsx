@@ -10,6 +10,7 @@ import "./styles.scss";
 import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { parseError } from "@/components/utilities/helper";
 
 export const EnterGroupCodeModal = () => {
   const {
@@ -41,6 +42,7 @@ export const EnterGroupCodeModal = () => {
       setShowModal("success");
       router.push(`/dashboard/groups/${group}`);
     } catch (error: any) {
+      console.log(parseError(error));
       toast.error("Unable to join group", error);
     }
     setIsLoading(false);
@@ -81,12 +83,12 @@ export const EnterGroupCodeModal = () => {
       }
     }
     setInputValues(_inputValues);
-    console.log({ _inputValues });
-    if (_inputValues.length === 5) {
+    // console.log({ _inputValues });
+    // if (_inputValues.length <= 5) {
       setDiscountCode(_inputValues.join(""));
-    } else {
-      setDiscountCode("");
-    }
+    // } else {
+    //   setDiscountCode("");
+    // }
   };
 
   const closeModal = () => {

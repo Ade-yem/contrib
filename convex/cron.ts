@@ -60,3 +60,21 @@ export const scheduleIntervalPayment = internalMutation({
   }
 })
 
+export const scheduleIntervalCharge = internalMutation({
+  args: {
+    groupId: v.id("groups"),
+    name: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const group = await ctx.db.get(args.groupId);
+    const jobId = await ctx.db.insert("jobs", {
+      name: args.name,
+      groupId: args.groupId,
+    })
+    const limit = group?.number_of_people as number
+    const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
+    const cronId = await cron(ctx, parseToMilliSeconds(interval), limit, internal.intervalReport.intervalCharge, {jobId})
+    await ctx.db.patch(jobId, { cronId });
+  }
+})
+

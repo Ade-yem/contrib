@@ -9,6 +9,10 @@ export const SortBy = ({
     privateCount: number;
     nonPrivateCount: number;
     total: number;
+    hourlyCount: number;
+    dailyCount: number;
+    weeklyCount: number;
+    monthlyCount: number;
   };
 }) => {
   return (
@@ -19,12 +23,20 @@ export const SortBy = ({
           {sort === "all" && <>{pagingInfo.total}</>}
           {sort === "private" && <>{pagingInfo.privateCount}</>}
           {sort === "public" && <>{pagingInfo.nonPrivateCount}</>}
+          {sort === "hourly" && <>{pagingInfo.hourlyCount}</>}
+          {sort === "daily" && <>{pagingInfo.dailyCount}</>}
+          {sort === "weekly" && <>{pagingInfo.weeklyCount}</>}
+          {sort === "monthly" && <>{pagingInfo.monthlyCount}</>}
         </span>{" "}
         results for{" "}
         <span className="text-black-000">
           {sort === "all" && <>all groups</>}
           {sort === "private" && <>private groups</>}
           {sort === "public" && <>public groups</>}
+          {sort === "hourly" && <>hourly groups</>}
+          {sort === "daily" && <>daily groups</>}
+          {sort === "weekly" && <>weekly groups</>}
+          {sort === "monthly" && <>monthly groups</>}
         </span>
       </p>
       <div className="d-flex align-items-center gap-3 me-3">
@@ -38,6 +50,10 @@ export const SortBy = ({
           <option value="all">All</option>
           <option value="public">Public</option>
           <option value="private">Private</option>
+          <option value="hourly">Hourly</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
         </select>
         {/* <span className="sort-menu btn-transition">
           <Icon icon="iconoir:menu" width="1.2rem" height="1.2rem" />

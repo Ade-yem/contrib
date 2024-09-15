@@ -31,10 +31,11 @@ export const addMember = action({
     groupId: v.id("groups"),
     userId: v.id("users"),
     amount: v.optional(v.float64()),
+    inviteCode: v.optional(v.string()),
   },
   async handler(ctx, args_0) {
     try {
-      await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount})
+      await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount, inviteCode: args_0.inviteCode})
     } catch(error: any) {  
       throw new ConvexError(error.message);
     }
@@ -45,6 +46,7 @@ export const addMember = action({
       if (res?.message === "success") {
         await ctx.runMutation(api.group.assignSlot, {groupId: args_0.groupId});
         await ctx.runMutation(internal.group.startGroup, {groupId: args_0.groupId, start_date: res.start })
+        await ctx.scheduler.runAt(new Date(res.start), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
         await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
         await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleMidTransactionReport, {name: group.name, groupId: group._id});
         await ctx.scheduler.runAt(new Date(res.schedule_date), internal.cron.scheduleIntervalReport, {name: group.name, groupId: group._id});
@@ -52,16 +54,3 @@ export const addMember = action({
     }
   },
 })
-
-// export const testSchedule = action({
-//   args: {
-//     groupId: v.id("groups"),
-//   },
-//   async handler(ctx, args) {
-//     const {groupId} = args;
-//     const schedule_date = new Date();
-//     schedule_date.setMinutes(schedule_date.getMinutes() + 1);
-//     console.log("schedule_date", schedule_date.toISOString());
-//     await ctx.scheduler.runAt(new Date(schedule_date.toISOString()), internal.cron.scheduleIntervalPayment, {groupId, name: "test"});
-//   }
-// })

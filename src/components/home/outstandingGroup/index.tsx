@@ -32,6 +32,7 @@ export const OustandingGroup = () => {
                   title={item.name}
                   desc={item.description}
                   privateGroup={item.private}
+                  groupId={item._id}
                 />
               ))}
           </>

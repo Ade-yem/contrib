@@ -30,6 +30,7 @@ import type * as intervalReport from "../intervalReport.js";
 import type * as memberships from "../memberships.js";
 import type * as monnify from "../monnify.js";
 import type * as monnify_api from "../monnify_api.js";
+import type * as paymentMethod from "../paymentMethod.js";
 import type * as payments from "../payments.js";
 import type * as paystack from "../paystack.js";
 import type * as paystack_api from "../paystack_api.js";
@@ -76,6 +77,7 @@ declare const fullApi: ApiFromModules<{
   memberships: typeof memberships;
   monnify: typeof monnify;
   monnify_api: typeof monnify_api;
+  paymentMethod: typeof paymentMethod;
   payments: typeof payments;
   paystack: typeof paystack;
   paystack_api: typeof paystack_api;
