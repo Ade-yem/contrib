@@ -23,8 +23,11 @@
   .sidebar-container {
     z-index: 30;
   }
-  .savings-plan {
+  .savings-plan-mobile {
     max-height: 40rem;
+  }
+  .savings-plan {
+    height: 45rem;
   }
 }
 

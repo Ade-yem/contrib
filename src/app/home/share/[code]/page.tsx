@@ -3,7 +3,6 @@
 import { useMutation, useQuery } from "convex/react";
 import React from "react";
 import Image from "next/image";
-import { api } from "../../../../convex/_generated/api";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { thousandFormatter } from "@/components/utilities";
 import { ModalTypes } from "@/services/_schema";
@@ -11,6 +10,7 @@ import { LayoutContext } from "@/context/layoutContext";
 import { useRoutes } from "react-router-dom";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { api } from "../../../../../convex/_generated/api";
 
 export default function GroupDetails({ params }: { params: { code: string } }) {
   const joinGroupz = useMutation(api.group.joinGroupWithInviteCode);
