@@ -7,7 +7,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { thousandFormatter } from "@/components/utilities";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
-import { useRoutes } from "react-router-dom";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { api } from "../../../../../convex/_generated/api";
