@@ -45,7 +45,7 @@ export default function Page() {
       <div className="row">
         <div className="col-lg-7 col-md-6 col-12">
           <div className="row">
-            <div className="col-9">
+            <div className="col-8">
               <div className="bg-white-000 rounded-10 p-4 d-flex justify-content-between">
                 <div>
                   <p className="text-pink text-sm">Personal savings</p>
@@ -66,15 +66,15 @@ export default function Page() {
                 </div>
               </div>
             </div>
-            <div className="col-3 d-flex flex-column justify-content-between">
+            <div className="col-4 d-flex flex-column justify-content-between">
               <button
-                className="btn btn-sm rounded-01 btn-green"
+                className="btn btn-sm rounded-01 text-xs btn-green"
                 onClick={() => setShowModal("createRecipient")}
               >
                 Add Money
               </button>
               <button
-                className="btn btn-sm rounded-01 btn-primary"
+                className="btn btn-sm rounded-01 text-xs btn-primary"
                 onClick={() => setShowModal("withdrawFunds")}
               >
                 Withdraw
@@ -89,7 +89,7 @@ export default function Page() {
                 charges !
               </p>
               <button
-                className="btn btn-sm rounded-01 btn-primary"
+                className="btn btn-sm rounded-01 btn-purplee"
                 onClick={addCard}
               >
                 {card ? "Change card details" : "Add Card"}
@@ -158,7 +158,7 @@ export default function Page() {
                       <td className="py-3 text-nowrap ps-4">
                         {transaction.status}
                       </td>
-                      <td className="py-3 text-nowrap ps-4">
+                      <td className="py-3 text-wrap ps-4">
                         {transaction.reference}
                       </td>
                     </tr>
