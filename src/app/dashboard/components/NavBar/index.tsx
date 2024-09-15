@@ -8,6 +8,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { ModalTypes } from "@/services/_schema";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 interface NavBarProps {
   setIsSideBarOpen: Dispatch<SetStateAction<boolean>>;
@@ -20,9 +21,14 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
   const { currentDashboardPageTitle } = useContext(LayoutContext);
-  const { signOut } = useAuthActions();
   const user = useQuery(api.user.getUser);
+  const { signOut } = useAuthActions();
+  const router = useRouter();
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
   return (
     <div className="w-100 d-flex justify-content-between align-items-center dashboard-navbar">
       <div className="fs-3 d-flex gap-2 align-items-center">
@@ -63,7 +69,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
               </div>
               <div className="dropdown-content">
                 <Link
-                  href={"/home"}
+                  href={"/"}
                   className="text-sm text-decoration-none text-black-000 hover-link click"
                 >
                   <p>Home</p>
@@ -77,7 +83,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
                 <div
                   className=" click hover-link sign-out"
                   role="button"
-                  onClick={signOut}
+                  onClick={handleSignOut}
                 >
                   <p className="d-flex align-items-center gap-2">
                     <Icon
