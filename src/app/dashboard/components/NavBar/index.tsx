@@ -51,9 +51,8 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
 
       <div className="">
         <div className="align-items-center gap-4 d-flex">
-          {/* <Notifications /> */}
           <div
-            className="btn btn-md d-md-inline d-none border border-black-000 py-3 fs-4"
+            className="btn btn-md d-sm-inline d-none border border-black-000 py-3 fs-4"
             onClick={() => setShowModal("createGroup")}
             role="button"
           >
