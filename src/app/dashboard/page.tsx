@@ -43,7 +43,7 @@ export default function Page() {
   return (
     <div>
       <div className="row">
-        <div className="col-lg-7 col-md-6 col-12">
+        <div className="col-lg-7 col-12">
           <div className="row">
             <div className="col-8">
               <div className="bg-white-000 rounded-10 p-4 d-flex justify-content-between">
@@ -57,12 +57,21 @@ export default function Page() {
                   className="mt-auto click"
                   onClick={() => setVisible((prev) => !prev)}
                 >
-                  <Icon
-                    icon="weui:eyes-on-outlined"
-                    width="2.5rem"
-                    height="2.5rem"
-                    role="button"
-                  />
+                  {!visible ? (
+                    <Icon
+                      icon="weui:eyes-on-outlined"
+                      width="2.5rem"
+                      height="2.5rem"
+                      role="button"
+                    />
+                  ) : (
+                    <Icon
+                      icon="iconamoon:eye-off-thin"
+                      width="2.5rem"
+                      height="2.5rem"
+                      role="button"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -78,6 +87,50 @@ export default function Page() {
                 onClick={() => setShowModal("withdrawFunds")}
               >
                 Withdraw
+              </button>
+            </div>
+          </div>
+          <div className="bg-white-000 rounded-10 p-4 my-5 d-lg-none d-block">
+            <p className="text-xl fw-bold text-cente mb-">My Savings Plans</p>
+
+            <div className="webkit-scrollbar-none overflow-auto savings-plan">
+              {!savings ? (
+                <Loader height="30vh" />
+              ) : savings?.length === 0 ? (
+                <EmptyData height="30vh" text="No savings plan." />
+              ) : (
+                <div className="row">
+                  {savings?.map((saving, index) => (
+                    <div className="col-6 my-2" key={index}>
+                      <div className="bg-purple rounded-10 p-4 d-flex flex-column justify-content-between">
+                        <p className="text-white-000 text-xs fw-bold">
+                          {saving.name}
+                        </p>
+                        <p className="text-white-000 text-xs">
+                          &#8358; {saving.amount / 100}
+                        </p>
+                        <p className="text-white-000 text-xs">
+                          {saving.reason}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="d-flex justify-content-center align-items-center pt-4 bg-gray-30">
+              <button
+                className="btn btn-sm btn-gray-400 text-center text-white-000"
+                onClick={() => setShowModal("createPersonalSavings")}
+              >
+                <Icon
+                  icon="humbleicons:plus"
+                  width="2rem"
+                  height="2rem"
+                  style={{ color: "white" }}
+                />
+                Add new plan
               </button>
             </div>
           </div>
@@ -124,7 +177,7 @@ export default function Page() {
             </div>
           ) : (
             <div className="table-responsive bg-white">
-              <table className="table">
+              <table className="table w-100">
                 <thead>
                   <tr>
                     <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
@@ -158,7 +211,7 @@ export default function Page() {
                       <td className="py-3 text-nowrap ps-4">
                         {transaction.status}
                       </td>
-                      <td className="py-3 text-wrap ps-4">
+                      <td className="py-3 text-wrap text-break ps-4">
                         {transaction.reference}
                       </td>
                     </tr>
@@ -168,7 +221,7 @@ export default function Page() {
             </div>
           )}
         </div>
-        <div className="col-lg-5 col-md-6 col-12">
+        <div className="col-lg-5 d-lg-block d-none col-12">
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-cente mb-">My Savings Plans</p>
 

@@ -84,12 +84,21 @@ export default function GroupDetails({
                 className="my-auto click"
                 onClick={() => setVisible((prev) => !prev)}
               >
-                <Icon
-                  icon="weui:eyes-on-outlined"
-                  width="2.5rem"
-                  height="2.5rem"
-                  role="button"
-                />
+                {!visible ? (
+                  <Icon
+                    icon="weui:eyes-on-outlined"
+                    width="2.5rem"
+                    height="2.5rem"
+                    role="button"
+                  />
+                ) : (
+                  <Icon
+                    icon="iconamoon:eye-off-thin"
+                    width="2.5rem"
+                    height="2.5rem"
+                    role="button"
+                  />
+                )}
               </div>
             </div>
             <div className="col-3 h-auto d-flex flex-column justify-content-between">
@@ -97,7 +106,10 @@ export default function GroupDetails({
                 <p className="text-red text-xs">Collection Cycle:</p>
                 <span>{GroupCollectionPercentage}%</span>
               </div>
-              <div className="bg-white-000 rounded-10 h-auto p-2 min" style={{minHeight: "20px"}}>
+              <div
+                className="bg-white-000 rounded-10 h-auto p-2 min"
+                style={{ minHeight: "20px" }}
+              >
                 <p className="text-red text-2xs mb-2 fw-bold">
                   Defaulters of the Day
                 </p>
@@ -128,7 +140,9 @@ export default function GroupDetails({
                     className="rounded-circle"
                   />
                   <p className="text-xs fw-bold mb-0"> {members.name}</p>
-                  {members.id === user?._id && <Icon icon="openmoji:crown" width="2rem" height="2rem" />}
+                  {members.id === user?._id && (
+                    <Icon icon="openmoji:crown" width="2rem" height="2rem" />
+                  )}
                 </div>
               ))}
             </div>
@@ -161,7 +175,7 @@ export default function GroupDetails({
         <div className="col-lg-5 col-md-6 col-12" id="messages">
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
-            <GroupChat groupId={groupId as Id<"groups">} userId={user!?._id}/>
+            <GroupChat groupId={groupId as Id<"groups">} userId={user!?._id} />
           </div>
         </div>
       </div>
