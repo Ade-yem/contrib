@@ -2,12 +2,16 @@
 import EmptyData from "@/components/shared/EmptyData";
 import { GroupCard } from "@/components/shared/groupCard";
 import Loader from "@/components/shared/Loader";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import React from "react";
 import { api } from "../../../../convex/_generated/api";
 
 export const OustandingGroup = () => {
-  const groupList = useQuery(api.group.getAllGroups);
+  const { results: groupList } = usePaginatedQuery(
+    api.group.getAllGroups,
+    {},
+    { initialNumItems: 4 }
+  );
 
   return (
     <div className="container text-center py-6">
@@ -21,18 +25,20 @@ export const OustandingGroup = () => {
           <EmptyData height="40vh" text="No groups yet." />
         ) : (
           <>
-            {groupList?.slice(0, 4).map((item, index) => (
-              <GroupCard
-                key={index}
-                color={index}
-                // img={item.img}
-                // alt={item.alt}
-                savings_per_interval={item.savings_per_interval}
-                title={item.name}
-                desc={item.description}
-                privateGroup={item.private}
-              />
-            ))}
+            {groupList
+              ?.slice(0, 4)
+              .map((item, index) => (
+                <GroupCard
+                  key={index}
+                  color={index}
+                  img={item.image || "/groupAvatar.png"}
+                  savings_per_interval={item.savings_per_interval}
+                  title={item.name}
+                  desc={item.description}
+                  privateGroup={item.private}
+                  groupId={item._id}
+                />
+              ))}
           </>
         )}
       </div>

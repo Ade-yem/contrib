@@ -11,6 +11,9 @@ type Transaction = {
   status: string;
   reference: string;
   details: string | undefined;
+  type: "deposit" | "transfer" | undefined;
+  userId?: Id<"users">;
+  groupId?: Id<"groups">;
 }
 export const getMyTransactions = query({
   args: {
@@ -29,7 +32,9 @@ export const getMyTransactions = query({
         amount: transaction.amount,
         status: transaction.status,
         reference: transaction.reference,
-        details: transaction.details
+        details: transaction.details,
+        userId: transaction.userId,
+        type: transaction.type,
       }
       myTransactions.push(res);
     }
@@ -54,7 +59,9 @@ export const getGroupTransactions = query({
         amount: transaction.amount,
         status: transaction.status,
         reference: transaction.reference,
-        details: transaction.details
+        details: transaction.details,
+        groupId: transaction.groupId,
+        type: transaction.type,
       }
       groupTransactions.push(res);
     }

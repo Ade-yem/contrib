@@ -8,10 +8,10 @@ export const subscribeUsersToPlan = internalAction({
       groupId: v.id("groups")
     },
     async handler(ctx, args) {
-      const users = await ctx.runQuery(api.memberships.getGroupMemberships, {groupId: args.groupId})
+      const users = await ctx.runQuery(api.memberships.getGroupMembers, {groupId: args.groupId})
       const group = await ctx.runQuery(api.group.getGroup, {groupId: args.groupId});
       if (users.length > 0 && group) {
-        const statuses: {[member_id: Id<"membership">] : boolean} = {};
+        // const statuses: {[member_id: Id<"membership">] : boolean} = {};
         const start_date = new Date();
         const schedule_date = new Date();
         const report_date = new Date();
@@ -34,12 +34,13 @@ export const subscribeUsersToPlan = internalAction({
             report_date.setDate(schedule_date.getDate() + 5);
             break;
         }
-        for (const user of users) {
-          const res = await ctx.runAction(internal.payments.createSubscription, {email: user?.email as string, plan: group.subscription_plan_id as string, start_date: start_date.toISOString() })
-          statuses[user._id] = res.status;
-        }
-        if (Object.values(statuses).every(val => val === true)) return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
-        else throw new Error("Could not create all the subscriptions");
+        // for (const user of users) {
+        //   const res = await ctx.runAction(internal.payments.createSubscription, {email: user?.email as string, plan: group.subscription_plan_id as string, start_date: start_date.toISOString() })
+        //   statuses[user._id] = res.status;
+        // }
+        return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
+        // if (Object.values(statuses).every(val => val === true)) return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
+        // else throw new Error("Could not create all the subscriptions");
       }
     }
   })

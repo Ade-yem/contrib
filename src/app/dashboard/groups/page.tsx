@@ -1,4 +1,5 @@
 "use client";
+
 import { LayoutContext } from "@/context/layoutContext";
 import { ModalTypes } from "@/services/_schema";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -94,7 +95,7 @@ export default function GroupPage() {
                 </tr>
               </thead>
             </table>
-            <EmptyData height="30vh" text="No savings plan." />
+            <EmptyData height="30vh" text="You aren't part of any group." />
           </>
         ) : (
           <table className="table">
@@ -141,13 +142,29 @@ export default function GroupPage() {
                           />
                         </div>
                         <div className="dropdown-content right">
-                          <p className="hover-link" role="button" onClick={() => router.push(`/${group.groupId}`)}>
+                          <p
+                            className="hover-link"
+                            role="button"
+                            onClick={() =>
+                              router.push(`/dashboard/groups/${group.groupId}`)
+                            }
+                          >
                             View Group
                           </p>
-                          <p className="hover-link" role="button" onClick={() => router.push(`/${group.groupId}#messages`)}>
+                          <p
+                            className="hover-link"
+                            role="button"
+                            onClick={() =>
+                              router.push(`/${group.groupId}#messages`)
+                            }
+                          >
                             Messages
                           </p>
-                          <p className="hover-link" role="button" onClick={() => setShowModal("shareGroup")}>
+                          <p
+                            className="hover-link"
+                            role="button"
+                            onClick={() => setShowModal("shareGroup")}
+                          >
                             Share Group
                           </p>
                           <p className="hover-link" role="button">

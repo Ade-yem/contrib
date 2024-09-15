@@ -89,9 +89,9 @@ export const initiateTransfer = internalAction({
 	},
 	async handler(ctx, args_0) {
 		const reference = args_0.retry ? args_0.reference as string : generateReference();
-		const result: TransferResponse = await paystack.initiateTransfer({
-			amount: args_0.amount, recipient: args_0.recipient, reason: args_0.reason, reference: reference
-		})
+		// const result: TransferResponse = await paystack.initiateTransfer({
+		// 	amount: args_0.amount, recipient: args_0.recipient, reason: args_0.reason, reference: reference
+		// })
     let name: string = "";
     if (args_0.groupId) {
       const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId});

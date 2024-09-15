@@ -7,9 +7,10 @@ import Button from "@/components/forms/Button";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import "./styles.scss";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { parseError } from "@/components/utilities/helper";
 
 export const EnterGroupCodeModal = () => {
   const {
@@ -26,7 +27,9 @@ export const EnterGroupCodeModal = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [inputValues, setInputValues] = useState(Array(6).fill(""));
   const router = useRouter();
-  const accessGroupWithInviteCode = useMutation(api.group.joinGroupWithInviteCode);
+  const accessGroupWithInviteCode = useMutation(
+    api.group.joinGroupWithInviteCode
+  );
 
   const verifygroup = async () => {
     setIsLoading(true);
@@ -39,6 +42,7 @@ export const EnterGroupCodeModal = () => {
       setShowModal("success");
       router.push(`/dashboard/groups/${group}`);
     } catch (error: any) {
+      console.log(parseError(error));
       toast.error("Unable to join group", error);
     }
     setIsLoading(false);
@@ -79,12 +83,12 @@ export const EnterGroupCodeModal = () => {
       }
     }
     setInputValues(_inputValues);
-    console.log({ _inputValues });
-    if (_inputValues.length === 5) {
+    // console.log({ _inputValues });
+    // if (_inputValues.length <= 5) {
       setDiscountCode(_inputValues.join(""));
-    } else {
-      setDiscountCode("");
-    }
+    // } else {
+    //   setDiscountCode("");
+    // }
   };
 
   const closeModal = () => {
@@ -110,7 +114,7 @@ export const EnterGroupCodeModal = () => {
                   {[...Array(5)].map((_, index) => (
                     <input
                       // maxLength={1}
-                      className="group-code-input border text-black-000"
+                      className="group-code-input border"
                       key={index}
                       id={`group-code-input-${index}`}
                       type="text"

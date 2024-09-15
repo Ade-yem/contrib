@@ -1,27 +1,37 @@
+import { JoinGroupModal } from "@/components/modals/actionModals";
 import { thousandFormatter } from "@/components/utilities";
+import { LayoutContext } from "@/context/layoutContext";
+import { ModalTypes } from "@/services/_schema";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
-import React from "react";
+import React, { useContext, useState } from "react";
 
 export const GroupCard = ({
   img,
-  alt,
   title,
   savings_per_interval,
   desc,
   key,
   privateGroup,
   color,
+  groupId,
 }: {
-  img?: string;
-  alt?: string;
+  img: string;
   title: string;
   savings_per_interval: number;
   desc?: string;
   key: number;
   color: number;
   privateGroup?: boolean;
+  groupId?: any;
 }) => {
+  const {
+    setShowModal,
+  }: {
+    setShowModal: (value: ModalTypes) => void;
+  } = useContext(LayoutContext);
+  const [openJoinGroupModal, setOpenJoinGroupModal] = useState(false);
+  const toggleJoinGroupModal = () => setOpenJoinGroupModal(!openJoinGroupModal);
   return (
     <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-5_6" key={key}>
       <div
@@ -31,11 +41,9 @@ export const GroupCard = ({
           className={`group-image-wrapper ${color === 1 ? "one" : color === 2 ? "two" : color === 3 ? "three" : "four"}`}
         >
           <Image
-            className="obj-cover"
-            // src={img}
-            // alt={alt}
-            src={"/friends.svg"}
-            alt={"alt"}
+            className="obj-cover bg-white"
+            src={img}
+            alt={"group image"}
             width={100}
             height={100}
           />
@@ -52,9 +60,6 @@ export const GroupCard = ({
           <span className="price d-non">
             <span>₦{thousandFormatter(savings_per_interval)}</span>
           </span>
-          {/* <span className="price">
-            <span>₦100</span>
-          </span> */}
         </div>
         <div className="d-flex justify-content-center align-items-center gap-3 my-4">
           <span>xxxxx</span>
@@ -62,9 +67,29 @@ export const GroupCard = ({
         </div>
         <p className="text-lg fw-bold"> {title}</p>
         <p className="text-sm px-md-4">{desc}</p>
+        {privateGroup ? (
+          <button
+            className="btn btn-md text-white-000 bg-transparent mx-auto"
+            onClick={() => setShowModal("groupCode")}
+          >
+            Join Group
+            <Icon className="ms-3_5" icon="bi:arrow-up-right" width="2rem" />
+          </button>
+        ) : (
+          <button
+            className="btn btn-md text-white-000 bg-transparent mx-auto"
+            onClick={() => setOpenJoinGroupModal(!openJoinGroupModal)}
+          >
+            Join Group
+            <Icon className="ms-3_5" icon="bi:arrow-up-right" width="2rem" />
+          </button>
+        )}
+        <JoinGroupModal
+          openJoinGroupModal={openJoinGroupModal}
+          toggleJoinGroupModal={toggleJoinGroupModal}
+          groupId={groupId}
+        />
       </div>
-      {/* <br />
-      <button className="btn btn-md btn-primary  mx-auto">Public Team</button> */}
     </div>
   );
 };

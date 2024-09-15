@@ -25,7 +25,7 @@ export function VerificationCodeEmail({
     <Html>
       <Tailwind>
         <Head />
-        <Container className="container px-20 font-sans bg-blue-50">
+        <Container className="container px-5 font-sans">
           <Heading className="text-2xl font-bold mb-4 text-blue-700">
             Verify your email address on Jekajodawo
           </Heading>

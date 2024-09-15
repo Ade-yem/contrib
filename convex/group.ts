@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { generateAndShuffleNumbers } from "./utils";
 import { Id } from "./_generated/dataModel";
 import { api } from "./_generated/api";
+import {paginationOptsValidator} from "convex/server";
 
 /**
  * @return groupId
@@ -23,25 +24,9 @@ export const createGroup = mutation({
   }
 });
 
-export const getAllGroups = query({
-  args: {},
-  async handler(ctx) {
-    return await ctx.db.query("groups").collect();
-  },
-})
-
-export const getGroupsByInterval = query({
-  args: {
-    interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
-  },
-  async handler(ctx, args_0) {
-    return await ctx.db.query("groups").filter(g => g.eq(g.field("interval"), args_0.interval)).collect();
-  },
-})
-
 export const generateGroupProfileUploadUrl = mutation(async (ctx) => await ctx.storage.generateUploadUrl());
 
-export const saveUserProfileImage = mutation({
+export const saveGroupImage = mutation({
   args: {
     imageId: v.id("_storage"),
     groupId: v.id("groups")
@@ -52,7 +37,30 @@ export const saveUserProfileImage = mutation({
     if (!image) throw new ConvexError("Could not get image from storage")
     await ctx.db.patch(groupId, {imageId, image})
   },
+});
+
+export const getAllGroups = query({
+  args: {paginationOpts: paginationOptsValidator},
+  async handler(ctx, args) {
+    const groups = await ctx.db.query("groups").paginate(args.paginationOpts);
+    const res = await Promise.all(groups.page.map(async (group) => {
+      const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), group._id)).first();
+      return {...group, inviteCode: invite?.code}
+    }))
+    return {
+      ...groups, page: res
+    }
+  },
 })
+
+export const getGroupsByInterval = query({
+  args: {
+    interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
+  },
+  async handler(ctx, args_0) {
+    return await ctx.db.query("groups").filter(g => g.eq(g.field("interval"), args_0.interval)).collect();
+  },
+});
 
 export const joinGroupWithInviteCode = mutation({
   args: {
@@ -60,12 +68,13 @@ export const joinGroupWithInviteCode = mutation({
     userId: v.id("users"),
   },
   async handler(ctx, args) {
+    console.info("code => ", args.code);
     const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("code"), args.code)).first();
     if (!invite) throw new ConvexError("There is no invite code of " + args.code);
     if (invite.status === "closed") throw new ConvexError("The group is closed");
     const group = await ctx.db.get(invite.groupId);
     if (!group) throw new ConvexError("There is no group attached to invite code of " + args.code);
-    await ctx.scheduler.runAfter(0, api.actions.addMember, {groupId: group._id, userId: args.userId});
+    await ctx.scheduler.runAfter(0, api.actions.addMember, {groupId: group._id, userId: args.userId, inviteCode: args.code});
     return group._id;
   }
 })

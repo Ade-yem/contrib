@@ -1,0 +1,38 @@
+@import "../../../../styles/base/variables";
+.chat-support-wrapper {
+  .message-content-wrapper {
+    border-radius: 1rem;
+    background-color: $gray-300;
+
+    font-size: 1.2rem;
+    &.left {
+      border-bottom-left-radius: 0;
+    }
+    &.right {
+      border-bottom-right-radius: 0;
+    }
+  }
+  .chat-support-body {
+    position: relative;
+    overflow: scroll;
+    height: 100vh;
+    height: calc(100vh - 13rem);
+    padding: 1rem 2.5rem;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .comment-footer {
+    border-top: 0.1rem solid #d8d8d8;
+    margin-top: auto;
+    width: 100%;
+    position: relative;
+    .form-control {
+      border: 0;
+      &::placeholder {
+        padding-left: 3rem;
+        padding-top: 1rem;
+      }
+    }
+  }
+}

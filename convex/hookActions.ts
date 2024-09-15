@@ -17,10 +17,12 @@ const subscriptionNotRenew = async (ctx: ActionCtx, data: any) => {}
  * @param data payload data
  */
 const invoiceCreated = async (ctx: ActionCtx, data: Invoice) => {
+  console.log("Payment created => ", data);
   const subscription_code = data.subscription.subscription_code;
   const amount = data.subscription.amount as number;
   const reference = data.transaction.reference as string;
-  const timestamp = data.paid_at as string;
+  const date = new Date();
+  const timestamp = date.toISOString();
   const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
   const userId = member?.userId as Id<"users">
   await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId});
@@ -34,6 +36,7 @@ const invoiceCreated = async (ctx: ActionCtx, data: Invoice) => {
  * @param data payload data
  */
 const invoiceUpdate = async (ctx: ActionCtx, data: Invoice) => {
+  console.log("Payment successful => ", data);
   const reference = data.transaction.reference as string;
   const status = data.transaction.status as string;
   const amount = data.transaction.amount as number;
@@ -50,6 +53,7 @@ const invoiceUpdate = async (ctx: ActionCtx, data: Invoice) => {
  * @param data payload data
  */
 const invoicePaymentFailed = async (ctx: ActionCtx, data: Invoice) => {
+  console.log("Payment failed => ", data);
   const subscription_code = data.subscription.subscription_code;
   const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
   const userId = member?.userId as Id<"users">
@@ -140,6 +144,8 @@ const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
     } else if (metadata.details === "add card") {
       await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code});
       await ctx.runMutation(internal.savings.addToFirstSavings, {userId: metadata.userId as Id<"users">, amount: data.amount});
+    } else if (metadata.details === "pay group") {
+      await ctx.runMutation(internal.intervalReport.updatePaymentStatus, {userId: metadata.userId as Id<"users">, groupId: metadata.groupId as Id<"groups">, timestamp: data.paid_at as string, amount: data.amount})
     }
     await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status})
 };

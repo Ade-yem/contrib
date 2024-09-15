@@ -2,7 +2,7 @@
 import { GroupCard } from "@/components/shared/groupCard";
 import { OurTeam } from "@/components/shared/ourTeam";
 import { SubPageBanner } from "@/components/shared/subPageBanner";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import React, { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { SortBy } from "@/components/shared/sortBy";
@@ -11,16 +11,8 @@ import Loader from "@/components/shared/Loader";
 
 export default function GroupsPage() {
   const [sort, setSort] = useState("all");
-  const groupList = useQuery(api.group.getAllGroups);
-  // const { groupList, status, loadMore } = usePaginatedQuery(
-  //   api.group.getAllGroups,
-  //   {},
-  //   { initialNumItems: 5 }
-  // );
-  // if (!groupList) {
-  //   return <Loader description="Fetching" height="70vh" />;
-  // }
-
+  const {results: groupList, loadMore, status } = usePaginatedQuery(api.group.getAllGroups, {}, {initialNumItems: 50});
+  console.log(groupList.filter(g => g.private === true));
   return (
     <div className="text-center">
       <SubPageBanner
@@ -48,6 +40,18 @@ export default function GroupsPage() {
                 nonPrivateCount:
                   groupList?.filter((group) => group.private === false)
                     .length || 0,
+                hourlyCount:
+                  groupList?.filter((group) => group.interval === "hourly")
+                    .length || 0,
+                dailyCount:
+                  groupList?.filter((group) => group.interval === "daily")
+                    .length || 0,
+                weeklyCount:
+                  groupList?.filter((group) => group.interval === "weekly")
+                    .length || 0,
+                monthlyCount:
+                  groupList?.filter((group) => group.interval === "monthly")
+                    .length || 0,
               }}
             />
           </div>
@@ -61,60 +65,81 @@ export default function GroupsPage() {
                 <>
                   {groupList
                     ?.filter((group) => group.private === true)
-                    .map((item, index) => (
-                      <GroupCard
-                        key={index}
-                        color={index}
-                        // img={item.img}
-                        // alt={item.alt}
-                        savings_per_interval={item.savings_per_interval}
-                        title={item.name}
-                        desc={item.description}
-                        privateGroup={item.private}
-                      />
-                    ))}
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                        />
+                      );
+                    })}
                 </>
               ) : sort === "public" ? (
                 <>
                   {groupList
                     ?.filter((group) => group.private === false)
-                    .map((item, index) => (
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                        />
+                      );
+                    })}
+                </>
+              ) : (
+                <>
+                  {groupList?.map((item, index) => {
+                    const colors = [0, 1, 2, 3];
+                    const rowSize = 4;
+                    const rowIndex = Math.floor(index / rowSize);
+                    const shift = rowIndex % rowSize;
+                    const color = colors[(index + shift) % colors.length];
+                    return (
                       <GroupCard
                         key={index}
-                        color={index}
-                        // img={item.img}
-                        // alt={item.alt}
+                        color={color}
+                        img={item.image || "/groupAvatar.png"}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
                         desc={item.description}
                         privateGroup={item.private}
+                        groupId={item._id}
                       />
-                    ))}
-                </>
-              ) : (
-                <>
-                  {groupList?.map((item, index) => (
-                    <GroupCard
-                      key={index}
-                      color={index}
-                      // img={item.img}
-                      // alt={item.alt}
-                      savings_per_interval={item.savings_per_interval}
-                      title={item.name}
-                      desc={item.description}
-                      privateGroup={item.private}
-                    />
-                  ))}
+                    );
+                  })}
                 </>
               )}
             </>
           )}
-          {/* <button
+          <button
             onClick={() => loadMore(5)}
             disabled={status !== "CanLoadMore"}
           >
             Load More
-          </button> */}
+          </button>
         </div>
       </div>
       <div className="mt-5_6 py-2  text-white-000">
