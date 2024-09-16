@@ -19,8 +19,8 @@ export const addGroupAction = action({
         const group = await ctx.runQuery(api.group.getGroup, {groupId});
         if (group) {
           await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, groupId: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});
-          await ctx.runMutation(internal.group.createInvite, {status: "pending", groupId: group._id});
-          await ctx.runAction(api.actions.addMember, {groupId: group._id, userId: args.creator_id});
+          const code = await ctx.runMutation(internal.group.createInvite, {status: "pending", groupId: group._id});
+          await ctx.runAction(api.actions.addMember, {groupId: group._id, userId: args.creator_id, inviteCode: code as string});
         } else throw new ConvexError("Could not create group");
       } else throw new ConvexError("The user is not authenticated");
     }
