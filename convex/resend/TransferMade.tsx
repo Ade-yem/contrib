@@ -9,7 +9,7 @@ import {
 } from "@react-email/components";
 import Logo from "./logo";
 
-export function TransferMadeEmail({ accountNumber, groupName, type }: { accountNumber: string; groupName: string; type: "group" | "savings";}) {
+export function TransferMadeEmail({ accountNumber, amount, groupName, type }: { accountNumber: string; groupName: string; type: "group" | "savings"; amount: number}) {
   return (
     <Html>
       <Tailwind>
@@ -81,7 +81,7 @@ export function TransferMadeEmail({ accountNumber, groupName, type }: { accountN
             Congratulations! 🎉
           </Heading>
           <Text className="text-lg my-2 text-blue">
-            We are excited to inform you that a transfer has been made to your account.
+            We are excited to inform you that a transfer of &#8358; {amount/100} has been made to your account.
           </Text>
           <Text className="text-lg my-2 text-blue">
             <strong>Account Number:</strong> {accountNumber}

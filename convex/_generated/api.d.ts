@@ -35,6 +35,7 @@ import type * as payments from "../payments.js";
 import type * as paystack from "../paystack.js";
 import type * as paystack_api from "../paystack_api.js";
 import type * as recipient from "../recipient.js";
+import type * as removeMoney from "../removeMoney.js";
 import type * as resend_GroupClosedEmail from "../resend/GroupClosedEmail.js";
 import type * as resend_GroupCompleteEmail from "../resend/GroupCompleteEmail.js";
 import type * as resend_logo from "../resend/logo.js";
@@ -85,6 +86,7 @@ declare const fullApi: ApiFromModules<{
   paystack: typeof paystack;
   paystack_api: typeof paystack_api;
   recipient: typeof recipient;
+  removeMoney: typeof removeMoney;
   "resend/GroupClosedEmail": typeof resend_GroupClosedEmail;
   "resend/GroupCompleteEmail": typeof resend_GroupCompleteEmail;
   "resend/logo": typeof resend_logo;

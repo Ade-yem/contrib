@@ -1,5 +1,5 @@
 import { api, internal } from "./_generated/api";
-import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { action, internalAction, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { v, ConvexError } from "convex/values";
 
@@ -42,9 +42,12 @@ export const removeMoneyFromSavings = mutation({
     savingsId: v.id("savings")
   },
   async handler(ctx, args_0) {
-    const {userId, amount, savingsId } = args_0;
-    const default_payment_method = await ctx.db.query("default_payment_method").filter(d => d.eq(d.field("userId"), userId)).first();
-    const payment_method = await ctx.db.get(default_payment_method?.paymentMethodId as Id<"payment_methods">)
+    const {userId, savingsId } = args_0;
+    const amount = args_0.amount * 100;
+    const savings = await ctx.db.get(savingsId);
+    if (savings && savings.amount < amount) throw new ConvexError("Insufficient funds");
+    // const default_payment_method = await ctx.db.query("default_payment_method").filter(d => d.eq(d.field("userId"), userId)).first();
+    const payment_method = await ctx.db.query("payment_methods").filter(p => p.eq(p.field("userId"), userId)).first();
     if(!payment_method) throw new ConvexError("Could not get payment method");
     await ctx.scheduler.runAt(new Date(), internal.transfers.initiateTransfer, {
       savingsId, details: "cashout", userId, amount, recipient: payment_method.recipient_code, retry: false, reason: "cashout", accountNumber: payment_method.account_number
@@ -106,10 +109,14 @@ export const getSavings = query({
 
 export const getUserSavings = query({
   args: {
-    userId: v.id("users")
+    userId: v.optional(v.id("users"))
   },
   async handler(ctx, args_0) {
     const {userId} = args_0;
-    return await ctx.db.query("savings").filter((m) => m.eq(m.field("userId"), userId)).collect();
+    if (userId) {
+      const savings = await ctx.db.query("savings").filter((m) => m.eq(m.field("userId"), userId)).collect();
+      return savings.map(({name, amount, _id}) => ({name: `${name} - ${amount/100}`, _id}));
+    }
+    
   },
 })

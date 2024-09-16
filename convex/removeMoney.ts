@@ -14,7 +14,7 @@ export const removeMoneyFromSavings = internalMutation({
   }
 })
 
-export const removeMoneyfromGroup = internalMutation({
+export const removeMoneyFromGroup = internalMutation({
   
   args: {
     amount: v.float64(),
