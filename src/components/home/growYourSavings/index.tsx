@@ -54,14 +54,26 @@ export const GrowYourSavings = () => {
     },
     {
       img: "/personal-saving.svg",
-      title: "Personal Savings",
-      desc: "Achieve your goals independently with our personalized saving plans",
+      title: "Family",
+      desc: "Save with your family to achieve family milestones",
       alt: "a beautiful lady",
     },
     {
       img: "/personal-saving.svg",
-      title: "Personal Savings",
-      desc: "Achieve your goals independently with our personalized saving plans",
+      title: "Spouse",
+      desc: "Work together to reach your financial goals as a couple",
+      alt: "a beautiful lady",
+    },
+    {
+      img: "/personal-saving.svg",
+      title: "Co-Workers",
+      desc: "Team up with your colleagues for shared financial objectives",
+      alt: "a beautiful lady",
+    },
+    {
+      img: "/personal-saving.svg",
+      title: "Siblings",
+      desc: "Save with your loving siblings and unlock great achievements effortlessly",
       alt: "a beautiful lady",
     },
   ];
@@ -99,6 +111,7 @@ export const GrowYourSavings = () => {
             <div key={index}>
               <div className="mx-lg-4 mx-3">
                 <SavingsCard
+                  index={index}
                   img={item.img}
                   title={item.title}
                   desc={item.desc}
