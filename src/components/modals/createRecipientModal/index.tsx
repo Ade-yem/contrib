@@ -7,18 +7,15 @@ import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
-import {
-  ModalTypes,
-  PaymentFrequency,
-  PaymentMethod,
-} from "@/services/_schema";
+import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
-import { useAction, useQuery } from "convex/react";
+import { useAction } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { parseError } from "@/components/utilities/helper";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export const CreateRecipientModal = () => {
   const {
@@ -69,11 +66,10 @@ export const CreateRecipientModal = () => {
         type: "nuban",
         name: values.name,
         account_number: values.account_number,
-        bank_code: values.bank_code,
+        bank_code: values.bank_code.code,
         currency: "NGN",
       });
       setShowModal("success");
-      console.log(`${values.amount} saved successfully`);
     } catch (error: any) {
       toast.error("Failed to save:", error);
     }
@@ -93,7 +89,6 @@ export const CreateRecipientModal = () => {
       }
     } catch (error) {
       console.log(parseError(error));
-      console.log(error);
       setSubmitting(false);
     }
   };
@@ -142,6 +137,9 @@ export const CreateRecipientModal = () => {
               return (
                 <Form className="py-5 mx-sm-5 mx-4_5" onSubmit={handleSubmit}>
                   <>
+                    <div className="close-modal" onClick={closeModal}>
+                      <Icon icon="charm:square-cross" />
+                    </div>
                     <div className="text-center">
                       <h2 className="modal-sub-title">
                         Create Transfer Recipient
@@ -199,28 +197,34 @@ export const CreateRecipientModal = () => {
                       id="name"
                     />
 
-                    <div className="d-flex justify-content-center align-items-center mt-4">
+                    <div className="d-flex justify-content-center align-items-center mt-4 mx-sm-5 mx-4_5">
                       <Button
                         title="Create Recipient"
                         type="submit"
                         disabled={submitting || !isValid}
                         loading={submitting}
                         loadingTitle={"Please wait..."}
-                        className="btn btn-lg text-sm btn-primary letter-spacing-1"
+                        className="btn btn-lg text-sm btn-primary letter-spacing-1 w-100"
                       />
-                      <button
+                      {/* <button
                         className="btn btn-lg text-sm text-red"
                         onClick={closeModal}
                       >
                         Cancel
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-lg text-sm btn-primary letter-spacing-1"
+                      </button> */}
+                    </div>
+                    <div className="py mx-sm-5 mx-4_5">
+                      <div className="row my-3">
+                        <div className="col-4 border-line   my-auto"></div>
+                        <div className="col-1 mx-auto text-lg">Or </div>
+                        <div className="col-4  border-line my-auto"></div>
+                      </div>
+                      <p
+                        className="btn-outline-purple btn btn-md w-100 text-sm letter-spacing-1 click text-center my-0"
                         onClick={createFromAuthorization}
                       >
                         Create from Card
-                      </button>
+                      </p>
                     </div>
                   </>
                 </Form>
