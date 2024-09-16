@@ -355,7 +355,7 @@ import {
         await ctx.scheduler.runAfter(0, cronFunction, cronJob.args);
       }
       // check if count is less than limit
-      if (cronJob.count <= cronJob.limit) {
+      if (cronJob.count < cronJob.limit) {
         // Now reschedule the next run.
         if (cronJob.schedule.kind === "interval") {
           const nextTime = schedulerJob.scheduledTime + cronJob.schedule.ms;

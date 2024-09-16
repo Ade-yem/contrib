@@ -5,48 +5,50 @@ import { Id } from "./_generated/dataModel";
 import { api, internal } from "./_generated/api";
 import {SendEmails} from "./resend/resend";
 
-export const generateReport = internalMutation({
-  args: {
-    jobId: v.id("jobs"),
-  },
-  async handler(ctx, args) {
-    const {jobId} = args;
-    const job = await ctx.db.get(jobId);
-    const groupId = job?.groupId as Id<"groups">
-    const group = await ctx.db.get(groupId);
-    if (!group) throw new Error("Could not get group of id " + groupId);
-    const groupTransactions = await ctx.db.query("transactions").filter(t => t.eq(t.field("groupId"), groupId) && t.eq(t.field("details"), "pay group")).order("desc").collect();
-    const start_date = new Date(group?.start_date as string);
-    const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
-    const elapsed = group?.elapsedTime ? group?.elapsedTime : 0;
-    const receiver = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId) && m.eq(m.field("collection_number"), elapsed)).first();
-    const multiplier = interval === "hourly" ? 1 : interval === "daily" ? 24 : interval === "weekly" ? 24 * 7 : 24 * 7 * 30;
-    const timestamp = start_date.getTime();
-    let startOfInterval = elapsed * multiplier;
-    let endOfInterval = elapsed * multiplier + multiplier;
-    startOfInterval = convertToMilliSeconds(startOfInterval) + timestamp;
-    endOfInterval = convertToMilliSeconds(endOfInterval) + timestamp;
-    const members_payment_status: any[] = []
-    for (const trns of groupTransactions) {
-      if (trns._creationTime >= startOfInterval && trns._creationTime <= endOfInterval) {
-        const det = {
-          userId: trns.userId, status: trns.status, amount: trns.amount
-        }
-        members_payment_status.push(det)
-      }
-    }
-    await ctx.db.insert("interval", {groupId, receiver_id: receiver?.userId as Id<"users">, month: elapsed, members_payment_status, details: job?.details });
-  },
-})
+// export const generateReport = internalMutation({
+//   args: {
+//     jobId: v.id("jobs"),
+//   },
+//   async handler(ctx, args) {
+//     const {jobId} = args;
+//     const job = await ctx.db.get(jobId);
+//     const groupId = job?.groupId as Id<"groups">
+//     const group = await ctx.db.get(groupId);
+//     if (!group) throw new Error("Could not get group of id " + groupId);
+//     const groupTransactions = await ctx.db.query("transactions").filter(t => t.eq(t.field("groupId"), groupId) && t.eq(t.field("details"), "pay group")).order("desc").collect();
+//     const start_date = new Date(group?.start_date as string);
+//     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
+//     const elapsed = group?.elapsedTime ? group?.elapsedTime : 0;
+//     const receiver = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId) && m.eq(m.field("collection_number"), elapsed)).first();
+//     const multiplier = interval === "hourly" ? 1 : interval === "daily" ? 24 : interval === "weekly" ? 24 * 7 : 24 * 7 * 30;
+//     const timestamp = start_date.getTime();
+//     let startOfInterval = elapsed * multiplier;
+//     let endOfInterval = elapsed * multiplier + multiplier;
+//     startOfInterval = convertToMilliSeconds(startOfInterval) + timestamp;
+//     endOfInterval = convertToMilliSeconds(endOfInterval) + timestamp;
+//     const members_payment_status: any[] = []
+//     for (const trns of groupTransactions) {
+//       if (trns._creationTime >= startOfInterval && trns._creationTime <= endOfInterval) {
+//         const det = {
+//           userId: trns.userId, status: trns.status, amount: trns.amount
+//         }
+//         members_payment_status.push(det)
+//       }
+//     }
+//     await ctx.db.insert("interval", {groupId, receiver_id: receiver?.userId as Id<"users">, month: elapsed, members_payment_status, details: job?.details });
+//   },
+// })
 
 export const intervalRecord = internalMutation({
   args: {
-    jobId: v.id("jobs"),
+    // jobId: v.id("jobs"),
+    groupId: v.id("groups"),
   },
   async handler(ctx, args_0) {
-    const { jobId } = args_0;
-    const job = await ctx.db.get(jobId);
-    const groupId = job?.groupId as Id<"groups">
+    // const { jobId } = args_0;
+    const { groupId } = args_0;
+    // const job = await ctx.db.get(jobId);
+    // const groupId = job?.groupId as Id<"groups">
     const group = await ctx.db.get(groupId);
     if (!group) throw new Error("Could not get group of id " + groupId);
     const elapsed = group?.elapsedTime ? group?.elapsedTime : 0;
@@ -63,11 +65,9 @@ export const intervalRecord = internalMutation({
     const p= Date.now();
     const t = parseToMilliSeconds(interval);
     const tot  = new Date(p + t);
-
-    await ctx.db.insert("interval", {groupId, receiver_id: receiver?.userId as Id<"users">, month: elapsed, start: startOfInterval, end: endOfInterval, details: job?.details, amount });
+    await ctx.db.insert("interval", {groupId, receiver_id: receiver?.userId as Id<"users">, month: elapsed, start: startOfInterval, end: endOfInterval, amount });
     await ctx.scheduler.runAfter(30000, internal.intervalReport.intervalCharge, {groupId});
     await ctx.scheduler.runAt(tot, internal.intervalReport.payNextCustomer, {groupId});
-    await ctx.scheduler.runAfter(0, internal.intervalReport.intervalChange, {groupId});
   },
 })
 
@@ -83,6 +83,7 @@ export const intervalChange = internalMutation({
     if (!group) throw new Error("Could not get group of id " + groupId);
     if (group.elapsedTime < group.number_of_people) {
       await ctx.db.patch(groupId, {elapsedTime: group.elapsedTime + 1});
+      await ctx.scheduler.runAfter(20000, internal.intervalReport.intervalRecord, {groupId});
     } else {
       await ctx.scheduler.runAfter(0, internal.group.endGroup, {groupId});
     }
@@ -106,23 +107,24 @@ export const payNextCustomer = internalMutation({
     await ctx.scheduler.runAt(new Date(), internal.transfers.initiateTransfer, {groupId, userId: receiver?.userId as Id<"users">,
       amount: amount, details: group.name +  "interval payment",
       recipient: payment_method?.recipient_code as string, retry: false,
-      reason: "interval payment", accountNumber: payment_method?.account_number as string
-    })
+      reason: "interval payment", accountNumber: payment_method?.account_number || "No number(Test Mode)"
+    });
+    await ctx.scheduler.runAfter(0, internal.intervalReport.intervalChange, {groupId});
     }
 })
 
-export const refundCustomer = internalMutation({
-  args: {
-    groupId: v.id("groups")
-  },
-  async handler(ctx, args_0) {
-    const { groupId } = args_0;
-    const members = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId)).collect();
-    for (const member of members) {
-      await ctx.scheduler.runAt(new Date(), internal.savings.addToFirstSavings, {userId: member.userId, amount: member.paid_deposit as number});
-    }
-  },
-})
+// export const refundCustomer = internalMutation({
+//   args: {
+//     groupId: v.id("groups")
+//   },
+//   async handler(ctx, args_0) {
+//     const { groupId } = args_0;
+//     const members = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), groupId)).collect();
+//     for (const member of members) {
+//       await ctx.scheduler.runAt(new Date(), internal.savings.addToFirstSavings, {userId: member.userId, amount: member.paid_deposit as number});
+//     }
+//   },
+// })
 
 /**
  * @function addPaidCustomersToInterval add paid customers to an interval
@@ -150,9 +152,7 @@ export const addPaidCustomersToInterval = internalMutation({
         interval = intervl;
         break;
       }
-
     }
-
     if (!interval) {
       throw new Error("Could not get interval");  
     }
@@ -299,7 +299,7 @@ export const intervalCharge = internalAction({
     // const groupId = job?.groupId as Id<"groups">
     const group = await ctx.runQuery(api.group.getGroup, {groupId});
     if (!group) throw new Error("Could not get group of id " + groupId);
-    const amount = group.number_of_people * group.savings_per_interval / 100;
+    const amount = group.savings_per_interval / 100;
     const members = await ctx.runQuery(api.memberships.getGroupMembers, {groupId});
     await Promise.all(members.map(async (member) => {
       //const date = new Date();

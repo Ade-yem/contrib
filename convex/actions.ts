@@ -50,7 +50,7 @@ export const addMember = action({
           //await ctx.scheduler.runAt(new Date(res.start), internal.cron.scheduleIntervalCharge, {name: group.name, groupId: group._id});
           //await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
           // await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleMidTransactionReport, {name: group.name, groupId: group._id});
-          await ctx.scheduler.runAt(new Date(res.schedule_date), internal.cron.scheduleIntervalReport, {name: group.name, groupId: group._id});
+          await ctx.scheduler.runAt(new Date(res.schedule_date), internal.intervalReport.intervalRecord, {groupId: group._id});
         }   
       }
     } else throw new ConvexError("The user is not authenticated");

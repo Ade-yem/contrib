@@ -1,5 +1,7 @@
-export const thousandFormatter = (number: number) => {
-  if (typeof number === "undefined" || isNaN(number)) return "0";
+export const thousandFormatter = (value: number) => {
+  if (typeof value === "undefined" || isNaN(value)) return "0";
+
+  const number = value / 100; // Divide by 100 to convert to currency
 
   // Handle the conversion for thousands (k), millions (m), billions (b), etc.
   const absNumber = Math.abs(number);

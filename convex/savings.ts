@@ -30,7 +30,7 @@ export const addMoneyToSavings = action({
   },
   async handler(ctx, args_0) {
     const {userId, email, amount, savingsId } = args_0;
-    await ctx.runAction(api.payments.initializePaystackTransaction, {
+    await ctx.runAction(api.payments.ChargeTransaction, {
       metadata: {savingsId, details: "add savings", userId}, amount, email
     })
   },
