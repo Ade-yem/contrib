@@ -174,7 +174,7 @@ export default function GroupDetails({
                           className="d-flex justify-content-between gap-3 mb-3 "
                           key={index}
                         >
-                          <div className={"d-flex justify-content-between gap-2 " + activity.details === "pay group" ? "text-primary-500" : "text-red"}>
+                          <div className={"d-flex justify-content-between gap-2 text-primary-500 "}>
                             <p className="text-xs fw-bold mb-0">
                               {activity.name}
                             </p>
@@ -183,7 +183,7 @@ export default function GroupDetails({
                               {activity.details}
                             </p>
                           </div>
-                          <p className={"text-xs fw-bold mb-0 " + activity.details === "pay group" ? "text-green" : "text-red"}>
+                          <p className={"text-xs fw-bold mb-0 text-primary-500"}>
                             {activity.details === "pay group" ? "+" : "-"} &#8358;{thousandFormatter(activity.amount ?? 0)}
                           </p>
                         </div>
@@ -308,7 +308,7 @@ export default function GroupDetails({
                       className="d-flex justify-content-between gap-3 mb-3 "
                       key={index}
                     >
-                      <div className={"d-flex justify-content-between gap-2 " + activity.details === "pay group" ? "text-primary-500" : "text-red"}>
+                      <div className={"d-flex justify-content-between gap-2 text-primary-500 "}>
                         <p className="text-xs fw-bold mb-0">
                           {activity.name}
                         </p>
@@ -317,7 +317,7 @@ export default function GroupDetails({
                           {activity.details}
                         </p>
                       </div>
-                      <p className={"text-xs fw-bold mb-0 " + activity.details === "pay group" ? "text-green" : "text-red"}>
+                      <p className={"text-xs fw-bold mb-0 text-primary-500"}>
                         {activity.details === "pay group" ? "+" : "-"} &#8358;{thousandFormatter(activity.amount ?? 0)}
                       </p>
                     </div>
