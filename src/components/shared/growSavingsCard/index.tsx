@@ -21,7 +21,7 @@ export const SavingsCard = ({
         <Image src={img} alt={alt} layout="fill" objectFit="cover" />
       </div>
       <div
-        className={`card-content ${index === 0 ? "one" : index === 1 ? "two" : index === 2 ? "three" : index === 3 ? "four" : index === 4 ? "five" : "six"}`}
+        className={`card-content ${index === 0 ? "one" : index === 1 ? "two" : index === 2 ? "three" : index === 3 ? "four" : index === 4 ? "five" : index === 5 ? "six" : index === 6 ? "one" : " two"}`}
       >
         <p className="text-lg fw-semi-bold">{title}</p>
         <p className="text-sm">{desc}</p>
