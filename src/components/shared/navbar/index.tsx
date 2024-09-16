@@ -93,7 +93,7 @@ const Navbar = () => {
             <Unauthenticated>
               <div className="dropdown">
                 <div>
-                  <div className="d-flex align-items-center ">
+                  <div className="d-flex align-items-center click">
                     Sign In
                     <Icon
                       className="ms-3"
