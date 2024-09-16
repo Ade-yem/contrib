@@ -7,7 +7,7 @@ import React from "react";
 import { api } from "../../../../convex/_generated/api";
 
 export const OustandingGroup = () => {
-  const groupList = useQuery(api.group.getTopGroups)
+  const groupList = useQuery(api.group.getTopGroups);
   return (
     <div className="container text-center py-6">
       <h2 className="sub-title  mb-6 fw-bold">
@@ -30,6 +30,7 @@ export const OustandingGroup = () => {
                   savings_per_interval={item.savings_per_interval}
                   title={item.name}
                   desc={item.description}
+                  interval={item.interval}
                   privateGroup={item.private}
                   groupId={item._id}
                   expectedMembers={item.number_of_people}

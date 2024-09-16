@@ -48,6 +48,7 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
         savings_per_interval={77}
         title={group?.name || ""}
         desc={group?.description}
+        interval={item.interval}
         privateGroup={group?.private}
         groupId={group?._id}
         expectedMembers={group?.number_of_people as number}

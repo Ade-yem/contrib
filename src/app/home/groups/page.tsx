@@ -11,8 +11,12 @@ import Loader from "@/components/shared/Loader";
 
 export default function GroupsPage() {
   const [sort, setSort] = useState("all");
-  const {results: groupList, loadMore, status } = usePaginatedQuery(api.group.getAllGroups, {}, {initialNumItems: 16});
-  console.log(groupList.filter(g => g.private === true));
+  const {
+    results: groupList,
+    loadMore,
+    status,
+  } = usePaginatedQuery(api.group.getAllGroups, {}, { initialNumItems: 16 });
+  console.log(groupList.filter((g) => g.private === true));
   return (
     <div className="text-center">
       <SubPageBanner
@@ -78,6 +82,7 @@ export default function GroupsPage() {
                           img={item.image || "/groupAvatar.png"}
                           savings_per_interval={item.savings_per_interval}
                           title={item.name}
+                          interval={item.interval}
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
@@ -104,6 +109,7 @@ export default function GroupsPage() {
                           img={item.image || "/groupAvatar.png"}
                           savings_per_interval={item.savings_per_interval}
                           title={item.name}
+                          interval={item.interval}
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
@@ -130,6 +136,7 @@ export default function GroupsPage() {
                           img={item.image || "/groupAvatar.png"}
                           savings_per_interval={item.savings_per_interval}
                           title={item.name}
+                          interval={item.interval}
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
@@ -156,6 +163,7 @@ export default function GroupsPage() {
                           img={item.image || "/groupAvatar.png"}
                           savings_per_interval={item.savings_per_interval}
                           title={item.name}
+                          interval={item.interval}
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
@@ -182,6 +190,7 @@ export default function GroupsPage() {
                           img={item.image || "/groupAvatar.png"}
                           savings_per_interval={item.savings_per_interval}
                           title={item.name}
+                          interval={item.interval}
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
@@ -208,6 +217,7 @@ export default function GroupsPage() {
                           img={item.image || "/groupAvatar.png"}
                           savings_per_interval={item.savings_per_interval}
                           title={item.name}
+                          interval={item.interval}
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
@@ -232,6 +242,7 @@ export default function GroupsPage() {
                         img={item.image || "/groupAvatar.png"}
                         savings_per_interval={item.savings_per_interval}
                         title={item.name}
+                        interval={item.interval}
                         desc={item.description}
                         privateGroup={item.private}
                         groupId={item._id}
