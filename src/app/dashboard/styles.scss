@@ -15,13 +15,19 @@
 
   .sidebar-padding {
     padding-left: 250px;
+    @media (max-width: 1050px) {
+      padding-left: 200px;
+    }
   }
 
   .sidebar-container {
     z-index: 30;
   }
-  .savings-plan {
+  .savings-plan-mobile {
     max-height: 40rem;
+  }
+  .savings-plan {
+    height: 45rem;
   }
 }
 

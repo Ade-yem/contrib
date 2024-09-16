@@ -9,8 +9,6 @@ export const LayoutContext = createContext<any>(undefined);
 export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const user = useQuery(api.user.getUser);
   const [showModal, setShowModal] = useState<ModalTypes>();
-  const [currentDashboardPageTitle, setCurrentDashboardPageTitle] =
-    useState("Dashboard");
   const [countdown, setCountdown] = useState<null | number>(null);
   const [timer, setTimer] = useState<any>(null);
 
@@ -39,8 +37,6 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
       value={{
         showModal,
         setShowModal,
-        currentDashboardPageTitle,
-        setCurrentDashboardPageTitle,
         countdown,
         setCountdown,
         user,

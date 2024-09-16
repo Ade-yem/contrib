@@ -1,0 +1,25 @@
+@import "../../../../styles/base/variables";
+.whyChooseUs-wrapper {
+  .overflo {
+    column-gap: 1.5rem;
+    display: flex;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0.2rem;
+      height: 0.2rem;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $orange;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $primary-500;
+    }
+  }
+
+  .min-width {
+    width: 25rem;
+  }
+}

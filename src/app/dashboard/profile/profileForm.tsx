@@ -79,8 +79,6 @@ export const ProfileForm = (props: profilePropTypes) => {
             />
             <form>
               <input
-                // type="submit"
-                // value="Send Image"
                 disabled={selectedImage !== null}
                 type="file"
                 name="image"
@@ -94,17 +92,30 @@ export const ProfileForm = (props: profilePropTypes) => {
                   }
                 }}
                 ref={imageInput}
-                />
+              />
               <p
                 role="button"
                 style={selectedImage !== null ? hide : show}
-                className="d-sm-flex text-sm px-4 btn h-100 border border-primary-500 text-primary-500"
+                className="d-flex text-sm px-4 btn h-100 border border-primary-500 text-primary-500 d-sm-none mb-0"
+                onClick={() => imageInput.current?.click()}
+              >
+                Upload photo
+              </p>
+              <p
+                role="button"
+                style={selectedImage !== null ? hide : show}
+                className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500"
                 onClick={() => imageInput.current?.click()}
               >
                 Upload new photo
               </p>
             </form>
-            <p className="mb-0 text-xs text-red click" onClick={() => removeImage()}>Remove</p>
+            <p
+              className="mb-0 text-xs text-red click"
+              onClick={() => removeImage()}
+            >
+              Remove
+            </p>
           </div>
 
           <div className="row row-cols-1 row-cols-md-3 mb-4 mt-4_5">

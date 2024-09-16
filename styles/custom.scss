@@ -238,6 +238,9 @@ body {
     display: block;
   }
 }
+.table-responsive {
+  min-height: 65vh;
+}
 .table {
   min-width: 60rem;
 }
@@ -249,11 +252,13 @@ tbody {
       }
     }
     .desc {
-      // background-color: aqua !important;
-      max-width: 200px;
+      min-width: 200px;
       // width: 100%;
     }
   }
+}
+.details-container {
+  height: 33rem;
 }
 .webkit-scrollbar-none {
   &::-webkit-scrollbar {

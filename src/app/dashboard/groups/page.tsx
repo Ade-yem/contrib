@@ -9,6 +9,8 @@ import { api } from "../../../../convex/_generated/api";
 import Loader from "@/components/shared/Loader";
 import EmptyData from "@/components/shared/EmptyData";
 import { useRouter } from "next/navigation";
+import { thousandFormatter } from "@/components/utilities";
+import ShareGroupModal from "@/components/modals/shareGroupModal";
 
 export default function GroupPage() {
   const {
@@ -17,7 +19,6 @@ export default function GroupPage() {
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
 
-  // const groupList = useQuery(api.group.getAllGroups);
   const user = useQuery(api.user.getUser);
   const router = useRouter();
 
@@ -26,10 +27,7 @@ export default function GroupPage() {
     { userId: user!?._id },
     { initialNumItems: 5 }
   );
-  // if (status === "LoadingFirstPage") {
-  //   return <Loader height="30vh" />;
-  // }
-  // console.log(status);
+
   return (
     <>
       <button
@@ -44,10 +42,10 @@ export default function GroupPage() {
         />
         Create New Group
       </button>
-      <div className="bg-white-000 p-4 mt-5">
+      <div className="table-responsive bg-white-000 p-4 mt-5">
         {status === "LoadingFirstPage" ? (
           <>
-            <table className="table">
+            <table className="table w-100">
               <thead>
                 <tr>
                   <th className="py-4_5 bg-primary-500 text-white-000 text-lg ps-4">
@@ -73,7 +71,7 @@ export default function GroupPage() {
           </>
         ) : results?.length === 0 ? (
           <>
-            <table className="table">
+            <table className="table w-100">
               <thead>
                 <tr>
                   <th className="py-4_5 bg-primary-500 text-white-000 text-lg ps-4">
@@ -126,7 +124,7 @@ export default function GroupPage() {
                   <td className="py-4_5 ps-4">{group.name}</td>
                   <td className="py-4_5 ps-4 desc">{group.description}</td>
                   <td className="py-4_5 ps-4">
-                    &#8358; {group.paymentPerInterval / 100}
+                    &#8358; {thousandFormatter(group.paymentPerInterval / 100)}
                   </td>
                   <td className="py-4_5 ps-4">{group.numOfMembers}</td>
                   <td className="py-4_5 ps-4">{group.collectionNumber}</td>
@@ -151,7 +149,7 @@ export default function GroupPage() {
                           >
                             View Group
                           </p>
-                          <p
+                          {/* <p
                             className="hover-link"
                             role="button"
                             onClick={() =>
@@ -159,7 +157,7 @@ export default function GroupPage() {
                             }
                           >
                             Messages
-                          </p>
+                          </p> */}
                           <p
                             className="hover-link"
                             role="button"
@@ -167,10 +165,11 @@ export default function GroupPage() {
                           >
                             Share Group
                           </p>
-                          <p className="hover-link" role="button">
+                          {/* <p className="hover-link" role="button">
                             Edit Group Name
-                          </p>
+                          </p> */}
                         </div>
+                        <ShareGroupModal inviteLink={group.groupId} />
                       </div>
                     </div>
                   </td>

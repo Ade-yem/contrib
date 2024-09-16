@@ -2,7 +2,7 @@
 import { GroupCard } from "@/components/shared/groupCard";
 import { OurTeam } from "@/components/shared/ourTeam";
 import { SubPageBanner } from "@/components/shared/subPageBanner";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import React, { useContext } from "react";
 import { api } from "../../../../convex/_generated/api";
 import EmptyData from "@/components/shared/EmptyData";
@@ -12,7 +12,11 @@ import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 
 export default function GroupSavingsPage() {
-  const groupList = useQuery(api.group.getAllGroups);
+  const { results: groupList } = usePaginatedQuery(
+    api.group.getAllGroups,
+    {},
+    { initialNumItems: 4 }
+  );
   const {
     setShowModal,
   }: {
