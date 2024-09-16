@@ -135,10 +135,13 @@ export const CreateRecipientModal = () => {
           >
             {({ handleSubmit, isValid, setFieldValue, values }) => {
               return (
-                <Form className="py-5 mx-sm-5 mx-4_5" onSubmit={handleSubmit}>
+                <Form className="pt-5 mx-sm-5 mx-4_5" onSubmit={handleSubmit}>
                   <>
                     <div className="close-modal" onClick={closeModal}>
-                      <Icon icon="charm:square-cross" />
+                      <Icon
+                        className="text-primary-500"
+                        icon="charm:square-cross"
+                      />
                     </div>
                     <div className="text-center">
                       <h2 className="modal-sub-title">
@@ -197,40 +200,37 @@ export const CreateRecipientModal = () => {
                       id="name"
                     />
 
-                    <div className="d-flex justify-content-center align-items-center mt-4 mx-sm-5 mx-4_5">
+                    <div className="d-flex justify-content-center align-items-center mt-4">
                       <Button
                         title="Create Recipient"
                         type="submit"
                         disabled={submitting || !isValid}
                         loading={submitting}
                         loadingTitle={"Please wait..."}
-                        className="btn btn-lg text-sm btn-primary letter-spacing-1 w-100"
+                        className="btn btn-md text-sm btn-primary letter-spacing-1 w-100"
                       />
-                      {/* <button
-                        className="btn btn-lg text-sm text-red"
-                        onClick={closeModal}
-                      >
-                        Cancel
-                      </button> */}
-                    </div>
-                    <div className="py mx-sm-5 mx-4_5">
-                      <div className="row my-3">
-                        <div className="col-4 border-line   my-auto"></div>
-                        <div className="col-1 mx-auto text-lg">Or </div>
-                        <div className="col-4  border-line my-auto"></div>
-                      </div>
-                      <p
-                        className="btn-outline-purple btn btn-md w-100 text-sm letter-spacing-1 click text-center my-0"
-                        onClick={createFromAuthorization}
-                      >
-                        Create from Card
-                      </p>
                     </div>
                   </>
                 </Form>
               );
             }}
           </Formik>
+          <div className="mb-5 mx-sm-5 mx-4_5">
+            <div className="row my-3">
+              <div className="col-4 border-line   my-auto"></div>
+              <div className="col-1 mx-auto text-lg">Or </div>
+              <div className="col-4  border-line my-auto"></div>
+            </div>
+            <Button
+              title="Create from Card"
+              type="submit"
+              disabled={submitting}
+              loading={submitting}
+              loadingTitle={"Please wait..."}
+              onClick={createFromAuthorization}
+              className="btn-outline-purple btn btn-md w-100 text-sm letter-spacing-1"
+            />
+          </div>
         </Modal.Body>
       </Modal>
     </>
