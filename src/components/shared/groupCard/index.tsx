@@ -17,11 +17,13 @@ export const GroupCard = ({
   groupId,
   expectedMembers,
   membersPresent,
+  interval,
 }: {
   img: string;
   title: string;
   savings_per_interval: number;
   desc?: string;
+  interval?: string;
   key: number;
   color: number;
   privateGroup?: boolean;
@@ -61,12 +63,17 @@ export const GroupCard = ({
               className={`text-white-000 ${privateGroup ? "" : "invisible"}`}
             />
           </span>
-          <span className="price d-non">
-            <span>₦{thousandFormatter(savings_per_interval)}</span>
+          <span>
+            <span className="price d-non">
+              <span>₦{thousandFormatter(savings_per_interval)}</span>
+            </span>
+            <p className="text-2xs text-capitalize fw-bold">{interval}</p>
           </span>
         </div>
         <div className="d-flex justify-content-center align-items-center gap-2 my-4">
-          <span>{membersPresent} of {expectedMembers} members</span>
+          <span>
+            {membersPresent} of {expectedMembers} members
+          </span>
         </div>
         <p className="text-lg fw-bold"> {title}</p>
         <p className="text-sm px-md-4">{desc}</p>

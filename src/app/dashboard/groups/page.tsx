@@ -25,7 +25,7 @@ export default function GroupPage() {
   const { results, status, loadMore } = usePaginatedQuery(
     api.user.getMyGroups,
     { userId: user!?._id },
-    { initialNumItems: 5 }
+    { initialNumItems: 7 }
   );
 
   return (
@@ -139,7 +139,9 @@ export default function GroupPage() {
                             data-toggle="dropdown"
                           />
                         </div>
-                        <div className="dropdown-content right">
+                        <div
+                          className={`dropdown-content ${index === results.length - 1 ? "last-item" : ""} right`}
+                        >
                           <p
                             className="hover-link"
                             role="button"
@@ -179,6 +181,15 @@ export default function GroupPage() {
           </table>
         )}
       </div>
+      {results?.length !== 0 && (
+        <button
+          className="btn-primary w-100"
+          onClick={() => loadMore(5)}
+          disabled={status !== "CanLoadMore"}
+        >
+          Load More
+        </button>
+      )}
     </>
   );
 }
