@@ -176,8 +176,8 @@ export const createInvite = internalMutation({
     const code = nanoid(5);
     const exists = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), args.groupId)).first();
     if (exists) return;
-    await ctx.db.insert("invites", {groupId: args.groupId, code: code, status: args.status});
-    return code;
+    const invite = await ctx.db.insert("invites", {groupId: args.groupId, code: code, status: args.status});
+    return invite ? code : undefined;
   }
 });
 
