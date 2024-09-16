@@ -32,7 +32,7 @@ export const SuccessModal = () => {
       >
         <Modal.Body>
           <div className="my-5 d-flex align-items-center flex-column">
-            <p className="text-green text-2xl">Successfully Verified!</p>
+            <p className="text-green text-2xl">Nailed It!</p>
             <Image
               src={"/success.svg"}
               alt="success img"

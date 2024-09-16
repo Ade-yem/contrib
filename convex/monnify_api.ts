@@ -3,12 +3,6 @@
 import { encode } from "./utils";
 import {ConvexError} from "convex/values";
 
-function makeHttpsRequest(options: RequestInit, params: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-
-  });
-}
-
 class MonnifyApi {
   monnifyData: {
     accessToken: string;
@@ -40,9 +34,7 @@ class MonnifyApi {
         body: params
       })
       const data = await res.json();
-      // await makeHttpsRequest(options, params);
       if (data.requestSuccessful) {
-        console.log(data.responseBody);
         this.monnifyData.accessToken = data.responseBody.accessToken;
       } else {
         throw new Error(data.responseMessage);
@@ -68,7 +60,6 @@ class MonnifyApi {
       body: params
     })
     const res = await dat.json();
-    console.log(res);
     if (!res.requestSuccessful) throw new ConvexError(res.responseMessage)
     else return res.responseBody;
 

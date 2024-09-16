@@ -42,7 +42,6 @@ export const VerifyUserModal = () => {
     phone: yup.number().label("Phone No").required(),
   });
   const handleProceed = async (values: FormikValues) => {
-    console.log("Submitting group data...", values);
     setSubmitting(true);
     try {
       await kycVerification({

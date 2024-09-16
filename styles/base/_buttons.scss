@@ -28,6 +28,36 @@
     opacity: 0.8;
   }
 }
+.btn-purplee {
+  background-color: $purple !important;
+  color: $white-000 !important;
+  transition: all ease 0.3s;
+  position: relative;
+  &:hover,
+  &:focus,
+  &:disabled {
+    color: $white-000;
+    background-color: darken($color: $purple, $amount: 5) !important;
+  }
+  &:disabled {
+    opacity: 0.8;
+  }
+}
+.btn-green {
+  background-color: $green !important;
+  color: $white-000 !important;
+  transition: all ease 0.3s;
+  position: relative;
+  &:hover,
+  &:focus,
+  &:disabled {
+    color: $white-000;
+    background-color: darken($color: $green, $amount: 15) !important;
+  }
+  &:disabled {
+    opacity: 0.8;
+  }
+}
 .btn-black {
   background-color: $black-000 !important;
   color: $white-000 !important;
@@ -78,7 +108,7 @@
 }
 
 .btn-sm {
-  height: 3rem;
+  height: 3.6rem;
   min-width: 0;
   font-size: 1.3rem;
   min-height: 0;

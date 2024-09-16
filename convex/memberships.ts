@@ -16,34 +16,28 @@ export const createMembership = internalMutation({
     groupId: v.id("groups"),
     userId: v.id("users"),
     paid_deposit: v.optional(v.float64()),
+    inviteCode: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const group = await ctx.db.get(args.groupId);
-    const exists = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), args.groupId) && m.eq(m.field("userId"), args.userId)).first();
-    if (exists) throw new ConvexError("User is already a member");
+    if (group?.private) {
+      const res = await ctx.db.query("invites").filter(i => i.eq(i.field("code"), args.inviteCode)).first();
+      if (!res) throw new Error("The invite code does not match what we have");
+    }
+    const members = await ctx.db.query("membership").filter(m => m.eq(m.field("groupId"), args.groupId)).collect();
+    const exists: any[] = [];
+    for (const member of members) {
+      if (member.userId === args.userId) exists.push(member);
+    };
+    if (exists.length > 0) throw new Error("User is already in the group");
     if (group && group.number_of_people_present <= group.number_of_people) {
       await ctx.db.insert("membership", {groupId: args.groupId, userId: args.userId, paid_deposit: args.paid_deposit});
       await ctx.db.patch(group._id, {number_of_people_present: group.number_of_people_present + 1})
     } else {
-      throw new ConvexError("The group does not exist or the group is full")
+      throw new Error("The group does not exist or the group is full")
     }
   }
 });
-
-export const getGroupMemberships = query({
-  args: {
-    groupId: v.id("groups")
-  },
-  async handler(ctx, args_0) {
-    const members = await ctx.db.query("membership").filter(q => q.eq(q.field("groupId"), args_0.groupId)).collect();
-    const memberships: any[] = [];
-    for (const member of members) {
-      const res = await ctx.db.get(member.userId);
-      if (res) memberships.push(res);
-    }
-    return memberships
-  },
-})
 
 export const getGroupMembers = query({
   args: {

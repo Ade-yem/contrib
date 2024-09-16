@@ -1,10 +1,5 @@
 import React from "react";
 import "./styles.scss";
-// import logo from "assets/images/QuickStayWhiteLogo.svg";
-// import logo from "assets/images/logo-white.png";
-// import cards from "assets/images/cardsFull.png";
-// import googleplay from "assets/images/google-play-badge.29ed87ab.svg";
-// import appstore from "assets/images/appstore.9dabe7cb.svg";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
@@ -73,13 +68,6 @@ export const Footer = () => {
                 height={70}
                 className="logo-img mb-5"
               />
-              {/* <p className="text-decoration-none text-xsm text-white mb-2 mt-3_5 d-md-block d-none">
-                Expert-vetted stays managed by <br /> experienced hosts.
-              </p>
-              <p className="text-decoration-none text-xsm text-white mb-0 mt-3 text-center d-md-none d-block">
-                Expert-vetted stays managed by experienced hosts.
-              </p> */}
-
               <div className="d-md-flex d-none">
                 <a
                   href="https://www.facebook.com/"
@@ -159,7 +147,7 @@ export const Footer = () => {
                 </li>
                 <li className="mb-2">
                   <Link
-                    href="/support"
+                    href="/contact"
                     className="text-decoration-none text-xsm text-white "
                   >
                     Support & Help
@@ -174,7 +162,7 @@ export const Footer = () => {
                 <li className="mb-2 text-lg fw-bold text-white">Company</li>
                 <li className="mb-2">
                   <Link
-                    href="/terms"
+                    href="#"
                     className="text-decoration-none text-xsm text-white "
                   >
                     Terms & Conditions
@@ -182,7 +170,7 @@ export const Footer = () => {
                 </li>
                 <li className="mb-2">
                   <Link
-                    href="/privacy"
+                    href="#"
                     className="text-decoration-none text-xsm text-white "
                   >
                     Privacy Policy
@@ -190,7 +178,7 @@ export const Footer = () => {
                 </li>
                 <li className="mb-2">
                   <Link
-                    href="/cancellation-policy"
+                    href="#"
                     className="text-decoration-none text-xsm text-white "
                   >
                     Dispute Resolution
@@ -198,7 +186,7 @@ export const Footer = () => {
                 </li>
                 <li className="mb-2">
                   <Link
-                    href="/booking-contract"
+                    href="#"
                     className="text-decoration-none text-xsm text-white "
                   >
                     Partnership

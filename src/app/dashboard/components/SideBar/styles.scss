@@ -7,6 +7,9 @@
   position: relative;
   z-index: 99999 !important;
   border-radius: 0 10rem 0 0;
+  @media (max-width: 1050px) {
+    width: 200px;
+  }
   &__x-padding {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -66,5 +69,8 @@
     width: 19rem;
     height: auto;
     object-fit: contain;
+    @media (max-width: 1050px) {
+      width: 15rem;
+    }
   }
 }

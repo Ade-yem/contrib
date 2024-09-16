@@ -2,6 +2,11 @@ import { nanoid } from "nanoid";
 
 export const currencies = ["NGN", "GHS"]
 
+/**
+ * generates a reference code or invite code
+ * @param length length of the reference or invite code
+ * @returns 
+ */
 export const generateReference = (length: number = 18) => {
     return nanoid(length);
 }
@@ -22,8 +27,10 @@ export const generateAndShuffleNumbers = (n: number) => {
  */
 export const convertToMilliSeconds = (length: number): number => length * 60 * 60 * 1000;
 
-export const parseToMilliSeconds = (length: "hourly" | "daily" | "weekly" | "monthly"): number => {
+export const parseToMilliSeconds = (length: "5 minutes" | "hourly" | "daily" | "weekly" | "monthly"): number => {
     switch (length) {
+        case "5 minutes":
+            return 5 * 60 * 1000;
         case "hourly":
             return 60 * 60 * 1000;
         case "daily":

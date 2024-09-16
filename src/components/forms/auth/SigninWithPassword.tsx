@@ -41,22 +41,24 @@ export function SignInWithPassword({
             })
             .catch((error) => {
               console.error(error);
-              console.log("Message => ", error.message);
-              console.log("stack => ", error.stack);
-              console.log("cause => ", error.cause);
-
-              const msg = error instanceof ConvexError ? (error.data as {message: string }).message
-              :
-                flow === "signIn"
-                  ? "Could not sign in, did you mean to sign up?"
-                  : "Could not sign up, did you mean to sign in?";
+              const msg =
+                error instanceof ConvexError
+                  ? (error.data as { message: string }).message
+                  : flow === "signIn"
+                    ? "Could not sign in, did you mean to sign up?"
+                    : "Could not sign up, did you mean to sign in?";
               toast.error(msg, { id: "auth" });
               setSubmitting(false);
             });
         }}
       >
         <label htmlFor="email">Email</label>
-        <input name="email" id="email" className="mb-4 form-control" autoComplete="email" />
+        <input
+          name="email"
+          id="email"
+          className="mb-4 form-control"
+          autoComplete="email"
+        />
         <div className="d-flex align-items-center justify-content-between">
           <label htmlFor="password">Password</label>
           {handlePasswordReset && flow === "signIn" ? (
@@ -77,7 +79,11 @@ export function SignInWithPassword({
           autoComplete={flow === "signIn" ? "current-password" : "new-password"}
         />
         <input name="flow" value={flow} type="hidden" />
-        <button className="btn btn-success" type="submit" disabled={submitting}>
+        <button
+          className="btn btn-success btn-primary"
+          type="submit"
+          disabled={submitting}
+        >
           {flow === "signIn" ? "Sign in" : "Sign up"}
         </button>
         <p

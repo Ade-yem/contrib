@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikValues } from "formik";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import { AddressLocation } from "./addressLocation";
 import { ProfileForm } from "./profileForm";
@@ -12,6 +12,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import toast from "react-hot-toast";
+import { toUpperLetter } from "@/components/utilities/helper";
 
 export default function ProfilePage() {
   const {
@@ -23,7 +24,7 @@ export default function ProfilePage() {
   } = useContext(LayoutContext);
   const updateProfile = useMutation(api.user.editProfile);
   const [submitting, setSubmitting] = useState(false);
-  const initialValues = {
+  const [initialValues, setInitialValues] = useState({
     firstName: "",
     lastName: "",
     phoneNumber: "",
@@ -32,8 +33,8 @@ export default function ProfilePage() {
     dob: "",
     homeAddress: "",
     nationality: "",
-    gender: "",
-  };
+    gender: {},
+  });
 
   const validationSchema = yup.object().shape({
     firstName: yup.string().label("First Name").required(),
@@ -46,6 +47,15 @@ export default function ProfilePage() {
   });
   const handleSave = (values: FormikValues) => {
     setSubmitting(true);
+
+    const dob =
+      typeof values.dob === "string" ? new Date(values.dob) : values.dob;
+
+    const formattedDob =
+      dob instanceof Date && !isNaN(dob.getTime())
+        ? dob.toISOString()
+        : undefined;
+
     updateProfile({
       first_name: values.firstName,
       last_name: values.lastName,
@@ -53,35 +63,59 @@ export default function ProfilePage() {
       user_id: user?._id as Id<"users">,
       nin: values.nin,
       bvn: values.bvn,
-      dob: values.dob.toISOString(),
+      dob: formattedDob, // Now dob will either be a string or undefined
       gender: values.gender.value,
       homeAddress: values.homeAddress,
       nationality: values.nationality,
     });
+
     setSubmitting(false);
     toast.success("Profile saved");
   };
 
+  useEffect(() => {
+    if (user) {
+      setInitialValues({
+        firstName: user.first_name,
+        lastName: user.last_name,
+        phoneNumber: user.phone,
+        nin: user.nin,
+        bvn: user.bvn,
+        dob: user.dob,
+        homeAddress: user.homeAddress,
+        nationality: user.nationality,
+        // gender: { value: user.gender, label: toUpperLetter(user.gender) },
+        gender: user.gender
+          ? { value: user.gender, label: toUpperLetter(user.gender) }
+          : { value: "", label: "Select.." },
+      });
+    }
+  }, [user]);
+
   return (
     <>
-      <button
-        className="btn btn-md btn-primary ms-auto mb-4 mt-md-5"
-        onClick={() => setShowModal("verifyUser")}
-      >
-        Verify your account
-      </button>
+      {user?.kycVerified === false && (
+        <button
+          className="btn btn-md btn-primary ms-auto mb-4 mt-md-5"
+          onClick={() => setShowModal("verifyUser")}
+        >
+          Verify your account
+        </button>
+      )}
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSave}
         validateOnBlur={false}
+        enableReinitialize
       >
-        {({ handleSubmit, isValid, setFieldValue, resetForm }) => {
+        {({ handleSubmit, values, isValid, setFieldValue, resetForm }) => {
           return (
             <>
-              {console.log("Form valid or not:", isValid)}
               <Form onSubmit={handleSubmit}>
                 <ProfileForm
+                  dateValue={values.dob}
                   setDateValue={(value: Date | null) => {
                     setFieldValue("dob", value);
                   }}

@@ -11,17 +11,22 @@ import monnify from "./monnify_api"
 /**
  * @dev get all banks in Nigeria or Ghana
  * @param currency can be NGN or GHS
+ * @returns list of banks
+ * @throws ConvexError if the request fails
  */
 export const getBanks = action({
   args: {
     currency: v.union(v.literal("NGN"), v.literal("GHS"))
   },
   async handler(ctx, args_0) {
-    const banks: BanksResponse = await paystack.getBanks({
+    const res: BanksResponse = await paystack.getBanks({
       currency: args_0.currency
     })
-    if (banks) return banks;
-    else throw new ConvexError("Could not fetch banks");
+    if (res.status) {
+      const banks = res.data.map(({name, code}) => ({name, code}));
+      return banks;
+    };
+    throw new ConvexError("Could not fetch banks");
   },
 })
 
@@ -33,7 +38,7 @@ export const resolveAccountNumber = action({
   async handler(ctx, args_0) {
     const { account_number, bank_code } = args_0;
     const res: ResolveAccount = await paystack.resolveAccountNumber({account_number, bank_code});
-    if (res.status) return res;
+    if (res.status) return res.data;
     else throw new ConvexError(res.message);
   },
 })
@@ -52,7 +57,6 @@ export const verifyNin = action({
       gender: string;
       mobileNumber: string;
   } | null = await monnify.verifyNin(args.nin);
-  console.log(res);
     if (!res) throw new ConvexError("Could not verify user nin");
     if (res.firstName.toLowerCase() === user.first_name?.toLowerCase() &&
         res.lastName.toLowerCase() === user.last_name?.toLowerCase() &&
@@ -74,6 +78,5 @@ export const verifyBvn = action({
     const {phone, name, dob, bvn } = args_0;
     const res = await monnify.verifyBvn({phone, name, dob, bvn});
     if (res.name.matchStatus === "NO MATCH") throw new ConvexError("The name does not match the bvn record");
-    console.log(res);
   },
 })
