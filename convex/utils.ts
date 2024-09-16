@@ -22,8 +22,10 @@ export const generateAndShuffleNumbers = (n: number) => {
  */
 export const convertToMilliSeconds = (length: number): number => length * 60 * 60 * 1000;
 
-export const parseToMilliSeconds = (length: "hourly" | "daily" | "weekly" | "monthly"): number => {
+export const parseToMilliSeconds = (length: "5 minutes" | "hourly" | "daily" | "weekly" | "monthly"): number => {
     switch (length) {
+        case "5 minutes":
+            return 5 * 60 * 1000;
         case "hourly":
             return 60 * 60 * 1000;
         case "daily":

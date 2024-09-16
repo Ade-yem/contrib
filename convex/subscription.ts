@@ -19,6 +19,10 @@ export const subscribeUsersToPlan = internalAction({
 
     // Check the group's interval and set the dates accordingly
         switch (group.interval) {
+          case '5 minutes':
+            start_date.setMinutes(start_date.getMinutes() + 2);
+            schedule_date.setMinutes(schedule_date.getMinutes() + 1);
+            report_date.setMinutes(schedule_date.getMinutes() + 3);
           case 'hourly':
             start_date.setMinutes(start_date.getMinutes() + 3);
             schedule_date.setMinutes(schedule_date.getMinutes() + 1);
@@ -61,3 +65,13 @@ export const groupClosed = internalAction({
     }
   }
 })
+// export const tryEmail = internalAction({
+//   args: {
+//     email: v.string(),
+//     name: v.string()
+//   },
+//   async handler(ctx, args) {
+//     const {email, name} = args;
+//     await SendEmails.GroupClosed({email, groupName: name})
+//   }
+// })

@@ -18,7 +18,7 @@ export const scheduleIntervalReport = internalMutation({
     })
     const limit = group?.number_of_people as number
     const interval = group?.interval as "hourly" | "daily" | "weekly" | "monthly";
-    const cronId = await cron(ctx, parseToMilliSeconds(interval), limit, internal.intervalReport.generateReport, {jobId})
+    const cronId = await cron(ctx, parseToMilliSeconds(interval), limit, internal.intervalReport.intervalRecord, {jobId})
     await ctx.db.patch(jobId, { cronId });
   }
 })

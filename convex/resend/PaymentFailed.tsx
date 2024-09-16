@@ -8,7 +8,7 @@ import {
   Text,
 } from "@react-email/components";
 
-import Image from "next/image";
+import Logo from "./logo";
 
 export function PaymentFailedEmail({ groupName }: { groupName: string }) {
   return (
@@ -75,9 +75,9 @@ export function PaymentFailedEmail({ groupName }: { groupName: string }) {
           `}</style>
         </Head>
         <Container className="container px-5">
-          <div className="logo">
-          <Image src="/public/JEKAJODAWO LOGO-BLACK.svg" className="img" alt="JEKAJODAWO" height={100} width={100} />
-          </div>
+        <div className="logo divide-b divide-slate-200 w-16 h-16">
+            <Logo/>
+            </div>
           <Heading className="text-2xl font-bold mb-4 text-blue">
             Oops! Payment Failed
           </Heading>

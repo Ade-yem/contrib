@@ -8,7 +8,7 @@ export const addGroupAction = action({
       name: v.string(),
       description: v.string(),
       number_of_people: v.float64(),
-      interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
+      interval: v.union(v.literal("5 minutes"), v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
       savings_per_interval: v.float64(),
       private: v.boolean()
     },
@@ -18,7 +18,7 @@ export const addGroupAction = action({
         const groupId = await ctx.runMutation(api.group.createGroup, {creator_id: args.creator_id, name: args.name, number_of_people: args.number_of_people, interval: args.interval, savings_per_interval: args.savings_per_interval * 100, private: args.private, description: args.description});
         const group = await ctx.runQuery(api.group.getGroup, {groupId});
         if (group) {
-          await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, groupId: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});
+          // await ctx.runAction(internal.payments.createPaystackPlan, {name: group.name, groupId: group._id, description: group?.description, interval: group.interval, amount: group.savings_per_interval, invoiceLimit: group.number_of_people, currency: "NGN"});
           const code = await ctx.runMutation(internal.group.createInvite, {status: "pending", groupId: group._id});
           await ctx.runAction(api.actions.addMember, {groupId: group._id, userId: args.creator_id, inviteCode: code as string});
         } else throw new ConvexError("Could not create group");

@@ -84,7 +84,7 @@ export class SendEmails {
     const { error } = await this.resend.emails.send({
       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
       to: [email],
-      subject: `Payment Failed`,
+      subject: `Transfer for ${groupName} Group`,
       react: TransferMadeEmail({groupName, accountNumber, type}),
     });
 
@@ -97,7 +97,7 @@ export class SendEmails {
     const { error } = await this.resend.emails.send({
       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
       to: [email],
-      subject: `Payment Failed`,
+      subject: `${groupName} Group about to start`,
       react: GroupCompleteEmail({groupName, date}),
     });
 
@@ -110,7 +110,7 @@ export class SendEmails {
     const { error } = await this.resend.emails.send({
       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
       to: [email],
-      subject: `Payment Failed`,
+      subject: `${groupName} Group Closed`,
       react: GroupClosedEmail({groupName}),
     });
 

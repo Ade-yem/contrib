@@ -7,7 +7,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
-import Image from "next/image";
+import Logo from "./logo";
 
 export function TransferMadeEmail({ accountNumber, groupName, type }: { accountNumber: string; groupName: string; type: "group" | "savings";}) {
   return (
@@ -74,8 +74,8 @@ export function TransferMadeEmail({ accountNumber, groupName, type }: { accountN
           `}</style>
         </Head>
         <Container className="container px-5">
-          <div className="logo">
-          <Image src="/public/JEKAJODAWO LOGO-BLACK.svg" className="img" alt="JEKAJODAWO" height={100} width={100} />
+          <div className="logo divide-b divide-slate-200 w-16 h-16">
+            <Logo/>
           </div>
           <Heading className="text-2xl font-bold mb-4 text-blue">
             Congratulations! 🎉

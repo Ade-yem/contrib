@@ -138,8 +138,17 @@ export const addPaidCustomersToInterval = internalMutation({
     const { timestamp, groupId, userId, amount } = args_0;
     const time = new Date(timestamp);
     const timeInMilliSeconds = time.getTime();
-    const interval = await ctx.db.query("interval").filter(i => i.eq(i.field("groupId"), groupId) && i.gte(timeInMilliSeconds, i.field("start")) && i.lte(timeInMilliSeconds, i.field("end")) ).first();
-    if (!interval) throw new Error("Could not get interval");
+    const intervals = await ctx.db.query("interval").filter(i => i.eq(i.field("groupId"), groupId)).collect();
+    let interval = null;
+    for (const interv of intervals) {
+      if (interv && interv.start && timeInMilliSeconds >= interv.start && interv.end && timeInMilliSeconds <= interv.end) {
+        interval = interv;
+        break;
+      }
+    }
+    if (!interval) {
+      throw new Error("Could not get interval");  
+    }
     const intAmount = interval.amount ? interval.amount : 0;
     const members_payment_status = [...(interval.members_payment_status || []), {
       userId, status: "pending" as "pending" | "paid", amount
@@ -240,6 +249,10 @@ export const chargeMembers = internalAction({
     })
     if (!res.status) {
       await ctx.runAction(internal.intervalReport.warnAndCharge, {groupId, email, userId, amount});
+    } else {
+      const time = new Date();
+      const timestamp = time.toISOString();
+      await ctx.runMutation(internal.intervalReport.addPaidCustomersToInterval, {amount, groupId, userId, timestamp})
     }
   }
 })

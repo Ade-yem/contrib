@@ -15,7 +15,7 @@ export const createGroup = mutation({
     name: v.string(),
     description: v.optional(v.string()),
     number_of_people: v.float64(),
-    interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
+    interval: v.union(v.literal("5 minutes"), v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),
     savings_per_interval: v.float64(),
     private: v.boolean()
   },
