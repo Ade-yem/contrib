@@ -16,7 +16,7 @@ export const GroupChat = ({
   const { results, status, loadMore } = usePaginatedQuery(
     api.chat.getChatsInGroup,
     { groupId },
-    { initialNumItems: 100 }
+    { initialNumItems: 120 }
   );
   const [message, setMessage] = React.useState("");
   const [image, setImage] = React.useState<File | null>(null);

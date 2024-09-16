@@ -256,6 +256,7 @@ export default function GroupsPage() {
             </>
           )}
           <button
+            className="btn-primary"
             onClick={() => loadMore(5)}
             disabled={status !== "CanLoadMore"}
           >
