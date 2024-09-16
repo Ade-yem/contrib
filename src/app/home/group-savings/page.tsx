@@ -113,6 +113,7 @@ export default function GroupSavingsPage() {
                     savings_per_interval={item.savings_per_interval}
                     title={item.name}
                     desc={item.description}
+                    interval={item.interval}
                     privateGroup={item.private}
                     groupId={item._id}
                     expectedMembers={item.number_of_people}

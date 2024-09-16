@@ -124,53 +124,9 @@ export const WithdrawFundsModal = () => {
                         setFieldValue("withdrawalMethod", selectedOption.value);
                       }}
                     />
-                    <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Select Bank
-                    </label>
-                    <Field
-                      component={ThemedSelect}
-                      name="bankName"
-                      id="bankName"
-                      size="base"
-                      options={convertModelArrayToSelectOptions(
-                        paymentFrequencySelect,
-                        "value",
-                        "label",
-                        true
-                      )}
-                      onChange={(selectedOption: any) => {
-                        // Ensure you extract the value from the selected option
-                        setFieldValue("bankName", selectedOption.value);
-                      }}
-                    />
-                    <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Enter Account Number
-                    </label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="e.g 200"
-                      type="number"
-                      min={0}
-                      name="accNo"
-                      id="accNo"
-                    />
-                    <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Description
-                    </label>
-                    <Field
-                      component={TextInput}
-                      className="form-control"
-                      placeholder="e.g 200"
-                      type="text"
-                      min={0}
-                      name="desc"
-                      id="desc"
-                    />
-
                     <div className="d-flex justify-content-center align-items-center mt-4">
                       <Button
-                        title="Create Plan"
+                        title="Withdraw"
                         type="submit"
                         disabled={submitting || !isValid}
                         loading={submitting}

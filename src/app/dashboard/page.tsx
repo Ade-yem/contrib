@@ -19,7 +19,7 @@ export default function Page() {
   const { results, status, loadMore } = usePaginatedQuery(
     api.transactions.getMyTransactions,
     { userId: user!?._id },
-    { initialNumItems: 5 }
+    { initialNumItems: 8 }
   );
   const card = useQuery(api.user.getCard);
   const totalSavings = useQuery(api.user.getTotalSavings);
@@ -193,42 +193,53 @@ export default function Page() {
               <EmptyData height="30vh" text="No transaction yet." />
             </div>
           ) : (
-            <div className="table-responsive bg-white">
-              <table className="table w-100">
-                <thead>
-                  <tr>
-                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                      Name
-                    </th>
-                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                      Amount
-                    </th>
-                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                      Details
-                    </th>
-                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {results?.map((transaction, index) => (
-                    <tr key={index}>
-                      <td className="py-3 text-nowrap ps-4">
-                        {transaction.name}
-                      </td>
-                      <td className="py-3  ps-4 text-nowrap">
-                        &#8358; {thousandFormatter(transaction.amount / 100)}
-                      </td>
-                      <td className="py-3 ps-4 desc">{transaction.details}</td>
-                      <td className="py-3 text-nowrap ps-4">
-                        {transaction.status}
-                      </td>
+            <div>
+              <div className="table-responsive bg-white">
+                <table className="table w-100">
+                  <thead>
+                    <tr>
+                      <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                        Name
+                      </th>
+                      <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                        Amount
+                      </th>
+                      <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                        Details
+                      </th>
+                      <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
+                        Status
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {results?.map((transaction, index) => (
+                      <tr key={index}>
+                        <td className="py-3 text-nowrap ps-4">
+                          {transaction.name}
+                        </td>
+                        <td className="py-3  ps-4 text-nowrap">
+                          &#8358; {thousandFormatter(transaction.amount / 100)}
+                        </td>
+                        <td className="py-3 ps-4 desc">
+                          {transaction.details}
+                        </td>
+                        <td className="py-3 text-nowrap ps-4">
+                          {transaction.status}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <button
+                className="btn-primary w-100"
+                onClick={() => loadMore(5)}
+                disabled={status !== "CanLoadMore"}
+              >
+                Load More
+              </button>
             </div>
           )}
         </div>
