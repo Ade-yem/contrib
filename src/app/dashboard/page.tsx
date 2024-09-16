@@ -81,7 +81,7 @@ export default function Page() {
             <div className="col-4 d-flex flex-column justify-content-between">
               <button
                 className="btn btn-sm rounded-01 text-xs btn-green"
-                onClick={() => setShowModal("createRecipient")}
+                onClick={() => setShowModal("addMoney")}
               >
                 Add Money
               </button>
