@@ -1,69 +1,61 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import toast from "react-hot-toast";
 import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
-import { ModalTypes, PaymentFrequency } from "@/services/_schema";
+import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
-import { useAction } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { parseError } from "@/components/utilities/helper";
 
-const paymentFrequencySelect = Object.entries(PaymentFrequency).map((item) => ({
-  label: item[1],
-  value: item[0],
-}));
 
 export const WithdrawFundsModal = () => {
   const {
     showModal,
     setShowModal,
-    user,
+    user
   }: {
-    user: any;
+    user: any
     showModal: ModalTypes;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
-  const addGroup = useAction(api.actions.addGroupAction);
+  const withdraw = useMutation(api.savings.removeMoneyFromSavings);
+  const savings = useQuery(api.savings.getUserSavings, {userId: user?._id});
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
-    savingName: "",
     amount: "",
-    category: "",
-    frequency: "",
-    sourceFund: false,
+    savings: "",
   };
   const validationSchema = yup.object().shape({
-    savingName: yup.string().label("Group Name").required(),
-    amount: yup.string().label("Amount").required(),
-    category: yup.object().label("Category").required(),
-    frequency: yup.object().label("Frequency of Savings").required(),
-    sourceFund: yup.object().label("Source of Fund").required(),
+    savings: yup.object().label("Savings").required(),
+    amount: yup.number().label("Amount").required(),
   });
-  const handleCreateGroup = async (values: FormikValues) => {
+  const handleWithdraw = async (values: FormikValues) => {
     setSubmitting(true);
     try {
-      await addGroup({
-        creator_id: user?._id as Id<"users">,
-        name: values.groupName,
-        number_of_people: values.memberNo,
-        interval: values.frequency.value,
-        savings_per_interval: values.amountGoal,
-        private: values.keepGroupPrivate,
-        description: values.desc,
+      await withdraw({
+        userId: user?._id as Id<"users">,
+        savingsId: values.savings.value,
+        amount: values.amount,
       });
+      console.log(values);
       setShowModal("success");
-      console.log(`${values.amount} saved successfully`);
+      toast.success(`${values.amount} withdrawn successfully`, {id: "withdrawal"});
+      setSubmitting(false);
     } catch (error: any) {
-      toast.error("Failed to save:", error);
+      toast.error("Withdrawal failed, have you linked your account", {id: "withdrawal"});
+      console.log(parseError(error));
+      console.error(error);
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   const closeModal = () => {
@@ -82,7 +74,7 @@ export const WithdrawFundsModal = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleCreateGroup}
+            onSubmit={handleWithdraw}
             validateOnBlur={false}
           >
             {({ handleSubmit, isValid, setFieldValue }) => {
@@ -106,17 +98,17 @@ export const WithdrawFundsModal = () => {
                       id="amount"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Select withdrawal Method
+                      Select savings you want to withdraw from
                     </label>
                     <Field
                       component={ThemedSelect}
-                      name="withdrawalMethod"
-                      id="withdrawalMethod"
+                      name="savings"
+                      id="savings"
                       size="base"
                       options={convertModelArrayToSelectOptions(
-                        paymentFrequencySelect,
-                        "value",
-                        "label",
+                        savings || [],
+                        "_id",
+                        "name",
                         true
                       )}
                       onChange={(selectedOption: any) => {

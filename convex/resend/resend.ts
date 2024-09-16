@@ -80,12 +80,12 @@ export class SendEmails {
     }
   }
 
-  public static async TransferMade({ email, groupName, accountNumber, type }: { email: string; groupName: string; accountNumber: string; type: "group" | "savings"; }) {
+  public static async TransferMade({ email, groupName, accountNumber, type, amount }: { email: string; groupName: string; accountNumber: string; type: "group" | "savings"; amount: number;}) {
     const { error } = await this.resend.emails.send({
       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
       to: [email],
-      subject: `Payment Failed`,
-      react: TransferMadeEmail({groupName, accountNumber, type}),
+      subject: `Transfer for ${groupName} Group`,
+      react: TransferMadeEmail({groupName, accountNumber, type, amount}),
     });
 
     if (error) {
@@ -97,7 +97,7 @@ export class SendEmails {
     const { error } = await this.resend.emails.send({
       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
       to: [email],
-      subject: `Payment Failed`,
+      subject: `${groupName} Group about to start`,
       react: GroupCompleteEmail({groupName, date}),
     });
 
@@ -110,7 +110,7 @@ export class SendEmails {
     const { error } = await this.resend.emails.send({
       from: process.env.AUTH_EMAIL ? `Jekajodawo <${process.env.AUTH_EMAIL}>` : "Team at Jekajodawo",
       to: [email],
-      subject: `Payment Failed`,
+      subject: `${groupName} Group Closed`,
       react: GroupClosedEmail({groupName}),
     });
 
