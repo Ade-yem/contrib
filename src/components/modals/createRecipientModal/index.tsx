@@ -7,7 +7,11 @@ import { Field, Form, Formik, FormikValues } from "formik";
 import * as yup from "yup";
 import Button from "@/components/forms/Button";
 import TextInput from "@/components/forms/TextInput";
-import { ModalTypes, PaymentFrequency, PaymentMethod } from "@/services/_schema";
+import {
+  ModalTypes,
+  PaymentFrequency,
+  PaymentMethod,
+} from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
@@ -27,22 +31,26 @@ export const CreateRecipientModal = () => {
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
   const createRecipient = useAction(api.transfers.createRecipient);
-  const createRecipientFromAuth = useAction(api.transfers.createRecipientFromAuthorization);
+  const createRecipientFromAuth = useAction(
+    api.transfers.createRecipientFromAuthorization
+  );
   const getBanks = useAction(api.recipient.getBanks);
   const resolveAccountNumber = useAction(api.recipient.resolveAccountNumber);
   const [submitting, setSubmitting] = useState(false);
-  const [banks, setBanks] = useState<{
-    name: string;
-    code: string;
-    }[]>([]);
+  const [banks, setBanks] = useState<
+    {
+      name: string;
+      code: string;
+    }[]
+  >([]);
   useEffect(() => {
     const loadBanks = async () => {
       const res = await getBanks({ currency: "NGN" });
       setBanks(res);
     };
     loadBanks();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const initialValues = {
     name: "",
     account_number: "",
@@ -88,23 +96,28 @@ export const CreateRecipientModal = () => {
       console.log(error);
       setSubmitting(false);
     }
-  }
+  };
 
-  const handleResolveAccountNumber = async (value: string, val: FormikValues) => {
-    if (value.length === 10) {
-      try{
+  const handleResolveAccountNumber = async (
+    account_number: string,
+    bank_code: string,
+    setFieldValue: any
+  ) => {
+    console.log(bank_code);
+    if (account_number.length === 10) {
+      try {
         const res = await resolveAccountNumber({
-          account_number: value,
-          bank_code: val.bank_code,
+          account_number,
+          bank_code,
         });
-        return res.account_name;
+        setFieldValue("name", res.account_name);
       } catch (error) {
         console.log(parseError(error));
         toast.error("Failed to resolve account number");
         console.log(error);
       }
     }
-  }
+  };
 
   const closeModal = () => {
     setShowModal(null);
@@ -125,12 +138,14 @@ export const CreateRecipientModal = () => {
             onSubmit={handleCreateRecipient}
             validateOnBlur={false}
           >
-            {({ handleSubmit, isValid, setFieldValue }) => {
+            {({ handleSubmit, isValid, setFieldValue, values }) => {
               return (
                 <Form className="py-5 mx-sm-5 mx-4_5" onSubmit={handleSubmit}>
                   <>
                     <div className="text-center">
-                      <h2 className="modal-sub-title">Create Transfer Recipient</h2>
+                      <h2 className="modal-sub-title">
+                        Create Transfer Recipient
+                      </h2>
                       <p className="text-sm">You have done a great Job!</p>
                     </div>
                     <label className="text-xs text-grey-300 mt-4 mb-2">
@@ -138,20 +153,15 @@ export const CreateRecipientModal = () => {
                     </label>
                     <Field
                       component={ThemedSelect}
-                      name="bankName"
-                      id="bankName"
+                      name="bank_code"
+                      id="bank_code"
                       size="base"
                       options={convertModelArrayToSelectOptions(
                         banks,
-                        "code", // Bank code as the value
-                        "name", // Bank name as the label
+                        "code",
+                        "name",
                         true
                       )}
-                      onChange={(selectedOption: any) => {
-                        // Ensure you extract the value from the selected option
-                        setFieldValue("bank_code", selectedOption.value);
-                        setFieldValue("bankDisplayName", selectedOption.label); // Store the bank name for display
-                      }}
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
                       Enter Account Number
@@ -165,8 +175,14 @@ export const CreateRecipientModal = () => {
                       name="account_number"
                       id="account_number"
                       onChange={(e: any) => {
-                        const res = handleResolveAccountNumber(e.value, e.target.formik.values)
-                        setFieldValue("name", res);
+                        setFieldValue("account_number", e.target.value);
+                        if ((values.bank_code as any).code) {
+                          handleResolveAccountNumber(
+                            e.target.value,
+                            (values.bank_code as any).code,
+                            setFieldValue
+                          );
+                        }
                       }}
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
@@ -198,7 +214,8 @@ export const CreateRecipientModal = () => {
                       >
                         Cancel
                       </button>
-                      <button type="button" 
+                      <button
+                        type="button"
                         className="btn btn-lg text-sm btn-primary letter-spacing-1"
                         onClick={createFromAuthorization}
                       >

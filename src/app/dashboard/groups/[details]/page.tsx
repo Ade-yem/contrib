@@ -62,7 +62,6 @@ export default function GroupDetails({
         id="myTabContent"
         defaultActiveKey="overview"
       >
-        {/* Overview Tab Pane */}
         <Tab
           title="Overview"
           eventKey={"overview"}
@@ -197,7 +196,6 @@ export default function GroupDetails({
           </div>
         </Tab>
 
-        {/* Group Chat Tab Pane */}
         <Tab
           title="Group Chat"
           eventKey={"chat"}
@@ -269,7 +267,6 @@ export default function GroupDetails({
                   <p className="text-3xs mb-0" key={index}>
                     {defaulter.amount}
                     {defaulter.status}
-                    {/* {defaulter.userId} */}
                   </p>
                 ))}
               </div>
