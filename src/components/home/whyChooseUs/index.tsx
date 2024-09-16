@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-
+import "./styles.scss";
 export const ChooseUs = () => {
   const cardList = [
     {
@@ -53,14 +53,14 @@ export const ChooseUs = () => {
     },
   ];
   return (
-    <div className="py-6 bg-primary-300 text-center">
+    <div className="py-6 bg-primary-300 text-center whyChooseUs-wrapper">
       <div className="container">
         <h2 className="sub-title  mb-5_6 fw-bold">
           Why You Should <span className="text-primary-500">Choose Us</span>
         </h2>
-        <div className="row px-6">
+        <div className="px-6 webkit-scrollbar-no\ne overflo">
           {cardList.map((item, index) => (
-            <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-4" key={index}>
+            <div className="col-3 min-width my-4" key={index}>
               <div className="default-card default-shadow">
                 <Image src={item.img} alt={item.alt} width={100} height={120} />
                 <p className="text-xl fw-bold"> {item.title}</p>
