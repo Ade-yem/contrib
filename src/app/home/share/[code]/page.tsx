@@ -50,6 +50,8 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
         desc={group?.description}
         privateGroup={group?.private}
         groupId={group?._id}
+        expectedMembers={group?.number_of_people as number}
+        membersPresent={group?.number_of_people_present as number}
       />
       <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-5_6">
         <div className={`default-card outstanding-group-card`}>
