@@ -40,7 +40,6 @@ export const JoinGroupModal = ({
     }); 
     } catch(error: any) {
       console.error(error)
-      console.log(parseError(error))
       toast.error("You have to be signed in to perform this action")
       setIsPending(false);
       setShowModal("login");

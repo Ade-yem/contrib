@@ -16,7 +16,6 @@ export default function GroupsPage() {
     loadMore,
     status,
   } = usePaginatedQuery(api.group.getAllGroups, {}, { initialNumItems: 16 });
-  console.log(groupList.filter((g) => g.private === true));
   return (
     <div className="text-center">
       <SubPageBanner

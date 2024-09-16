@@ -88,7 +88,6 @@ export const CreateRecipientModal = () => {
         setSubmitting(false);
       }
     } catch (error) {
-      console.log(parseError(error));
       setSubmitting(false);
     }
   };
@@ -98,7 +97,6 @@ export const CreateRecipientModal = () => {
     bank_code: string,
     setFieldValue: any
   ) => {
-    console.log(bank_code);
     if (account_number.length === 10) {
       try {
         const res = await resolveAccountNumber({
@@ -107,9 +105,7 @@ export const CreateRecipientModal = () => {
         });
         setFieldValue("name", res.account_name);
       } catch (error) {
-        console.log(parseError(error));
         toast.error("Failed to resolve account number");
-        console.log(error);
       }
     }
   };

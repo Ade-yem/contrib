@@ -35,10 +35,7 @@ const ChatCard: React.FC<ChatCardProps> = ({
   } else {
     dateString = `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}`;
   }
-  console.log(user?._id);
 
-  // userId: "jx78afky7gtxm9yfqtgszs8std7071tv";
-  // "mn75rcdp2dka7yc55a2598ck0170wrm1"
   return (
     <>
       {user?._id === userId ? (

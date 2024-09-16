@@ -154,11 +154,11 @@ export const verifyTransaction = action({
 
 export const confirmPaystackWebhook = action ({
   args: {
-      body: v.any(),
+    body: v.any(),
   },
   handler: async (ctx, args_0) => {
-      const { body } = args_0
-      const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET as string).update(JSON.stringify(body)).digest('hex');
-      return hash;
+    const { body } = args_0
+    const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET as string).update(JSON.stringify(body)).digest('hex');
+    return hash;
   },
 })

@@ -50,7 +50,6 @@ export const GroupChat = ({
     setImage(null);
     setMessage("");
   };
-  console.log(results);
   return (
     <div className="chat-support-wrapper">
       <div className="chat-support-body">

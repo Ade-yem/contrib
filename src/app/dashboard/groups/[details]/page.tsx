@@ -128,7 +128,6 @@ export default function GroupDetails({
                       <p className="text-3xs mb-0" key={index}>
                         {defaulter.amount}
                         {defaulter.status}
-                        {/* {defaulter.userId} */}
                       </p>
                     ))}
                   </div>
@@ -175,16 +174,17 @@ export default function GroupDetails({
                           className="d-flex justify-content-between gap-3 mb-3 "
                           key={index}
                         >
-                          <div className="d-flex justify-content-between gap-2 ">
-                            <p className="text-xs text-primary-500 fw-bold mb-0">
+                          <div className={"d-flex justify-content-between gap-2 " + activity.details === "pay group" ? "text-primary-500" : "text-red"}>
+                            <p className="text-xs fw-bold mb-0">
                               {activity.name}
                             </p>
-                            <p className="text-xs text-primary-500 fw-bold mb-0">
+                            <p 
+                              className="text-xs fw-bold mb-0">
                               {activity.details}
                             </p>
                           </div>
-                          <p className="text-xs fw-bold mb-0 text-green">
-                            + &#8358;{thousandFormatter(activity.amount ?? 0)}
+                          <p className={"text-xs fw-bold mb-0 " + activity.details === "pay group" ? "text-green" : "text-red"}>
+                            {activity.details === "pay group" ? "+" : "-"} &#8358;{thousandFormatter(activity.amount ?? 0)}
                           </p>
                         </div>
                       ))}
@@ -308,16 +308,17 @@ export default function GroupDetails({
                       className="d-flex justify-content-between gap-3 mb-3 "
                       key={index}
                     >
-                      <div className="d-flex justify-content-between gap-2 ">
-                        <p className="text-xs text-primary-500 fw-bold mb-0">
+                      <div className={"d-flex justify-content-between gap-2 " + activity.details === "pay group" ? "text-primary-500" : "text-red"}>
+                        <p className="text-xs fw-bold mb-0">
                           {activity.name}
                         </p>
-                        <p className="text-xs text-primary-500 fw-bold mb-0">
+                        <p 
+                          className="text-xs fw-bold mb-0">
                           {activity.details}
                         </p>
                       </div>
-                      <p className="text-xs fw-bold mb-0 text-green">
-                        + &#8358;{thousandFormatter(activity.amount ?? 0)}
+                      <p className={"text-xs fw-bold mb-0 " + activity.details === "pay group" ? "text-green" : "text-red"}>
+                        {activity.details === "pay group" ? "+" : "-"} &#8358;{thousandFormatter(activity.amount ?? 0)}
                       </p>
                     </div>
                   ))}

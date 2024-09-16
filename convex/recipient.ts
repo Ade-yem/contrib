@@ -57,7 +57,6 @@ export const verifyNin = action({
       gender: string;
       mobileNumber: string;
   } | null = await monnify.verifyNin(args.nin);
-  console.log(res);
     if (!res) throw new ConvexError("Could not verify user nin");
     if (res.firstName.toLowerCase() === user.first_name?.toLowerCase() &&
         res.lastName.toLowerCase() === user.last_name?.toLowerCase() &&
@@ -79,6 +78,5 @@ export const verifyBvn = action({
     const {phone, name, dob, bvn } = args_0;
     const res = await monnify.verifyBvn({phone, name, dob, bvn});
     if (res.name.matchStatus === "NO MATCH") throw new ConvexError("The name does not match the bvn record");
-    console.log(res);
   },
 })

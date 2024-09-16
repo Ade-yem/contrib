@@ -46,14 +46,12 @@ export const WithdrawFundsModal = () => {
         savingsId: values.savings.value,
         amount: values.amount,
       });
-      console.log(values);
       setShowModal("success");
       toast.success(`${values.amount} withdrawn successfully`, {id: "withdrawal"});
       setSubmitting(false);
     } catch (error: any) {
       if (error.includes("Insufficient funds")) toast .error("Insufficient funds", {id: "withdrawal"});
       else toast.error("Withdrawal failed, have you linked your account", {id: "withdrawal"});
-      console.log(parseError(error));
       console.error(error);
       setSubmitting(false);
     }

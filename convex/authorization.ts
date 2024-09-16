@@ -1,6 +1,5 @@
 import {query, internalMutation} from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-// import {  } from "convex/server";
 
 export const getAuthorization = query({
     args: {

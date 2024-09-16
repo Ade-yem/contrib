@@ -60,7 +60,6 @@ export const AddMoney = () => {
     } catch (error: any) {
       if (error.includes("Insufficient funds")) toast .error("Insufficient funds", {id: "withdrawal"});
       else toast.error("Savings failed, Please try again later", {id: "withdrawal"});
-      console.log(parseError(error));
       console.error(error);
       setSubmitting(false);
     }

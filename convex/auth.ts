@@ -1,5 +1,5 @@
 import Google, {GoogleProfile} from "@auth/core/providers/google";
-import { Password } from "./customPassword";
+import { Password } from "./password";
 import { convexAuth } from "@convex-dev/auth/server";
 import { ResendOTP, ResendOTPPasswordReset } from "./resend/resend";
 import { TokenSet } from "@auth/core/types";
@@ -15,6 +15,7 @@ export const { auth, signIn, signOut, store } = convexAuth({
         last_name: prof.family_name,
       }
     }
-  }), Password({id: "password-code", reset: ResendOTPPasswordReset, verify: ResendOTP})
+  }), Password
+  // ({id: "password-code", reset: ResendOTPPasswordReset, verify: ResendOTP})
   ],
 });

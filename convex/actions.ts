@@ -46,10 +46,7 @@ export const addMember = action({
         const res = await ctx.runAction(internal.subscription.subscribeUsersToPlan, {groupId: args_0.groupId});
         if (res?.message === "success") {
           await ctx.runMutation(api.group.assignSlot, {groupId: args_0.groupId});
-          await ctx.runMutation(internal.group.startGroup, {groupId: args_0.groupId, start_date: res.start })
-          //await ctx.scheduler.runAt(new Date(res.start), internal.cron.scheduleIntervalCharge, {name: group.name, groupId: group._id});
-          //await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
-          // await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleMidTransactionReport, {name: group.name, groupId: group._id});
+          await ctx.runMutation(internal.group.startGroup, {groupId: args_0.groupId, start_date: res.start });
           await ctx.scheduler.runAt(new Date(res.schedule_date), internal.intervalReport.intervalRecord, {groupId: group._id});
         }   
       }

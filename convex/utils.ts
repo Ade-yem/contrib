@@ -2,6 +2,11 @@ import { nanoid } from "nanoid";
 
 export const currencies = ["NGN", "GHS"]
 
+/**
+ * generates a reference code or invite code
+ * @param length length of the reference or invite code
+ * @returns 
+ */
 export const generateReference = (length: number = 18) => {
     return nanoid(length);
 }

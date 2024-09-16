@@ -68,7 +68,6 @@ export const CreatePersonalSavingsModal = () => {
   });
   const createSavings = async (values: FormikValues) => {
     setSubmitting(true);
-    console.log(values);
     try {
       if (values.amount && values.payment.value === "card") {
         await payCard(values);
@@ -85,7 +84,6 @@ export const CreatePersonalSavingsModal = () => {
         });
         setShowModal("success");
       }
-      console.log(`${values.amount} saved successfully`);
     } catch (error: any) {
       console.error(error)
       toast.error("Failed create to save");

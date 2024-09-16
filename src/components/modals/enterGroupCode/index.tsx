@@ -42,7 +42,6 @@ export const EnterGroupCodeModal = () => {
       setShowModal("success");
       router.push(`/dashboard/groups/${group}`);
     } catch (error: any) {
-      console.log(parseError(error));
       toast.error("Unable to join group", error);
     }
     setIsLoading(false);
@@ -53,7 +52,6 @@ export const EnterGroupCodeModal = () => {
     const currentInput: HTMLInputElement | null = document.querySelector(
       `#group-code-input-${inputNumber}`
     );
-    console.log(currentInput?.value);
     if (inputValues[inputNumber] && value) return;
     const nextInput = document.querySelector(
       `#group-code-input-${inputNumber + 1}`
@@ -67,7 +65,6 @@ export const EnterGroupCodeModal = () => {
       .join("")
       .split("")
       .slice(0, 6 - inputNumber);
-    console.log({ splittedValues });
     if (!value) {
       _inputValues[inputNumber] = "";
     }
@@ -83,12 +80,8 @@ export const EnterGroupCodeModal = () => {
       }
     }
     setInputValues(_inputValues);
-    // console.log({ _inputValues });
-    // if (_inputValues.length <= 5) {
-      setDiscountCode(_inputValues.join(""));
-    // } else {
-    //   setDiscountCode("");
-    // }
+    setDiscountCode(_inputValues.join(""));
+
   };
 
   const closeModal = () => {

@@ -113,7 +113,6 @@ export default function ProfilePage() {
         {({ handleSubmit, values, isValid, setFieldValue, resetForm }) => {
           return (
             <>
-              {console.log("Form valid or not:", isValid)}
               <Form onSubmit={handleSubmit}>
                 <ProfileForm
                   dateValue={values.dob}

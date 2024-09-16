@@ -12,7 +12,6 @@ export const subscribeUsersToPlan = internalAction({
       const users = await ctx.runQuery(api.memberships.getGroupMembers, {groupId: args.groupId})
       const group = await ctx.runQuery(api.group.getGroup, {groupId: args.groupId});
       if (users.length > 0 && group) {
-        // const statuses: {[member_id: Id<"membership">] : boolean} = {};
         const start_date = new Date();
         const schedule_date = new Date();
         const report_date = new Date();
@@ -40,13 +39,10 @@ export const subscribeUsersToPlan = internalAction({
             break;
         }
         for (const user of users) {
-          // const res = await ctx.runAction(internal.payments.createSubscription, {email: user?.email as string, plan: group.subscription_plan_id as string, start_date: start_date.toISOString() })
-          // statuses[user._id] = res.status;
           await SendEmails.GroupComplete({email: user.email as string, groupName: group.name, date: start_date.toISOString()})
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
         return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
-        // if (Object.values(statuses).every(val => val === true)) return {message:"success", start: start_date.toISOString(), schedule_date:schedule_date.toISOString(), report_date: report_date.toISOString()};
-        // else throw new Error("Could not create all the subscriptions");
       }
     }
   })
