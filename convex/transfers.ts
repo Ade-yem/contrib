@@ -96,9 +96,12 @@ export const initiateTransfer = internalAction({
     if (args_0.groupId) {
       const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId});
       name = group?.name;
+      await ctx.runMutation(internal.removeMoney.removeMoneyfromGroup, {amount: args_0.amount, groupId: args_0.groupId})
+      
     } else if (args_0.savingsId) {
       const savings = await ctx.runQuery(api.savings.getSavings, {savingsId: args_0.savingsId});
       name = savings?.name as string;
+      await ctx.runMutation(internal.removeMoney.removeMoneyfromSavings, {savingsId: args_0.savingsId, amount: args_0.amount});
     }
     const user = await ctx.runQuery(api.user.getUserById, {userId: args_0.userId});
     await SendEmails.TransferMade({

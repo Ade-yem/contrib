@@ -11,7 +11,7 @@ import { ModalTypes, PaymentFrequency } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import ThemedSelect from "@/components/forms/ThemedSelect";
 import { convertModelArrayToSelectOptions } from "@/components/utilities";
-import { useAction } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 
@@ -30,14 +30,14 @@ export const WithdrawFundsModal = () => {
     showModal: ModalTypes;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
-  const addGroup = useAction(api.actions.addGroupAction);
+  const withdraw = useMutation(api.savings.removeMoneyFromSavings);
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
     savingName: "",
     amount: "",
     category: "",
     frequency: "",
-    sourceFund: false,
+    savingsId: "",
   };
   const validationSchema = yup.object().shape({
     savingName: yup.string().label("Group Name").required(),
@@ -49,7 +49,7 @@ export const WithdrawFundsModal = () => {
   const handleCreateGroup = async (values: FormikValues) => {
     setSubmitting(true);
     try {
-      await addGroup({
+      await withdraw({
         creator_id: user?._id as Id<"users">,
         name: values.groupName,
         number_of_people: values.memberNo,
@@ -124,6 +124,25 @@ export const WithdrawFundsModal = () => {
                         setFieldValue("withdrawalMethod", selectedOption.value);
                       }}
                     />
+                    <label className="text-xs text-grey-300 mt-4 mb-2">
+                                            Select withdrawal Method
+                                                                </label>
+                                                                                    <Field
+                                                                                                          component={ThemedSelect}
+                                                                                                                                name="withdrawalMethod"
+                                                                                                                                                      id="withdrawalMethod"
+                                                                                                                                                                            size="base"
+                                                                                                                                                                                                  options={convertModelArrayToSelectOptions(
+                                                                                                                                                                                                                          paymentFrequencySelect,
+                                                                                                                                                                                                                                                  "value",
+                                                                                                                                                                                                                                                                          "label",
+                                                                                                                                                                                                                                                                                                  true
+                                                                                                                                                                                                                                                                                                                        )}
+                                                                                                                                                                                                                                                                                                                                              onChange={(selectedOption: any) => {
+                                                                                                                                                                                                                                                                                                                                                                      // Ensure you extract the value from the selected option
+                                                                                                                                                                                                                                                                                                                                                                                              setFieldValue("withdrawalMethod", selectedOption.value);
+                                                                                                                                                                                                                                                                                                                                                                                                                    }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                       />
                     <div className="d-flex justify-content-center align-items-center mt-4">
                       <Button
                         title="Withdraw"

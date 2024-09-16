@@ -1,5 +1,5 @@
 import { api, internal } from "./_generated/api";
-import { action, internalMutation, mutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { v, ConvexError } from "convex/values";
 
@@ -101,5 +101,15 @@ export const getSavings = query({
   },
   async handler(ctx, args_0) {
     return await ctx.db.get(args_0.savingsId);
+  },
+});
+
+export const getUserSavings = query({
+  args: {
+    userId: v.id("users")
+  },
+  async handler(ctx, args_0) {
+    const {userId} = args_0;
+    return await ctx.db.query("savings").filter((m) => m.eq(m.field("userId"), userId)).collect();
   },
 })

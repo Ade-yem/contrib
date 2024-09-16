@@ -108,8 +108,7 @@ export const payNextCustomer = internalMutation({
       recipient: payment_method?.recipient_code as string, retry: false,
       reason: "interval payment", accountNumber: payment_method?.account_number as string
     })
-    await ctx.db.patch(groupId, {amount: group.amount as number - amount});
-  }
+    }
 })
 
 export const refundCustomer = internalMutation({
