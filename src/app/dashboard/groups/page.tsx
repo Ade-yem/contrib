@@ -139,7 +139,9 @@ export default function GroupPage() {
                             data-toggle="dropdown"
                           />
                         </div>
-                        <div className="dropdown-content right">
+                        <div
+                          className={`dropdown-content ${index === results.length - 1 ? "last-item" : ""} right`}
+                        >
                           <p
                             className="hover-link"
                             role="button"

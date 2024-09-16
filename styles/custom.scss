@@ -215,6 +215,10 @@ body {
       border-radius: 1rem 0 1rem 1rem;
       right: 7px;
     }
+    &.last-item {
+      top: -28px;
+    }
+
     p {
       padding: 0.5rem;
       cursor: pointer;

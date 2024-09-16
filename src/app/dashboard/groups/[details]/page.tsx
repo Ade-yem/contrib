@@ -57,7 +57,11 @@ export default function GroupDetails({
         {GroupDetails?.nameOfGroup}
       </h1>
       <br />
-      <Tabs className="d-lg-none mb-2" id="myTabContent" defaultActiveKey="overview">
+      <Tabs
+        className="d-lg-none mb-2"
+        id="myTabContent"
+        defaultActiveKey="overview"
+      >
         {/* Overview Tab Pane */}
         <Tab
           title="Overview"
@@ -109,7 +113,8 @@ export default function GroupDetails({
                 <div className="col-3 h-auto d-flex gap-2 flex-column justify-content-between">
                   <div className="bg-purple rounded-10 h-100 p-2 d-flex align-items-center gap-3">
                     <p className="text-white-000 text-2xs mb-0 pl-3">
-                      Collection Cycle:
+                      <span className="d-sm-block d-none">Collection</span>
+                      Cycle:
                     </p>
                     <p className="text-white-000 text-2xs mb-0">
                       {GroupCollectionPercentage}%
@@ -117,7 +122,8 @@ export default function GroupDetails({
                   </div>
                   <div className="bg-white-000 rounded-10 h-100 p-2 d-flex flex-column justify-content-between">
                     <p className="text-red text-center text-2xs mb-2 fw-bold">
-                      Defaulters of the Day
+                      Defaulters{" "}
+                      <span className="d-sm-block d-none">of the Day</span>
                     </p>
                     {GetDefaultersDetails?.map((defaulter, index) => (
                       <p className="text-3xs mb-0" key={index}>
