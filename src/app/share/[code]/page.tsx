@@ -39,8 +39,8 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
     }
   };
   return (
-    <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-5_6">
-      <div className={`default-card outstanding-group-card`}>
+    <div className="d-flex justify-content-center flex-column align-items-center w-50 m-auto h-100">
+      <div className={`default-card outstanding-group-card p-5`}>
         <div className={`group-image-wrapper`}>
           <Image
             className="obj-cover"
@@ -71,7 +71,11 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
           <span>Creator: {creator?.first_name + " " + creator?.last_name}</span>
           <span>Savings interval: {group?.interval}</span>
         </div>
-        <p className="text-lg fw-bold"> {group?.name}</p>
+        <div className="px-md-4 d-flex justify-content-between">
+          <p className="text-lg fw-bold"> {group?.name}</p>
+          <span className="text-sm">{group?.number_of_people_present} of {group?.number_of_people} members</span>
+        </div>
+        
         <p className="text-sm px-md-4">{group?.description}</p>
       </div>
       <br />

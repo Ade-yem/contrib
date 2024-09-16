@@ -11,7 +11,7 @@ import Loader from "@/components/shared/Loader";
 
 export default function GroupsPage() {
   const [sort, setSort] = useState("all");
-  const {results: groupList, loadMore, status } = usePaginatedQuery(api.group.getAllGroups, {}, {initialNumItems: 50});
+  const {results: groupList, loadMore, status } = usePaginatedQuery(api.group.getAllGroups, {}, {initialNumItems: 16});
   console.log(groupList.filter(g => g.private === true));
   return (
     <div className="text-center">
@@ -81,6 +81,8 @@ export default function GroupsPage() {
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
+                          expectedMembers={item.number_of_people}
+                          membersPresent={item.number_of_people_present}
                         />
                       );
                     })}
@@ -105,6 +107,112 @@ export default function GroupsPage() {
                           desc={item.description}
                           privateGroup={item.private}
                           groupId={item._id}
+                          expectedMembers={item.number_of_people}
+                          membersPresent={item.number_of_people_present}
+                        />
+                      );
+                    })}
+                </>
+              ) : sort === "hourly" ? (
+                <>
+                  {groupList
+                    ?.filter((group) => group.interval === "hourly")
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                          expectedMembers={item.number_of_people}
+                          membersPresent={item.number_of_people_present}
+                        />
+                      );
+                    })}
+                </>
+              ) : sort === "daily" ? (
+                <>
+                  {groupList
+                    ?.filter((group) => group.interval === "daily")
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                          expectedMembers={item.number_of_people}
+                          membersPresent={item.number_of_people_present}
+                        />
+                      );
+                    })}
+                </>
+              ) : sort === "weekly" ? (
+                <>
+                  {groupList
+                    ?.filter((group) => group.interval === "weekly")
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                          expectedMembers={item.number_of_people}
+                          membersPresent={item.number_of_people_present}
+                        />
+                      );
+                    })}
+                </>
+              ) : sort === "monthly" ? (
+                <>
+                  {groupList
+                    ?.filter((group) => group.interval === "monthly")
+                    .map((item, index) => {
+                      const colors = [0, 1, 2, 3];
+                      const rowSize = 4;
+                      const rowIndex = Math.floor(index / rowSize);
+                      const shift = rowIndex % rowSize;
+                      const color = colors[(index + shift) % colors.length];
+                      return (
+                        <GroupCard
+                          key={index}
+                          color={color}
+                          img={item.image || "/groupAvatar.png"}
+                          savings_per_interval={item.savings_per_interval}
+                          title={item.name}
+                          desc={item.description}
+                          privateGroup={item.private}
+                          groupId={item._id}
+                          expectedMembers={item.number_of_people}
+                          membersPresent={item.number_of_people_present}
                         />
                       );
                     })}
@@ -127,6 +235,8 @@ export default function GroupsPage() {
                         desc={item.description}
                         privateGroup={item.private}
                         groupId={item._id}
+                        expectedMembers={item.number_of_people}
+                        membersPresent={item.number_of_people_present}
                       />
                     );
                   })}

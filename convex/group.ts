@@ -3,7 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { nanoid } from "nanoid";
 import { generateAndShuffleNumbers } from "./utils";
 import { Id } from "./_generated/dataModel";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import {paginationOptsValidator} from "convex/server";
 
 /**
@@ -44,12 +44,25 @@ export const getAllGroups = query({
   async handler(ctx, args) {
     const groups = await ctx.db.query("groups").paginate(args.paginationOpts);
     const res = await Promise.all(groups.page.map(async (group) => {
-      const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), group._id)).first();
+      const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), group._id) && i.neq(i.field("status"), "closed")).first();
       return {...group, inviteCode: invite?.code}
     }))
     return {
       ...groups, page: res
     }
+  },
+})
+
+export const getTopGroups = query({
+  async handler(ctx) {
+    const groups = await ctx.db.query("groups").collect();
+    const sortedGroups = groups.sort((a, b) => (a.number_of_people * a.savings_per_interval) - (b.number_of_people * b.savings_per_interval));
+    const topGroups = sortedGroups.slice(0, 5);
+    const res = await Promise.all(topGroups.map(async (group) => {
+      const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), group._id) && i.neq(i.field("status"), "closed")).first();
+      return {...group, inviteCode: invite?.code}
+    }))
+    return res;
   },
 })
 
@@ -120,7 +133,8 @@ export const endGroup = internalMutation({
     // get invite of the group and close it too
     const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), args_0.groupId)).first();
     if (invite) await ctx.db.patch(invite._id, {status: "closed"});
-    return await ctx.db.patch(args_0.groupId, {status: "closed"})
+    await ctx.scheduler.runAt(new Date(), internal.subscription.groupClosed, {groupId: args_0.groupId})
+    return await ctx.db.patch(args_0.groupId, {status: "closed"});
   },
 })
 

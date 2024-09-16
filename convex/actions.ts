@@ -34,23 +34,25 @@ export const addMember = action({
     inviteCode: v.optional(v.string()),
   },
   async handler(ctx, args_0) {
-    try {
-      await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount, inviteCode: args_0.inviteCode})
-    } catch(error: any) {  
-      throw new ConvexError(error.message);
-    }
-    const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId})
-    if (!group) throw new ConvexError("Unable to find group");
-    if (group.number_of_people === group.number_of_people_present) {
-      const res = await ctx.runAction(internal.subscription.subscribeUsersToPlan, {groupId: args_0.groupId});
-      if (res?.message === "success") {
-        await ctx.runMutation(api.group.assignSlot, {groupId: args_0.groupId});
-        await ctx.runMutation(internal.group.startGroup, {groupId: args_0.groupId, start_date: res.start })
-        await ctx.scheduler.runAt(new Date(res.start), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
-        await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
-        await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleMidTransactionReport, {name: group.name, groupId: group._id});
-        await ctx.scheduler.runAt(new Date(res.schedule_date), internal.cron.scheduleIntervalReport, {name: group.name, groupId: group._id});
-      }   
-    }
-  },
+    if (await ctx.auth.getUserIdentity()) {
+      try {
+        await ctx.runMutation(internal.memberships.createMembership, {groupId: args_0.groupId, userId: args_0.userId, paid_deposit: args_0.amount, inviteCode: args_0.inviteCode})
+      } catch(error: any) {  
+        throw new ConvexError(error.message);
+      }
+      const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId})
+      if (!group) throw new ConvexError("Unable to find group");
+      if (group.number_of_people === group.number_of_people_present) {
+        const res = await ctx.runAction(internal.subscription.subscribeUsersToPlan, {groupId: args_0.groupId});
+        if (res?.message === "success") {
+          await ctx.runMutation(api.group.assignSlot, {groupId: args_0.groupId});
+          await ctx.runMutation(internal.group.startGroup, {groupId: args_0.groupId, start_date: res.start })
+          await ctx.scheduler.runAt(new Date(res.start), internal.cron.scheduleIntervalCharge, {name: group.name, groupId: group._id});
+          await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleIntervalPayment, {name: group.name, groupId: group._id});
+          // await ctx.scheduler.runAt(new Date(res.report_date), internal.cron.scheduleMidTransactionReport, {name: group.name, groupId: group._id});
+          await ctx.scheduler.runAt(new Date(res.schedule_date), internal.cron.scheduleIntervalReport, {name: group.name, groupId: group._id});
+        }   
+      }
+    } else throw new ConvexError("The user is not authenticated");
+  }
 })
