@@ -15,6 +15,8 @@ export const GroupCard = ({
   privateGroup,
   color,
   groupId,
+  expectedMembers,
+  membersPresent,
 }: {
   img: string;
   title: string;
@@ -24,6 +26,8 @@ export const GroupCard = ({
   color: number;
   privateGroup?: boolean;
   groupId?: any;
+  expectedMembers: number;
+  membersPresent: number;
 }) => {
   const {
     setShowModal,
@@ -61,9 +65,8 @@ export const GroupCard = ({
             <span>₦{thousandFormatter(savings_per_interval)}</span>
           </span>
         </div>
-        <div className="d-flex justify-content-center align-items-center gap-3 my-4">
-          <span>xxxxx</span>
-          <span>(5.0)</span>
+        <div className="d-flex justify-content-center align-items-center gap-2 my-4">
+          <span>{membersPresent} of {expectedMembers} members</span>
         </div>
         <p className="text-lg fw-bold"> {title}</p>
         <p className="text-sm px-md-4">{desc}</p>

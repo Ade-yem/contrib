@@ -115,6 +115,8 @@ export default function GroupSavingsPage() {
                     desc={item.description}
                     privateGroup={item.private}
                     groupId={item._id}
+                    expectedMembers={item.number_of_people}
+                    membersPresent={item.number_of_people_present}
                   />
                 ))}
             </>

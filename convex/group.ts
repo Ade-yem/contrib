@@ -53,6 +53,19 @@ export const getAllGroups = query({
   },
 })
 
+export const getTopGroups = query({
+  async handler(ctx) {
+    const groups = await ctx.db.query("groups").collect();
+    const sortedGroups = groups.sort((a, b) => (a.number_of_people * a.savings_per_interval) - (b.number_of_people * b.savings_per_interval));
+    const topGroups = sortedGroups.slice(0, 5);
+    const res = await Promise.all(topGroups.map(async (group) => {
+      const invite = await ctx.db.query("invites").filter(i => i.eq(i.field("groupId"), group._id) && i.neq(i.field("status"), "closed")).first();
+      return {...group, inviteCode: invite?.code}
+    }))
+    return res;
+  },
+})
+
 export const getGroupsByInterval = query({
   args: {
     interval: v.union(v.literal("hourly"), v.literal("daily"), v.literal("weekly"), v.literal("monthly")),

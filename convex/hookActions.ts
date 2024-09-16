@@ -17,16 +17,16 @@ const subscriptionNotRenew = async (ctx: ActionCtx, data: any) => {}
  * @param data payload data
  */
 const invoiceCreated = async (ctx: ActionCtx, data: Invoice) => {
-  console.log("Payment created => ", data);
-  const subscription_code = data.subscription.subscription_code;
-  const amount = data.subscription.amount as number;
-  const reference = data.transaction.reference as string;
-  const date = new Date();
-  const timestamp = date.toISOString();
-  const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
-  const userId = member?.userId as Id<"users">
-  await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId});
-  await ctx.runMutation(internal.intervalReport.addPaidCustomersToInterval, {userId, groupId: member!?.groupId, amount, timestamp})
+//   console.log("Payment created => ", data);
+//   const subscription_code = data.subscription.subscription_code;
+//   const amount = data.subscription.amount as number;
+//   const reference = data.transaction.reference as string;
+//   const date = new Date();
+//   const timestamp = date.toISOString();
+//   const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
+//   const userId = member?.userId as Id<"users">
+//   await ctx.runMutation(internal.paystack.createTransaction, {type: "deposit", groupId: member?.groupId, details: "pay group", status: "pending", amount, reference, userId});
+//   await ctx.runMutation(internal.intervalReport.addPaidCustomersToInterval, {userId, groupId: member!?.groupId, amount, timestamp})
 
 };
 
@@ -36,15 +36,15 @@ const invoiceCreated = async (ctx: ActionCtx, data: Invoice) => {
  * @param data payload data
  */
 const invoiceUpdate = async (ctx: ActionCtx, data: Invoice) => {
-  console.log("Payment successful => ", data);
-  const reference = data.transaction.reference as string;
-  const status = data.transaction.status as string;
-  const amount = data.transaction.amount as number;
-  await ctx.runMutation(internal.paystack.updateTransaction, {status, reference});
-  const transaction = await ctx.runQuery(internal.paystack.getTransaction, {reference});
-  if (transaction) {
-    await ctx.runMutation(internal.intervalReport.updatePaymentStatus, {userId: transaction.userId, groupId: transaction.groupId as Id<"groups">, timestamp: data.paid_at as string, amount})
-  }
+//   console.log("Payment successful => ", data);
+//   const reference = data.transaction.reference as string;
+//   const status = data.transaction.status as string;
+//   const amount = data.transaction.amount as number;
+//   await ctx.runMutation(internal.paystack.updateTransaction, {status, reference});
+//   const transaction = await ctx.runQuery(internal.paystack.getTransaction, {reference});
+//   if (transaction) {
+//     await ctx.runMutation(internal.intervalReport.updatePaymentStatus, {userId: transaction.userId, groupId: transaction.groupId as Id<"groups">, timestamp: data.paid_at as string, amount})
+//   }
 };
 
 /**
@@ -53,13 +53,13 @@ const invoiceUpdate = async (ctx: ActionCtx, data: Invoice) => {
  * @param data payload data
  */
 const invoicePaymentFailed = async (ctx: ActionCtx, data: Invoice) => {
-  console.log("Payment failed => ", data);
-  const subscription_code = data.subscription.subscription_code;
-  const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
-  const userId = member?.userId as Id<"users">
-  const groupId = member?.groupId as Id<"groups">
-  const email = data.customer.email;
-  const amount = data.subscription.amount;
+  // console.log("Payment failed => ", data);
+  // const subscription_code = data.subscription.subscription_code;
+  // const member = await ctx.runQuery(internal.memberships.getMembershipWithSubscriptionCode, {subscription_code});
+  // const userId = member?.userId as Id<"users">
+  // const groupId = member?.groupId as Id<"groups">
+  // const email = data.customer.email;
+  // const amount = data.subscription.amount;
   // await ctx.runAction(internal.intervalReport.warnAndCharge, {amount, userId, groupId, email})
 };
 
@@ -69,10 +69,10 @@ const invoicePaymentFailed = async (ctx: ActionCtx, data: Invoice) => {
  * @param data payload data
  */
 const subscriptionCreate = async (ctx: ActionCtx, data: any) => {
-    const email = data.customer.email;
-    const subscription_code = data.subscription_code;
-    const plan_code = data.plan.plan_code;
-    await ctx.runMutation(internal.memberships.addSubscriptionCodeToMembership, {subscription_code, email, plan_code})
+    // const email = data.customer.email;
+    // const subscription_code = data.subscription_code;
+    // const plan_code = data.plan.plan_code;
+    // await ctx.runMutation(internal.memberships.addSubscriptionCodeToMembership, {subscription_code, email, plan_code})
 };
 
 /**
@@ -81,7 +81,7 @@ const subscriptionCreate = async (ctx: ActionCtx, data: any) => {
  * @param data payload data
  */
 const transferFailed = async (ctx: ActionCtx, data: any) => {
-  await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status});
+  // await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status});
 };
 
 /**
@@ -90,12 +90,12 @@ const transferFailed = async (ctx: ActionCtx, data: any) => {
  * @param data payload data
  */
 const transferSuccess = async (ctx: ActionCtx, data: any) => {
-  let details: 'savings payment' | "interval pay" | "refund method fee" | "cashout";
-  const {reason, reference, amount} = data;
-  if (reason === "cashout") {
-    await ctx.runMutation(internal.savings.updateSavings, {reference, amount})
-  };
-  await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status });
+  // let details: 'savings payment' | "interval pay" | "refund method fee" | "cashout";
+  // const {reason, reference, amount} = data;
+  // if (reason === "cashout") {
+  //   await ctx.runMutation(internal.savings.updateSavings, {reference, amount})
+  // };
+  // await ctx.runMutation(internal.paystack.updateTransaction, { reference: data.reference, status: data.status });
 };
 
 /**
@@ -104,18 +104,18 @@ const transferSuccess = async (ctx: ActionCtx, data: any) => {
  * @param data payload data
  */
 const transferReversed = async (ctx: ActionCtx, data: any) => {
-  const transaction = await ctx.runQuery(internal.paystack.getTransaction, {reference: data.reference});
-  await ctx.runAction(internal.transfers.initiateTransfer, {
-    groupId: transaction.groupId as Id<"groups">,
-    reference: data.reference,
-    userId: transaction.userId,
-    amount: data.amount,
-    reason: data.reason,
-    recipient: data.recipient.recipient_code,
-    retry: true,
-    details: data.reason,
-    accountNumber: ""
-  })
+  // const transaction = await ctx.runQuery(internal.paystack.getTransaction, {reference: data.reference});
+  // await ctx.runAction(internal.transfers.initiateTransfer, {
+  //   groupId: transaction.groupId as Id<"groups">,
+  //   reference: data.reference,
+  //   userId: transaction.userId,
+  //   amount: data.amount,
+  //   reason: data.reason,
+  //   recipient: data.recipient.recipient_code,
+  //   retry: true,
+  //   details: data.reason,
+  //   accountNumber: ""
+  // })
 };
 
 /**

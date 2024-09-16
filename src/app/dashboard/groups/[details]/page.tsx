@@ -10,6 +10,8 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { GroupChat } from "@/components/shared/groupChat";
 import GoBack from "@/components/shared/GoBack";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 
 export default function GroupDetails({
   params,
@@ -55,46 +57,12 @@ export default function GroupDetails({
         {GroupDetails?.nameOfGroup}
       </h1>
       <br />
-
-      {/* Tab navigation */}
-      <ul className="nav nav-tabs d-lg-none" id="myTab" role="tablist">
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link active"
-            id="overview-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#overview"
-            type="button"
-            role="tab"
-            aria-controls="overview"
-            aria-selected="true"
-          >
-            Overview
-          </button>
-        </li>
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link"
-            id="chat-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#chat"
-            type="button"
-            role="tab"
-            aria-controls="chat"
-            aria-selected="false"
-          >
-            Group Chat
-          </button>
-        </li>
-      </ul>
-
-      {/* Tab content */}
-      <div className="tab-content d-lg-none" id="myTabContent">
+      <Tabs className="d-lg-none mb-2" id="myTabContent" defaultActiveKey="overview">
         {/* Overview Tab Pane */}
-        <div
-          className="tab-pane fade show active"
+        <Tab
+          title="Overview"
+          eventKey={"overview"}
           id="overview"
-          role="tabpanel"
           aria-labelledby="overview-tab"
         >
           <div className="row">
@@ -104,7 +72,7 @@ export default function GroupDetails({
                   <div>
                     <p className="text-gray-400 text-sm">Available Savings</p>
                     <p className="text-sm mb-4">
-                      &#8358;
+                      &#8358;{" "}
                       {visible
                         ? thousandFormatter(GroupDetails?.available ?? 0)
                         : "*****"}
@@ -139,7 +107,7 @@ export default function GroupDetails({
                 </div>
                 <div className="col-3 h-auto d-flex gap-2 flex-column justify-content-between">
                   <div className="bg-purple rounded-10 h-100 p-2 d-flex align-items-center gap-3">
-                    <p className="text-white-000 text-2xs mb-0">
+                    <p className="text-white-000 text-2xs mb-0 pl-3">
                       Collection Cycle:
                     </p>
                     <p className="text-white-000 text-2xs mb-0">
@@ -154,7 +122,7 @@ export default function GroupDetails({
                       <p className="text-3xs mb-0" key={index}>
                         {defaulter.amount}
                         {defaulter.status}
-                        {defaulter.userId}
+                        {/* {defaulter.userId} */}
                       </p>
                     ))}
                   </div>
@@ -201,7 +169,10 @@ export default function GroupDetails({
                           className="d-flex justify-content-between gap-3 mb-3 "
                           key={index}
                         >
-                          <div>
+                          <div className="d-flex justify-content-between gap-2 ">
+                            <p className="text-xs text-primary-500 fw-bold mb-0">
+                              {activity.name}
+                            </p>
                             <p className="text-xs text-primary-500 fw-bold mb-0">
                               {activity.details}
                             </p>
@@ -217,21 +188,21 @@ export default function GroupDetails({
               </div>
             </div>
           </div>
-        </div>
+        </Tab>
 
         {/* Group Chat Tab Pane */}
-        <div
-          className="tab-pane fade"
+        <Tab
+          title="Group Chat"
+          eventKey={"chat"}
           id="chat"
-          role="tabpanel"
           aria-labelledby="chat-tab"
         >
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>
             <GroupChat groupId={groupId as Id<"groups">} userId={user!?._id} />
           </div>
-        </div>
-      </div>
+        </Tab>
+      </Tabs>
 
       <div className="row d-none d-lg-flex">
         <div className="col-lg-7 col-12">
@@ -240,7 +211,7 @@ export default function GroupDetails({
               <div>
                 <p className="text-gray-400 text-sm">Available Savings</p>
                 <p className="text-sm mb-4">
-                  &#8358;
+                  &#8358;{" "}
                   {visible
                     ? thousandFormatter(GroupDetails?.available ?? 0)
                     : "*****"}
@@ -275,7 +246,7 @@ export default function GroupDetails({
             </div>
             <div className="col-3 h-auto d-flex gap-2 flex-column justify-content-between">
               <div className="bg-purple rounded-10 h-100 p-2 d-flex align-items-center gap-3">
-                <p className="text-white-000 text-2xs mb-0">
+                <p className="text-white-000 text-2xs pl-3 mb-0">
                   Collection Cycle:
                 </p>
                 <p className="text-white-000 text-2xs mb-0">
@@ -290,7 +261,7 @@ export default function GroupDetails({
                   <p className="text-3xs mb-0" key={index}>
                     {defaulter.amount}
                     {defaulter.status}
-                    {defaulter.userId}
+                    {/* {defaulter.userId} */}
                   </p>
                 ))}
               </div>
@@ -332,7 +303,10 @@ export default function GroupDetails({
                       className="d-flex justify-content-between gap-3 mb-3 "
                       key={index}
                     >
-                      <div>
+                      <div className="d-flex justify-content-between gap-2 ">
+                        <p className="text-xs text-primary-500 fw-bold mb-0">
+                          {activity.name}
+                        </p>
                         <p className="text-xs text-primary-500 fw-bold mb-0">
                           {activity.details}
                         </p>

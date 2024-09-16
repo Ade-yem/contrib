@@ -90,20 +90,23 @@ export const GroupChat = ({groupId, userId}: {groupId: Id<"groups">; userId: Id<
             setImage(file);
           }
         }}/>
+        <div className="position-absolute end-1 bottom-2 d-flex justify-content-between gap-3">
         <Icon
-          icon={"mdi:paper-clip"}
-          className="click position-absolute bottom-2 end-3 text-black-50"
+          icon={"oi:paperclip"}
+          className="click text-black-50 mt-1" style={{transform: "rotate(180deg)"}} 
           width="2rem"
           height="2rem"
           onClick={() => (inputRef.current as HTMLInputElement | null)?.click()}
         />
         <Icon
           icon="material-symbols:send-rounded"
-          className="click position-absolute bottom-2 end-1 text-primary-500"
+          className="click text-primary-500"
           width="3rem"
           height="3rem"
           onClick={sendMessage}
         />
+        </div>
+        
       </div>
     </div>
   );
