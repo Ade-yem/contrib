@@ -104,7 +104,7 @@ export const ProfileForm = (props: profilePropTypes) => {
               <p
                 role="button"
                 style={selectedImage !== null ? hide : show}
-                className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500"
+                className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500 mb-0"
                 onClick={() => imageInput.current?.click()}
               >
                 Upload new photo

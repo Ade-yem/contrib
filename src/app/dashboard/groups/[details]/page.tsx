@@ -64,6 +64,7 @@ export default function GroupDetails({
           eventKey={"overview"}
           id="overview"
           aria-labelledby="overview-tab"
+          className="d-lg-none"
         >
           <div className="row">
             <div className="col-12">
@@ -196,6 +197,7 @@ export default function GroupDetails({
           eventKey={"chat"}
           id="chat"
           aria-labelledby="chat-tab"
+          className="d-lg-none"
         >
           <div className="bg-white-000 rounded-10 p-4 ">
             <p className="text-xl fw-bold text-primary-500 mb-">Group Chats</p>

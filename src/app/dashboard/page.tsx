@@ -209,9 +209,6 @@ export default function Page() {
                     <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
                       Status
                     </th>
-                    <th className="py-3 bg-primary-500 text-white-000 text-sm ps-4">
-                      Reference code
-                    </th>
                   </tr>
                 </thead>
 
@@ -227,9 +224,6 @@ export default function Page() {
                       <td className="py-3 ps-4 desc">{transaction.details}</td>
                       <td className="py-3 text-nowrap ps-4">
                         {transaction.status}
-                      </td>
-                      <td className="py-3 text-wrap text-break ps-4">
-                        {transaction.reference}
                       </td>
                     </tr>
                   ))}
