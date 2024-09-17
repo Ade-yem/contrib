@@ -13,6 +13,16 @@ export const getAuthorization = query({
     },
   })
 
+export const getAuthorizations = query({
+  args: {
+    userId: v.optional(v.id("users"))
+  },
+  async handler(ctx, args_0) {
+    const {userId} = args_0;
+    if (userId) return await ctx.db.query("authorizations").filter(a => a.eq(a.field("userId"), userId)).collect();
+    else return [];
+  }
+})
   export const createAuthorization = internalMutation({
     args: {
       userId: v.id('users'),

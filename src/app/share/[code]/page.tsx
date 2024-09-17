@@ -10,6 +10,7 @@ import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Loader from "@/components/shared/Loader";
 
 export default function GroupDetails({ params }: { params: { code: string } }) {
   const joinGroupz = useMutation(api.group.joinGroupWithInviteCode);
@@ -39,13 +40,15 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
     }
   };
   return (
-    <div className="d-flex justify-content-center flex-column align-items-center w-50 m-auto h-100">
+    <div className="container">
+    <div style={{height: "150px"}}></div>
+    {
+      !group ? <Loader />  :
+      <div className="d-flex justify-content-center flex-column align-items-center w-100 mx-auto my-20">
       <div className={`default-card outstanding-group-card p-5`}>
         <div className={`group-image-wrapper`}>
           <Image
             className="obj-cover"
-            // src={img}
-            // alt={alt}
             src={group?.image ?? "/friends.svg"}
             alt={"alt"}
             width={100}
@@ -71,7 +74,7 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
           <span>Creator: {creator?.first_name + " " + creator?.last_name}</span>
           <span>Savings interval: {group?.interval}</span>
         </div>
-        <div className="px-md-4 d-flex justify-content-between">
+        <div className="px-md-4 d-flex justify-content-between gap-3">
           <p className="text-lg fw-bold"> {group?.name}</p>
           <span className="text-sm">{group?.number_of_people_present} of {group?.number_of_people} members</span>
         </div>
@@ -79,9 +82,11 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
         <p className="text-sm px-md-4">{group?.description}</p>
       </div>
       <br />
-      <button onClick={joinGroup} className="btn btn-md btn-primary  mx-auto">
+      <button onClick={joinGroup} className="btn btn-md btn-primary mb-5 mx-auto">
         Join Group
       </button>
+      </div>
+    }
     </div>
   );
 }

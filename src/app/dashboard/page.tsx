@@ -81,7 +81,10 @@ export default function Page() {
             <div className="col-4 d-flex flex-column justify-content-between">
               <button
                 className="btn btn-sm rounded-01 text-xs btn-green"
-                onClick={() => setShowModal("addMoney")}
+                onClick={() => {
+                  if (savings && savings.length > 0) return setShowModal("addMoney");
+                  else return setShowModal("createPersonalSavings")
+                }}
               >
                 Add Money
               </button>
