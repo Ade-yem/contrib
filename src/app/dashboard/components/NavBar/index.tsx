@@ -25,7 +25,7 @@ const NavBar = ({ setIsSideBarOpen }: NavBarProps) => {
   const pageTitles: Record<string, string> = {
     "/dashboard": "Dashboard",
     "/dashboard/profile": "Profile",
-    "/dashboard/groups": "Groups",
+    "/dashboard/groups": "My Groups",
     "/dashboard/linked-accounts": "Linked Accounts",
   };
 

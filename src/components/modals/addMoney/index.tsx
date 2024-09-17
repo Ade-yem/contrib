@@ -142,7 +142,7 @@ export const AddMoney = () => {
                       id="amount"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Select savings you want to withdraw from
+                      Select savings you want to add money to
                     </label>
                     <Field
                       component={ThemedSelect}

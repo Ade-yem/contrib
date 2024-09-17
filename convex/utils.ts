@@ -8,7 +8,7 @@ export const currencies = ["NGN", "GHS"]
  * @returns 
  */
 export const generateReference = (length: number = 18) => {
-    return nanoid(length);
+    return nanoid(length).toLowerCase();
 }
 
 export const generateAndShuffleNumbers = (n: number) => {
