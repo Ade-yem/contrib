@@ -301,14 +301,22 @@ const Sidebar = ({
                 rotate={180}
               />
             </div>
-            <Link
-              href="/group-savings"
-              className="text-decoration-none desktop-item"
-            >
-              <button className="btn p-lg-3 btn-primary" type="button">
-                <span className="text-base"> Join a Group</span>
+            <Authenticated>
+              <button
+                className="btn p-lg-3 btn-primary"
+                onClick={() => setShowModal("createGroup")}
+              >
+                <span className="text-base"> Create New Group</span>
               </button>
-            </Link>
+            </Authenticated>
+            <Unauthenticated>
+              <button
+                className="btn p-lg-3 btn-primary"
+                onClick={handleShowLogin}
+              >
+                <span className="text-base"> Create New Group</span>
+              </button>
+            </Unauthenticated>
           </div>
         </div>
         <div className="container mt-5">
