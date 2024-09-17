@@ -127,7 +127,7 @@ export const CreateGroupModal = () => {
                       id="desc"
                     />
                     <label className="text-xs text-grey-300 mt-4 mb-2">
-                      Amount Goals (#)
+                      Amount (Interval) (#)
                     </label>
                     <Field
                       component={TextInput}
