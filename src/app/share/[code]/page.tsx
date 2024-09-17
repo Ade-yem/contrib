@@ -63,7 +63,7 @@ export default function GroupDetails({ params }: { params: { code: string } }) {
           </span>
           <span className="price d-non">
             <span>
-              ₦{thousandFormatter(group?.savings_per_interval ?? 0 / 100)}
+              ₦{thousandFormatter(group?.savings_per_interval ?? 0)}
             </span>
           </span>
         </div>
