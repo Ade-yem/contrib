@@ -80,7 +80,7 @@ export const EnterGroupCodeModal = () => {
       }
     }
     setInputValues(_inputValues);
-    setDiscountCode(_inputValues.join(""));
+    setDiscountCode(_inputValues.join("").toLowerCase());
 
   };
 
