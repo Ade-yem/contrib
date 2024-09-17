@@ -128,9 +128,6 @@ export const RegisterModal = ({
                           name="password"
                           id="password"
                         />
-                        <p className="text-xs text-primary-400 click  mt-4 mb-2">
-                          Forgot Password?
-                        </p>
                         <Button
                           title="Sign Up"
                           type="submit"

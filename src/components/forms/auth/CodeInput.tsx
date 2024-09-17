@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState } from "react";
 
 export const CodeInput: React.FC = () => {
