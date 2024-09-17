@@ -25,7 +25,7 @@ const chargeSuccess = async (ctx: ActionCtx, data: ChargeSuccessData) => {
       await ctx.runMutation(internal.savings.addSavings, {savingsId: metadata.savingsId as Id<"savings">, amount: data.amount})
     } else if (metadata.details === "create savings") {
       const interval = metadata.interval.length > 0 ? metadata.interval as "hourly" | "daily" | "weekly" | "monthly" : undefined;
-      await ctx.runMutation(api.savings.createSavings, {name: metadata.name, userId: metadata.userId as Id<"users">, amount: data.amount, reason: metadata.reason, amountTarget: metadata.amountTarget, interval })
+      await ctx.runMutation(api.savings.createSavings, {name: metadata.name, userId: metadata.userId as Id<"users">, amount: data.amount, reason: metadata.reason, amountTarget: metadata.amountTarget as number, interval })
     } else if (metadata.details === "add card") {
       await ctx.runMutation(internal.authorization.createAuthorization, {userId: metadata.userId as Id<"users">, authorization_code: auth.authorization_code, bin: auth.bin, last4: auth.last4, card_type: auth.card_type, exp_month: auth.exp_month, exp_year: auth.exp_year, bank: auth.bank, brand: auth.brand, country_code: auth.country_code});
       await ctx.runMutation(internal.savings.addToFirstSavings, {userId: metadata.userId as Id<"users">, amount: data.amount});

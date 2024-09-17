@@ -9,6 +9,7 @@ import { RegisterSuccessModal } from "./modals/successModal/registerSuccessModal
 import { VerifyUserModal } from "./modals/verifyUserModal";
 import { WithdrawFundsModal } from "./modals/withdrawFundsModal";
 import { AddMoney } from "./modals/addMoney"
+import { ResetPassword } from "./modals/ResetPasswordModal";
 
 export const AuthContainer = () => {
   return (
@@ -24,6 +25,7 @@ export const AuthContainer = () => {
       <WithdrawFundsModal />
       <RegisterSuccessModal />
       <AddMoney/>
+      <ResetPassword/>
     </>
   );
 };
