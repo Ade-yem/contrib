@@ -124,7 +124,7 @@ export default function GroupPage() {
                   <td className="py-4_5 ps-4">{group.name}</td>
                   <td className="py-4_5 ps-4 desc">{group.description}</td>
                   <td className="py-4_5 ps-4">
-                    &#8358; {thousandFormatter(group.paymentPerInterval / 100)}
+                    &#8358; {thousandFormatter(group.paymentPerInterval)}
                   </td>
                   <td className="py-4_5 ps-4">{group.numOfMembers}</td>
                   <td className="py-4_5 ps-4">{group.collectionNumber}</td>

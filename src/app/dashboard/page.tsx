@@ -52,7 +52,7 @@ export default function Page() {
                   <p className="text-sm mb-0">
                     &#8358;{" "}
                     {visible
-                      ? thousandFormatter((totalSavings ?? 0) / 100)
+                      ? thousandFormatter(totalSavings ?? 0)
                       : "*****"}
                   </p>
                 </div>
@@ -121,7 +121,7 @@ export default function Page() {
                             {saving.name}
                           </p>
                           <p className="text-white-000 text-xs">
-                            &#8358; {thousandFormatter(saving.amount / 100)}
+                            &#8358; {thousandFormatter(saving.amount)}
                           </p>
                           <p className="text-white-000 text-xs">
                             {saving.reason}
@@ -219,7 +219,7 @@ export default function Page() {
                           {transaction.name}
                         </td>
                         <td className="py-3  ps-4 text-nowrap">
-                          &#8358; {thousandFormatter(transaction.amount / 100)}
+                          &#8358; {thousandFormatter(transaction.amount)}
                         </td>
                         <td className="py-3 ps-4 desc">
                           {transaction.details}
@@ -272,7 +272,7 @@ export default function Page() {
                             {saving.name}
                           </p>
                           <p className="text-white-000 text-xs">
-                            &#8358; {thousandFormatter(saving.amount / 100)}
+                            &#8358; {thousandFormatter(saving.amount)}
                           </p>
                           {/* <p className="text-white-000 text-xs">
                             &#8358; {saving?.amountTarget / 100}
