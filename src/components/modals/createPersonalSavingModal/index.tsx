@@ -101,7 +101,6 @@ export const CreatePersonalSavingsModal = () => {
         name: values.savingName,
         reason: values.category.value,
         interval: values.frequency ? values.frequency.value : values.frequency,
-        amountTarget: values.amountTarget
       },
     });
     const stat = await confirmTransaction({ reference: res.reference });
@@ -119,7 +118,6 @@ export const CreatePersonalSavingsModal = () => {
         name: values.savingName,
         reason: values.category.value,
         interval: values.frequency ? values.frequency.value : values.frequency,
-        amountTarget: values.amountTarget
       },
     });
     if (res) {

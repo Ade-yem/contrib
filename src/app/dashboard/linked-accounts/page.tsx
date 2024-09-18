@@ -77,10 +77,7 @@ export default function LinkedAccounts() {
           ))}
         </Accordion>
         <div className="w-100 d-block d-sm-none"></div>
-        <div className="d-none d-sm-block" style={{width: "1px", borderRight: "1px solid grey"}}></div>
-        <div className="d-block d-sm-none"><hr/></div>
-
-        <Accordion className="w-100 w-lg-50 w-md-70 mt-2 col">
+          <Accordion className="w-100 w-lg-50 w-md-70 mt-2 col">
             <h2 className="m-2">Linked Card</h2>
           {cards?.map((card, index) => (
           <Card  key={card._id} className="p-2 mt-4"

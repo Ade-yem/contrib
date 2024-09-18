@@ -1,9 +1,8 @@
-"use client";
-
 import { useAuthActions } from "@convex-dev/auth/react";
 import { CodeInput } from "@/components/forms/auth/CodeInput";
 import { SignInWithEmailCode } from "@/components/forms/auth/SignInWithEmailCode";
 import Button from "@/components/buttons/BaseButton";
+// import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
@@ -48,7 +47,6 @@ export function ResetPasswordWithEmailCode({
           event.preventDefault();
           setSubmitting(true);
           const formData = new FormData(event.currentTarget);
-          console.log(formData);
           signIn(provider, formData).catch((error) => {
             console.error(error);
             toast.error("Code could not be verified or new password is too short, try again");
@@ -56,8 +54,7 @@ export function ResetPasswordWithEmailCode({
           });
         }}
       >
-        <label htmlFor="code">Code</label>
-        {/* <input type="text" name="code" id="code" /> */}
+        <label htmlFor="email">Code</label>
         <CodeInput />
         <label htmlFor="newPassword">New Password</label>
         <input
