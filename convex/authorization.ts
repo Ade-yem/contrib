@@ -1,6 +1,5 @@
 import {query, internalMutation} from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-// import {  } from "convex/server";
 
 export const getAuthorization = query({
     args: {
@@ -29,7 +28,7 @@ export const getAuthorization = query({
     },
     handler: async (ctx, args) => {
       const { userId, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand } = args;
-      if (await ctx.db.query("authorizations").filter(q => q.eq(q.field("authorization_code"), authorization_code) || q.eq(q.field("userId"), userId) ).first()) return;
+      if (await ctx.db.query("authorizations").filter(q => q.eq(q.field("authorization_code"), authorization_code)).first()) return;
       await ctx.db.insert("authorizations", {userId, authorization_code, bin, last4, exp_month, exp_year, card_type, bank, country_code, brand});
     }
   })

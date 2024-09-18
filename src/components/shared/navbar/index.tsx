@@ -10,6 +10,7 @@ import { LayoutContext } from "@/context/layoutContext";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "../../../../convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { signOut } = useAuthActions();
@@ -28,12 +29,18 @@ const Navbar = () => {
   const handleShowRegister = () => {
     setShowModal("register");
   };
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
 
   return (
     <>
       <nav className="nav-fixed">
         <div className="container navbar d-flex justify-content-between align-items-center">
-          <Link href="/home">
+          <Link href="/">
             <Image
               src={"/JEKAJODAWO-LOGO.svg"}
               alt="logo"
@@ -86,7 +93,7 @@ const Navbar = () => {
             <Unauthenticated>
               <div className="dropdown">
                 <div>
-                  <div className="d-flex align-items-center ">
+                  <div className="d-flex align-items-center click">
                     Sign In
                     <Icon
                       className="ms-3"
@@ -143,7 +150,7 @@ const Navbar = () => {
                     <div
                       className=" click hover-link sign-out"
                       role="button"
-                      onClick={signOut}
+                      onClick={handleSignOut}
                     >
                       <p className="d-flex align-items-center gap-2">
                         <Icon
@@ -211,7 +218,7 @@ const Navbar = () => {
                     <div
                       className=" click hover-link sign-out"
                       role="button"
-                      onClick={signOut}
+                      onClick={handleSignOut}
                     >
                       <p className="d-flex align-items-center gap-2">
                         <Icon
@@ -294,14 +301,22 @@ const Sidebar = ({
                 rotate={180}
               />
             </div>
-            <Link
-              href="/group-savings"
-              className="text-decoration-none desktop-item"
-            >
-              <button className="btn p-lg-3 btn-primary" type="button">
-                <span className="text-base"> Join a Group</span>
+            <Authenticated>
+              <button
+                className="btn p-lg-3 btn-primary"
+                onClick={() => setShowModal("createGroup")}
+              >
+                <span className="text-base"> Create New Group</span>
               </button>
-            </Link>
+            </Authenticated>
+            <Unauthenticated>
+              <button
+                className="btn p-lg-3 btn-primary"
+                onClick={handleShowLogin}
+              >
+                <span className="text-base"> Create New Group</span>
+              </button>
+            </Unauthenticated>
           </div>
         </div>
         <div className="container mt-5">
@@ -403,7 +418,7 @@ const Sidebar = ({
               className={({ isActive }) =>
                 isActive ? "active border-none" : "border-none"
               }
-              to="/home"
+              to="/"
               onClick={closeSidebar}
             >
               <div className="for">Careers</div>

@@ -60,7 +60,6 @@ export const CreateGroupModal = () => {
         description: values.desc,
       });
       setShowModal("success");
-      console.log("Group created successfully");
     } catch (error: any) {
       toast.error("Failed to create group:", error);
     }

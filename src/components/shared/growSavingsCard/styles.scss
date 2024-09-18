@@ -1,27 +1,55 @@
+@import "../../../../styles/base/variables";
 .saving-card {
-  border-radius: 1rem;
-  overflow: hidden;
   position: relative;
+  border-radius: 1rem;
+  overflow: visible;
+  width: 100%;
+  max-width: 40rem;
+  height: 45rem;
 
-  img {
-    // max-width: 20rem;
+  .image-container {
+    position: relative;
     width: 100%;
-    height: 41rem;
-    object-fit: cover;
+    height: 40rem;
+    border-radius: inherit;
+    overflow: hidden;
+
+    img {
+      border-radius: inherit;
+    }
   }
+
   .card-content {
-    display: block;
+    color: $white-000;
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
     width: 60%;
-    margin-inline: auto;
-    background: pink;
-    padding: 5rem 10rem 3rem 2rem;
-    // clip-path: polygon(1% 36%, 100% 0%, 75% 100%, 0% 100%);
-    // clip-path: polygon(0% 15%, 83% 2%, 73% 101%, 0% 100%);
-    clip-path: polygon(0% 20%, 83% 2%, 73% 101%, 0% 100%);
     min-height: 20rem;
-    margin-top: -8rem;
-    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    background-color: $pink;
+    padding: 2rem;
+    box-shadow: 10px 10px 5px 0px #ffffff;
+    // -webkit-box-shadow: 10px 10px 5px 0px rgba(255, 255, 255, 1);
+    // -moz-box-shadow: 10px 10px 5px 0px rgba(255, 255, 255, 1);
+    box-shadow: 7.98px 9.97px 2.66px 0px #ffffff;
+
+    z-index: 1;
+    // clip-path: polygon(0% 20%, 83% 2%, 73% 101%, 0% 100%);
+    &.two {
+      background-color: $orange;
+    }
+    &.three {
+      background-color: $purple;
+    }
+    &.four {
+      background-color: $green;
+    }
+    &.five {
+      background-color: $yellow;
+    }
+    &.six {
+      background-color: $primary-600;
+    }
   }
 }

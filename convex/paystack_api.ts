@@ -51,6 +51,8 @@ class PaystackAPI {
     details: string;
     name: string;
     reason: string;
+    interval: string;
+    amountTarget: number;
 } | undefined }) {
     const params = JSON.stringify({
         "email": data.email,
@@ -80,6 +82,8 @@ class PaystackAPI {
     details: string;
     name: string;
     reason: string;
+    interval: string;
+    amountTarget: number;
     } | undefined 
   }) {
     const params = JSON.stringify({
@@ -188,6 +192,25 @@ class PaystackAPI {
       "account_number": data.account_number,
       "bank_code": data.bank_code,
       "currency": data.currency
+    });
+    const options = {
+      hostname: this.paystack.hostname,
+      port: 443,
+      path: '/transferrecipient',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + this.paystack.secret_key,
+        'Content-Type': 'application/json'
+      }
+    };
+    return await makeHttpsRequest(options, params);
+  }
+  async createTransferRecipientWithCode(data: { name: string, authorization_code: string, email: string }) {
+    const params = JSON.stringify({
+      "type": "authorization",
+      "name": data.name,
+      "email": data.email,
+      "authorization_code": data.authorization_code,
     });
     const options = {
       hostname: this.paystack.hostname,

@@ -7,24 +7,24 @@ const Faqs = () => {
 
   const accordionList = [
     {
-      title: " How does group savings works?",
+      title: " How does Jekajodawo savings works?",
       answer:
-        "  How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works? How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?",
+        "Jekajodawo Group savings works like a collective or shared savings also known as *Thrift* which involves two or more individuals like Friends, Lovers, Family, Co-workers etc contribute certain amount of  money at the fixed time agreed to by the members of the group, Each Members of the group are paid in *Turns* according to the assigned number that was given to them during the the process of joining or being added to a Group.",
     },
     {
       title: "What Supports is available for Me?",
       answer:
-        "  How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works? How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?",
+        "We have Our Reliable and Dedicated Support and Customer Relations Team that handles queries, issues and concern that revolves around your personal Savings, Group Savings, Payment issues , etc and we Operate 24/7 with fast response time.",
     },
     {
       title: "How do Disputes get Resolved?",
       answer:
-        "  How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works? How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?",
+        " We understand that Groups have different members known or unknown to one another which different perspectives and experiences, but we have Our Disputes Resolution Team that handles matters that concerns Groups Savings, Order or Collection, Theft etc. <br/> <br/> Also, we have a Chat page provided for members of each group to communicate among themselves, trying to resolve issues at their best among themselves, just Incase the issue is persistent, You can reach out to Our Disputes Resolution Team.",
     },
     {
       title: "Can I Create Multiple Accounts?",
       answer:
-        "  How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works? How does group savings works?How does group savings works?How does group savings  works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?How does group savings works?",
+        "No, You won't be able to do that, You will be required to verify the details you provided being it KYC, Identity Cards or Your Face before you can be allow to join any Group. Jekajodawo's. team frowns against compromising your personal details in order to affect other users of the platforms. <br/> <br/> However, Your sole account can be use as much as you want for your desired purpose.",
     },
   ];
   const handleToggle = (index: number) => {
@@ -57,7 +57,10 @@ const Faqs = () => {
             </div>
             {openAccordion === index && (
               <div className="bg-white-000 mt-4 p-4_5 px-5_6 rounded-10">
-                <p className="text-sm fw-small lh-lg mb-0">{item.answer}</p>
+                <p
+                  className="text-sm fw-small lh-lg mb-0"
+                  dangerouslySetInnerHTML={{ __html: item.answer }}
+                />
               </div>
             )}
           </div>

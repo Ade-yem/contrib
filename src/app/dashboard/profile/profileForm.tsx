@@ -13,6 +13,7 @@ import React, { FormEvent, useContext, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { LayoutContext } from "@/context/layoutContext";
 import Loader from "@/components/shared/Loader";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 interface profilePropTypes {
   setDateValue: (e: any) => void;
@@ -30,81 +31,91 @@ export const ProfileForm = (props: profilePropTypes) => {
   }: {
     user: any;
   } = useContext(LayoutContext);
-  console.log(user);
-  const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
   const sendImage = useMutation(api.user.saveUserProfileImage);
 
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  // async function handleSendImage(event: FormEvent) {
-  //   event.preventDefault();
+  const generateUploadUrl = useMutation(api.user.generateUserProfileUploadUrl);
+  const saveImage = useMutation(api.user.saveUserProfileImage);
+  const removeImage = useMutation(api.user.removeUserImage);
+  const [image, setImage] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  //   // Step 1: Get a short-lived upload URL
-  //   const postUrl = await generateUploadUrl();
+  const handleProfileUpload = async (image: File) => {
+    try {
+      setSubmitting(true);
+      const url = await generateUploadUrl();
+      const result = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": image!.type },
+        body: image,
+      });
+      const { storageId } = await result.json();
+      await saveImage({ imageId: storageId as Id<"_storage"> });
+    } catch (error) {
+      console.error("Error uploading the image", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-  //   // Step 2: POST the file to the URL
-  //   const result = await fetch(postUrl, {
-  //     method: "POST",
-  //     headers: { "Content-Type": selectedImage!.type },
-  //     body: selectedImage,
-  //   });
-  //   const { imageId } = await result.json();
-  //   // Step 3: Save the newly allocated storage id to the database
-  //   await sendImage({ imageId });
-
-  //   setSelectedImage(null);
-  //   imageInput.current!.value = "";
-  //   console.log("postUrl", postUrl);
-  //   console.log("result", result);
-  //   console.log("imageId", imageId);
-  // }
-  // console.log("generateUploadUrl", generateUploadUrl());
+  const hide = { display: "none" };
+  const show = { display: "block" };
   return (
     <div className="bg-white-000 rounded w-100 p-5 ">
       <p className="text-lg fw-bold">Personal Details</p>
-
       {!user ? (
         <Loader height="30vh" />
       ) : (
         <>
           <div className="d-flex gap-4 align-items-center">
             <Image
-              // src={"/avatar.svg"}
-              src={user?.image}
+              src={user?.image ?? "/avatar.svg"}
               width={70}
               height={70}
               alt="profile-pics"
               className="rounded-circle"
             />
-            {/* <form onSubmit={handleSendImage}>
+            <form>
               <input
-                type="file"
-                accept="image/*"
-                ref={imageInput}
-                onChange={(event) => setSelectedImage(event.target.files![0])}
                 disabled={selectedImage !== null}
+                type="file"
+                name="image"
+                id="image"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length > 0) {
+                    setImage(files[0]);
+                    handleProfileUpload(files[0]);
+                  }
+                }}
+                ref={imageInput}
               />
-              <input
-                type="submit"
-                value="Send Image"
-                disabled={selectedImage === null}
-              />
-            </form> */}
-
-            <label
-              htmlFor="profilePicture"
-              className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500"
+              <p
+                role="button"
+                style={selectedImage !== null ? hide : show}
+                className="d-flex text-sm px-4 btn h-100 border border-primary-500 text-primary-500 d-sm-none mb-0"
+                onClick={() => imageInput.current?.click()}
+              >
+                Upload photo
+              </p>
+              <p
+                role="button"
+                style={selectedImage !== null ? hide : show}
+                className="d-sm-flex d-none text-sm px-4 btn h-100 border border-primary-500 text-primary-500 mb-0"
+                onClick={() => imageInput.current?.click()}
+              >
+                Upload new photo
+              </p>
+            </form>
+            <p
+              className="mb-0 text-xs text-red click"
+              onClick={() => removeImage()}
             >
-              Upload new photo
-            </label>
-            <label
-              htmlFor="profilePicture"
-              className="d-sm-none d-flex text-sm px-2 btn h-100 border border-primary-500 text-primary-500"
-            >
-              Upload photo
-            </label>
-            <p className="mb-0 text-xs text-red click">Remove</p>
+              Remove
+            </p>
           </div>
 
           <div className="row row-cols-1 row-cols-md-3 mb-4 mt-4_5">

@@ -1,13 +1,15 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
+import { usePathname } from "next/navigation";
 
 export default function GoogleSignIn() {
   const { signIn } = useAuthActions();
+  const pathname = usePathname();
   return (
     <button
       className="btn btn-md text-xs btn-outline-purple w-100"
-      onClick={() => void signIn("google")}
+      onClick={() => void signIn("google", {redirectTo: pathname})}
     >
       <svg
         width="20px"

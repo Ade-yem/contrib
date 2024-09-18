@@ -14,6 +14,7 @@ import Image from "next/image";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
 import "./style.scss";
+import { useRouter } from "next/navigation";
 
 export const RegisterModal = ({
   provider,
@@ -31,6 +32,7 @@ export const RegisterModal = ({
     showModal: ModalTypes;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
+  const router = useRouter();
   const { signIn } = useAuthActions();
   const [submitting, setSubmitting] = useState(false);
   const initialValues = {
@@ -58,12 +60,13 @@ export const RegisterModal = ({
       .then(() => {
         handleSent?.(values.email);
         actions.setSubmitting(false);
-        setShowModal(null);
+        setShowModal("registerSuccess");
+        router.push(`/dashboard/profile`);
       })
       .catch((error) => {
         console.error(error);
         const title = "Could not sign up, Try again";
-        toast.error(title, { id: "auth" });
+        toast.error(title, error);
         setSubmitting(false);
         actions.setSubmitting(false);
       });

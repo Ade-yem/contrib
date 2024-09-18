@@ -20,6 +20,6 @@
     "isolatedModules": true,
     "noEmit": true,
   },
-  "include": ["./**/*", "../paystack.d.ts"],
+  "include": ["./**/*"],
   "exclude": ["./_generated"]
 }

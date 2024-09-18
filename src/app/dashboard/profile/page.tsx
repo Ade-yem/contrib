@@ -94,7 +94,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      {user?.kycVerified === false && (
+      {!user?.kycVerified && (
         <button
           className="btn btn-md btn-primary ms-auto mb-4 mt-md-5"
           onClick={() => setShowModal("verifyUser")}
@@ -113,7 +113,6 @@ export default function ProfilePage() {
         {({ handleSubmit, values, isValid, setFieldValue, resetForm }) => {
           return (
             <>
-              {console.log("Form valid or not:", isValid)}
               <Form onSubmit={handleSubmit}>
                 <ProfileForm
                   dateValue={values.dob}

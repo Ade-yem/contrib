@@ -5,11 +5,12 @@
 // Listen for transfer status
 
 import { action, internalAction } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import paystack from "./paystack_api";
 import { TransferRecipientResponse, TransferResponse } from "./types/transfers";
-import { internal } from "./_generated/api";
+import { internal, api } from "./_generated/api";
 import { generateReference } from "./utils";
+import { SendEmails } from "./resend/resend";
 
 export const createRecipient = action({
   args: {
@@ -25,18 +26,52 @@ export const createRecipient = action({
     const result: TransferRecipientResponse = await paystack.createTransferRecipient({
       type: type, name: name, account_number: account_number, bank_code: bank_code, currency: currency
     })
-    if (result) {
+    if (result.status) {
+      const account_name = result.data.details.account_name || "";
+      const account_number = result.data.details.account_number || "";
+      const authorization_code = result.data.details.authorization_code || "";
+      const bank_name = result.data.details.bank_name || "";
       const res = await ctx.runMutation(internal.paystack.createPaymentMethod, {
-        userId: args.userId, type: type, account_name: result.data.details.account_name as string,
-        recipient_code: result.data.recipient_code, authorization_code: result.data.details.authorization_code as string,
-        currency: result.data.currency as "NGN" | "GHS", bank_name: result.data.details.bank_name, account_number: result.data.details.account_number
+        userId: args.userId, type: type, account_name,
+        recipient_code: result.data.recipient_code, authorization_code,
+        currency: result.data.currency as "NGN" | "GHS", bank_name, account_number
       })
       if (res && res.length > 1) {
         return true;
       } else return false;
-    }
+    } else throw new ConvexError(result.message);
   }
 })
+
+export const createRecipientFromAuthorization = action({
+  args: {
+    name: v.string(),
+    email: v.string(),
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const {name, email, userId} = args;
+    const authorization_code = await ctx.runQuery(api.authorization.getAuthorization, {userId});
+    const result: TransferRecipientResponse = await paystack.createTransferRecipientWithCode({
+      name, email, authorization_code
+    });
+    if (result.status) {
+      const account_name = result.data.details.account_name || "";
+      const account_number = result.data.details.account_number || "";
+      const authorization_code = result.data.details.authorization_code || "";
+      const bank_name = result.data.details.bank_name || "";
+
+      const res = await ctx.runMutation(internal.paystack.createPaymentMethod, {
+        userId: args.userId, type: "authorization", account_name,
+        recipient_code: result.data.recipient_code, authorization_code,
+        currency: result.data.currency as "NGN" | "GHS", bank_name, account_number
+      })
+      if (res && res.length > 1) {
+        return true;
+      } else return false;
+    } else throw new ConvexError(result.message)
+  }
+});
 
 export const initiateTransfer = internalAction({
 	args: {
@@ -49,16 +84,28 @@ export const initiateTransfer = internalAction({
 		userId: v.id("users"),
 		details: v.string(),
 		retry: v.boolean(),
+    accountNumber: v.string(),
 	},
 	async handler(ctx, args_0) {
 		const reference = args_0.retry ? args_0.reference as string : generateReference();
-		const result: TransferResponse = await paystack.initiateTransfer({
-			amount: args_0.amount, recipient: args_0.recipient, reason: args_0.reason, reference: reference
-		})
-		if (result) {
-			await ctx.runMutation(internal.paystack.createTransaction, {
-				groupId: args_0.groupId, userId: args_0.userId, amount: result.data.amount, type: "transfer", status: result.data.status, reference: result.data.reference, details: args_0.details, transfer_code: result.data.transfer_code, savingsId: args_0.savingsId
-			})
-		}
+    let name: string = "";
+    if (args_0.groupId) {
+      const group = await ctx.runQuery(api.group.getGroup, {groupId: args_0.groupId});
+      name = group?.name;
+      await ctx.runMutation(internal.removeMoney.removeMoneyFromGroup, {amount: args_0.amount, groupId: args_0.groupId})
+      
+    } else if (args_0.savingsId) {
+      const savings = await ctx.runQuery(api.savings.getSavings, {savingsId: args_0.savingsId});
+      name = savings?.name as string;
+      await ctx.runMutation(internal.removeMoney.removeMoneyFromSavings, {savingsId: args_0.savingsId, amount: args_0.amount});
+    }
+    const user = await ctx.runQuery(api.user.getUserById, {userId: args_0.userId});
+    await SendEmails.TransferMade({ amount: args_0.amount,
+      email: user?.email as string, groupName: name, accountNumber: args_0.accountNumber, type: args_0.groupId ? "group" : "savings", 
+    })
+
+    await ctx.runMutation(internal.paystack.createTransaction, {
+      groupId: args_0.groupId, userId: args_0.userId, amount: args_0.amount, type: "transfer", status: "success", reference: reference, details: args_0.details, savingsId: args_0.savingsId
+    })
 	},
 });

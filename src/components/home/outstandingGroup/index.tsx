@@ -7,8 +7,7 @@ import React from "react";
 import { api } from "../../../../convex/_generated/api";
 
 export const OustandingGroup = () => {
-  const groupList = useQuery(api.group.getAllGroups);
-
+  const groupList = useQuery(api.group.getTopGroups);
   return (
     <div className="container text-center py-6">
       <h2 className="sub-title  mb-6 fw-bold">
@@ -21,18 +20,23 @@ export const OustandingGroup = () => {
           <EmptyData height="40vh" text="No groups yet." />
         ) : (
           <>
-            {groupList?.slice(0, 4).map((item, index) => (
-              <GroupCard
-                key={index}
-                color={index}
-                // img={item.img}
-                // alt={item.alt}
-                savings_per_interval={item.savings_per_interval}
-                title={item.name}
-                desc={item.description}
-                privateGroup={item.private}
-              />
-            ))}
+            {groupList
+              ?.slice(0, 4)
+              .map((item, index) => (
+                <GroupCard
+                  key={index}
+                  color={index}
+                  img={item.image || "/groupAvatar.png"}
+                  savings_per_interval={item.savings_per_interval}
+                  title={item.name}
+                  desc={item.description}
+                  interval={item.interval}
+                  privateGroup={item.private}
+                  groupId={item._id}
+                  expectedMembers={item.number_of_people}
+                  membersPresent={item.number_of_people_present}
+                />
+              ))}
           </>
         )}
       </div>

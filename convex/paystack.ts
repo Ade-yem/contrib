@@ -15,7 +15,7 @@ export const createPlan = internalMutation ({
 export const createPaymentMethod = internalMutation({
     args: {
         userId: v.id('users'),
-        type: v.union(v.literal("ghpss"), v.literal("nuban")),
+        type: v.union(v.literal("ghpss"), v.literal("nuban"), v.literal("authorization")),
         account_name: v.string(),
         recipient_code: v.string(),
         authorization_code: v.string(),
@@ -60,7 +60,7 @@ export const createTransaction = internalMutation({
         transfer_code: args_0.transfer_code,
         savingsId: args_0.savingsId
      })
-      if (!res) throw new ConvexError("Could not create transaction");  
+      if (!res) throw new Error("Could not create transaction");  
   },
 })
 
@@ -72,7 +72,7 @@ export const updateTransaction = internalMutation({
   async handler(ctx, args_0) {
     const q = await ctx.db.query("transactions").filter(q => q.eq(q.field("reference"), args_0.reference)).first();
     if (q) return await ctx.db.patch(q._id, {status: args_0.status});
-    else throw new ConvexError("Could not update transaction");
+    else throw new Error("Could not update transaction");
   },
 })
 
@@ -83,6 +83,6 @@ export const getTransaction = internalQuery({
   async handler(ctx, args_0) {
     const q = await ctx.db.query("transactions").filter(q => q.eq(q.field("reference"), args_0.reference)).first();
     if (q) return q;
-    else throw new ConvexError("Could not get transaction of reference " + args_0.reference);
+    else throw new Error("Could not get transaction of reference " + args_0.reference);
   },
 })
