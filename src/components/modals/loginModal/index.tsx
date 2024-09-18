@@ -53,7 +53,7 @@ export const LoginModal = ({
     formData.append("password", values.password);
     formData.append("flow", "signIn");
 
-    signIn(provider ?? "password-code", formData)
+    signIn(provider ?? "password", formData)
       .then(() => {
         handleSent?.(values.email);
         actions.setSubmitting(false);
@@ -125,7 +125,7 @@ export const LoginModal = ({
                         />
                         <p
                           className="text-xs text-primary-400 click  mt-4 mb-2"
-                          onClick={() => setShowModal("resetPassword")}
+                          onClick={handlePasswordReset}
                         >
                           Forgot Password?
                         </p>

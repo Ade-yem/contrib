@@ -8,24 +8,21 @@ import { ProfileForm } from "./profileForm";
 import Button from "@/components/forms/Button";
 import { ModalTypes } from "@/services/_schema";
 import { LayoutContext } from "@/context/layoutContext";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import toast from "react-hot-toast";
 import { toUpperLetter } from "@/components/utilities/helper";
-import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const {
     setShowModal,
-    user
+    user,
   }: {
     user: any;
     setShowModal: (value: ModalTypes) => void;
   } = useContext(LayoutContext);
-  const userz = useQuery(api.user.getUser)
   const updateProfile = useMutation(api.user.editProfile);
-  const authorizations = useQuery(api.authorization.getAuthorizations, {userId: userz?._id})
   const [submitting, setSubmitting] = useState(false);
   const [initialValues, setInitialValues] = useState({
     firstName: "",
@@ -38,8 +35,6 @@ export default function ProfilePage() {
     nationality: "",
     gender: {},
   });
-
-  const router = useRouter()
 
   const validationSchema = yup.object().shape({
     firstName: yup.string().label("First Name").required(),
@@ -75,11 +70,7 @@ export default function ProfilePage() {
     });
 
     setSubmitting(false);
-    toast.success("Profile saved", {id: "profile"});
-    if (authorizations?.length === 0) {
-      toast.success("You are almost there, please make sure your card details", {id: "profile"});
-      router.push("/dashboard/linked-accounts")
-    }
+    toast.success("Profile saved");
   };
 
   useEffect(() => {
@@ -93,6 +84,7 @@ export default function ProfilePage() {
         dob: user.dob,
         homeAddress: user.homeAddress,
         nationality: user.nationality,
+        // gender: { value: user.gender, label: toUpperLetter(user.gender) },
         gender: user.gender
           ? { value: user.gender, label: toUpperLetter(user.gender) }
           : { value: "", label: "Select.." },
