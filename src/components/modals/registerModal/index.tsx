@@ -56,7 +56,7 @@ export const RegisterModal = ({
     formData.append("password", values.password);
     formData.append("flow", values.signUp);
 
-    signIn(provider ?? "password-code", formData)
+    signIn(provider ?? "password", formData)
       .then(() => {
         handleSent?.(values.email);
         actions.setSubmitting(false);
